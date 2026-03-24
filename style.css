@@ -350,63 +350,61 @@ body {
 /* --- ADAPTIVE MOBILE ENGINE --- */
 
 @media screen and (max-width: 768px) {
-    /* 1. Global Reset - Prevents side-scrolling/wobbling */
-    html, body {
-        overflow-x: hidden;
-        width: 100%;
-        margin: 0;
-        padding: 0;
+    /* 1. Reset all potential fixed-width parents */
+    html, body, .container, .main-content, .gallery-layout {
+        width: 100% !important;
+        max-width: 100vw !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-x: hidden !important; /* Kills horizontal scroll */
+        display: block !important;
+        height: auto !important;
     }
 
-    /* 2. Full-Width Header */
+    /* 2. Header: Force it to touch the edges */
     header {
         width: 100% !important;
-        box-sizing: border-box; /* Ensures padding doesn't push it off-screen */
-        flex-direction: column !important;
-        height: auto !important;
-        padding: 15px !important;
+        left: 0 !important;
+        right: 0 !important;
+        position: relative !important;
+        box-sizing: border-box !important;
+        padding: 10px !important;
     }
 
-    /* 3. Sprite Viewer & Character Sprites (Out of Bounds Fix) */
+    /* 3. Sprite Viewer: Force it inside the box */
     .sprite-viewer, .sprite-window, .char-img-container {
         width: 100% !important;
-        max-width: 100% !important;
-        box-sizing: border-box;
-        height: auto !important;
-        min-height: 300px; /* Keeps a good size on phone */
+        box-sizing: border-box !important;
         overflow: hidden !important;
+        display: flex !important;
+        justify-content: center;
     }
 
     .sprite-window img, .char-img-container img {
-        max-width: 100% !important;
+        max-width: 100% !important; /* Image cannot be wider than the phone */
         height: auto !important;
-        object-fit: contain; /* Prevents the image from stretching out of the box */
+        object-fit: contain;
     }
 
-    /* 4. Login Page Centering (Fixes the "Moving to the left" issue) */
-    .index-page .glass-panel {
-        width: 90% !important; /* Percentage is safer than VW for zooming */
-        max-width: 400px;
-        margin: 0 auto !important; /* Horizontal centering */
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        box-sizing: border-box;
+    /* 4. Quest Information: Stack as Rows */
+    .quest-container {
+        display: flex !important;
+        flex-direction: column !important; /* Stack rows instead of columns */
+        gap: 15px !important;
+        width: 100% !important;
     }
 
-    /* 5. Force the "Black Box" (Glass Panel) to stay within screen */
+    .quest-item {
+        width: 100% !important;
+        border-bottom: 1px solid var(--box-border);
+        padding-bottom: 10px;
+    }
+
+    /* 5. The Glass Panel (The Black Box) */
     .glass-panel {
         width: 95% !important;
-        margin: 10px auto !important;
+        margin: 10px auto !important; /* Centers the box on the screen */
+        box-sizing: border-box !important;
         height: auto !important;
-        overflow: hidden !important; /* Clips anything trying to escape */
-    }
-
-    /* 6. Layout Stacking */
-    .gallery-layout, .container {
-        display: block !important;
-        height: auto !important;
-        width: 100% !important;
     }
 }
