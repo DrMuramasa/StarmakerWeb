@@ -173,23 +173,42 @@ let previousVolume = 0.5;
 // --- UPDATED MUSIC ENGINE ---
 
 function initMusic() {
-    const savedVol = localStorage.getItem('sm_volume') || 0.5;
-    const savedTime = localStorage.getItem('sm_music_time') || 0; // Get the last timestamp
+    // 1. Pull the saved data from the user's browser
+    const savedVol = parseFloat(localStorage.getItem('sm_volume')) || 0.5;
+    const savedTime = parseFloat(localStorage.getItem('sm_music_time')) || 0;
 
     if (typeof bgMusic !== 'undefined') {
-        bgMusic.volume = savedVol;
-        bgMusic.currentTime = savedTime; // Jump to where we left off
+        // 2. Prepare the track (Silent but at the right timestamp)
+        bgMusic.volume = 0; 
+        bgMusic.currentTime = savedTime;
         
         const playPromise = bgMusic.play();
+
         if (playPromise !== undefined) {
-            playPromise.catch(() => {
+            playPromise.then(() => {
+                // 3. SUCCESS: The song is playing, now fade it in
+                let currentFadeVol = 0;
+                const fadeStep = 0.05; 
+                const fadeInterval = setInterval(() => {
+                    if (currentFadeVol < savedVol) {
+                        currentFadeVol += fadeStep;
+                        // Use Math.min to ensure we don't go past the user's setting
+                        bgMusic.volume = Math.min(currentFadeVol, savedVol);
+                    } else {
+                        clearInterval(fadeInterval);
+                    }
+                }, 50); 
+            }).catch(() => {
+                // 4. BLOCKED: Browser needs a click first
                 document.addEventListener('click', () => {
                     bgMusic.play();
+                    bgMusic.volume = savedVol; // Skip fade on manual click for instant feedback
                 }, { once: true });
             });
         }
     }
     
+    // 5. Sync the UI
     const slider = document.getElementById('volume-slider');
     if (slider) slider.value = savedVol;
     updateMuteIcon();
