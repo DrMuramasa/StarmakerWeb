@@ -180,15 +180,17 @@
             object-fit: cover;
         }
 
-        /* --- Lightbox --- */
+        /* --- Lightbox / Zoom Feature --- */
         .lightbox {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: rgba(0,0,0,0.95);
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            cursor: zoom-out;
         }
 
         .lightbox img {
@@ -196,6 +198,7 @@
             max-height: 85%;
             border: 2px solid var(--gold);
             box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            cursor: default;
         }
 
         /* --- Settings Bar --- */
@@ -274,9 +277,9 @@
     <audio id="bgMusic" loop src="StarmakerMainmenuTheme.mp3"></audio>
     <audio id="squishSound" src="squish.mp3"></audio>
 
-    <div id="lightbox" class="lightbox" onclick="this.style.display='none'">
-        <img id="lightbox-img" src="">
-        <div style="position:absolute; top:20px; right:30px; font-size:30px; cursor:pointer;">&times;</div>
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" onclick="event.stopPropagation()">
+        <div style="position:absolute; top:20px; right:30px; font-size:30px; color:white; cursor:pointer;">&times;</div>
     </div>
 
     <div class="settings-bar">
@@ -292,8 +295,9 @@
 
     <script>
         // --- CONFIGURATION ---
-        const githubUser = 'DrMuramasa'; // Change this
-        const repoName = 'StarmakerWeb';         // Change this
+        // Change these to your actual GitHub info
+        const githubUser = 'YOUR_GITHUB_USERNAME';
+        const repoName = 'YOUR_REPO_NAME';
         const galleryCache = {};
 
         // --- AUDIO LOGIC ---
@@ -371,14 +375,22 @@
                 if (file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
                     const card = document.createElement('div');
                     card.className = 'img-card';
-                    card.onclick = () => {
-                        document.getElementById('lightbox-img').src = file.download_url;
-                        document.getElementById('lightbox').style.display = 'flex';
-                    };
+                    // Link clicking the image to open the lightbox
+                    card.onclick = () => openLightbox(file.download_url);
                     card.innerHTML = `<img src="${file.download_url}" alt="Character Art">`;
                     display.appendChild(card);
                 }
             });
+        }
+
+        // --- LIGHTBOX/ZOOM FUNCTIONS ---
+        function openLightbox(imgUrl) {
+            document.getElementById('lightbox-img').src = imgUrl;
+            document.getElementById('lightbox').style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
         }
 
         // Initial Load
