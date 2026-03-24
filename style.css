@@ -113,3 +113,70 @@ header {
     box-shadow: 0 0 50px rgba(0,0,0,0.8);
     border: 1px solid var(--gold);
 }
+
+/* Main Layout Fix */
+.gallery-layout {
+    display: grid;
+    /* Column 1: Buttons (160px) | Column 2: Gallery (Flexible) | Column 3: Sprite (320px) */
+    grid-template-columns: 160px 1fr 320px;
+    gap: 20px;
+    height: 85vh; /* Prevents the page from growing infinitely */
+    align-items: start;
+}
+
+/* Mosaic Grid Fix */
+.gallery-scroll-area {
+    height: 100%;
+    overflow-y: auto; /* Internal scrolling only */
+    padding-right: 10px;
+}
+
+.gallery-grid {
+    display: grid;
+    /* Forces images to be at least 130px wide, fitting as many as possible */
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+}
+
+.img-card {
+    width: 100%;
+    aspect-ratio: 1 / 1; /* Forces perfect squares */
+    border: 2px solid var(--box-border);
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    background: #111;
+}
+
+.img-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Prevents stretching */
+    display: block;
+}
+
+/* Sprite Container Fix */
+.sprite-viewer {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--box-border);
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+}
+
+.sprite-window {
+    width: 100%;
+    height: 500px; /* Fixed height for the sprite box */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.sprite-window img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Keeps character proportions correct */
+}
