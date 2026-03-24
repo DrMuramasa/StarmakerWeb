@@ -25,6 +25,7 @@
             transition: background-image 0.5s ease-in-out;
         }
 
+        /* --- Background --- */
         .bg-wrapper {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -36,11 +37,11 @@
         .bg-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             z-index: -1;
         }
 
-        /* --- Header --- */
+        /* --- Header & Nav --- */
         header {
             display: flex;
             justify-content: space-between;
@@ -68,7 +69,7 @@
             box-shadow: 0 0 15px var(--gold);
         }
 
-        .container { max-width: 1300px; margin: 30px auto; padding: 0 20px; }
+        .container { max-width: 1400px; margin: 30px auto; padding: 0 20px; }
         
         .glass-panel {
             background: var(--glass);
@@ -76,7 +77,7 @@
             border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 20px;
             padding: 40px;
-            min-height: 500px;
+            min-height: 600px;
         }
 
         /* --- Tab System --- */
@@ -84,75 +85,48 @@
         .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- Character Archive Grid --- */
+        /* --- Characters Section --- */
         .grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; }
         .char-card { 
             background: rgba(0,0,0,0.6); border: 1px solid var(--box-border); 
             border-radius: 8px; overflow: hidden; cursor: pointer; transition: 0.3s;
         }
-        .char-card:hover { transform: translateY(-5px); border-color: var(--gold); box-shadow: 0 5px 15px rgba(212,175,55,0.3); }
-        .char-card img { width: 100%; height: 300px; object-fit: cover; border-bottom: 1px solid var(--box-border); }
-        .char-card h3 { padding: 12px; margin: 0; text-align: center; color: var(--gold); letter-spacing: 1px; }
+        .char-card:hover { transform: translateY(-5px); border-color: var(--gold); }
+        .char-card img { width: 100%; height: 320px; object-fit: cover; border-bottom: 1px solid var(--box-border); }
+        .char-card h3 { padding: 12px; margin: 0; text-align: center; color: var(--gold); text-transform: uppercase; }
 
-        /* --- Integrated Guide Look (Merging Image 1 & 2) --- */
         #guide-view { display: none; }
-        .guide-layout { 
-            display: grid; 
-            grid-template-columns: 320px 250px 1fr; 
-            gap: 20px; 
-            align-items: start;
-        }
+        .guide-layout { display: grid; grid-template-columns: 320px 250px 1fr; gap: 20px; align-items: start; }
 
-        /* Sidebar & Quest List Styling from Image 1/2 */
         .profile-box, .quest-box, .details-box {
             background: rgba(0, 0, 0, 0.7);
             border: 1px solid var(--box-border);
             border-radius: 12px;
             padding: 20px;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
         }
 
-        .sprite-container {
-            width: 100%;
-            background: rgba(255,255,255,0.03);
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 15px;
-            overflow: hidden;
-        }
+        .sprite-container { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden; margin-bottom: 15px; }
         .sprite-container img { width: 100%; display: block; }
 
         .q-item {
-            padding: 15px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            border-radius: 6px;
-            border: 1px solid transparent;
-            color: #aaa;
-            background: rgba(255,255,255,0.02);
-            transition: 0.2s;
-            font-weight: 600;
+            padding: 15px; margin-bottom: 8px; cursor: pointer; border-radius: 6px; border: 1px solid transparent;
+            color: #aaa; background: rgba(255,255,255,0.02); transition: 0.2s; font-weight: bold;
         }
-        .q-item:hover { background: rgba(212,175,55,0.05); color: var(--text); }
-        .q-item.active { 
-            border-color: var(--gold); 
-            color: var(--gold); 
-            background: rgba(212, 175, 55, 0.1); 
-            box-shadow: 0 0 10px rgba(212,175,55,0.1);
-        }
+        .q-item.active { border-color: var(--gold); color: var(--gold); background: rgba(212, 175, 55, 0.1); }
 
-        .step { display: flex; gap: 12px; margin-bottom: 20px; line-height: 1.5; }
-        .bullet { color: var(--gold); font-size: 1.2em; }
-        .req-tag { 
-            display: block; 
-            color: var(--req-color); 
-            font-weight: bold; 
-            font-size: 0.85em; 
-            text-transform: uppercase; 
-            margin-top: 5px;
-            padding-left: 10px;
-            border-left: 2px solid var(--req-color);
-        }
+        .step { display: flex; gap: 12px; margin-bottom: 20px; }
+        .bullet { color: var(--gold); font-weight: bold; }
+        .req-tag { display: block; color: var(--req-color); font-weight: bold; font-size: 0.85em; border-left: 2px solid var(--req-color); padding-left: 10px; margin-top: 5px; }
+
+        /* --- Gallery Section --- */
+        .gallery-layout { display: grid; grid-template-columns: 200px 1fr; gap: 30px; }
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .img-card { aspect-ratio: 1/1; border: 4px solid #111; border-radius: 4px; overflow: hidden; cursor: pointer; transition: 0.3s; background: #000; }
+        .img-card:hover { border-color: var(--gold); transform: scale(1.02); }
+        .img-card img { width: 100%; height: 100%; object-fit: cover; }
+
+        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; }
+        .lightbox img { max-width: 90%; max-height: 90%; border: 2px solid var(--gold); }
 
         @keyframes squish { 0% { transform: scale(1); } 40% { transform: scale(0.9, 1.1); } 100% { transform: scale(1); } }
         .squish { animation: squish 0.2s ease-in-out; }
@@ -169,6 +143,7 @@
             <button class="nav-btn active" onclick="switchTab('home', this)">Home</button>
             <button class="nav-btn" onclick="switchTab('characters', this)">Characters</button>
             <button class="nav-btn" onclick="switchTab('gallery', this)">Gallery</button>
+            <button class="nav-btn" onclick="switchTab('quests', this)">Quests</button>
         </nav>
     </header>
 
@@ -176,15 +151,16 @@
         <div class="glass-panel">
             
             <section id="home" class="tab-content active">
-                <div style="text-align:center; padding: 100px 0;">
-                    <h1 style="font-size: 4rem; color: var(--gold); text-shadow: 0 0 20px rgba(212,175,55,0.5);">SNAKE QUEEN</h1>
-                    <button class="nav-btn" style="padding: 15px 50px; font-size: 1.2rem;" onclick="document.querySelectorAll('.nav-btn')[1].click()">ACCESS DATA</button>
+                <div style="text-align:center; padding: 80px 0;">
+                    <h1 style="font-size: 4rem; color: var(--gold); text-shadow: 0 0 20px rgba(212,175,55,0.4);">SNAKE QUEEN</h1>
+                    <p style="max-width: 600px; margin: 0 auto 30px; opacity: 0.8;">Accessing neural network... Monitor character synchronization and recovered visual data.</p>
+                    <button class="nav-btn" style="padding: 15px 50px;" onclick="document.querySelectorAll('.nav-tabs .nav-btn')[1].click()">INITIALIZE DATABASE</button>
                 </div>
             </section>
 
             <section id="characters" class="tab-content">
                 <div id="mosaic-view">
-                    <h2 style="color:var(--gold); margin-bottom: 30px; border-bottom: 1px solid var(--box-border); padding-bottom: 10px;">SUBJECT ARCHIVES</h2>
+                    <h2 style="color:var(--gold); border-bottom: 1px solid var(--box-border); padding-bottom: 10px; margin-bottom: 25px;">SUBJECT ARCHIVES</h2>
                     <div id="char-grid" class="grid-view"></div>
                 </div>
 
@@ -193,45 +169,63 @@
                     <div class="guide-layout">
                         <div class="profile-box">
                             <div class="sprite-container" id="display-sprite"></div>
-                            <h2 id="display-name" style="color:var(--gold); text-transform: uppercase; margin: 10px 0;"></h2>
-                            <p id="display-bio" style="font-size: 0.9em; opacity: 0.7; line-height: 1.4;"></p>
+                            <h2 id="display-name" style="color:var(--gold); text-transform: uppercase;"></h2>
+                            <p id="display-bio" style="font-size: 0.9em; opacity: 0.7;"></p>
                         </div>
                         <div class="quest-box" id="quest-list"></div>
                         <div class="details-box">
                             <h2 id="q-title" style="color:var(--gold); margin-top:0;"></h2>
-                            <p id="q-desc" style="font-style:italic; opacity: 0.6; margin-bottom: 25px;"></p>
+                            <p id="q-desc" style="font-style:italic; opacity: 0.6; margin-bottom: 20px;"></p>
                             <div id="q-steps"></div>
                         </div>
                     </div>
                 </div>
             </section>
 
+            <section id="gallery" class="tab-content">
+                <div class="gallery-layout">
+                    <div class="profile-box" style="padding: 15px;">
+                        <h3 style="color:var(--gold); margin-top:0;">Data Folders</h3>
+                        <button class="nav-btn" style="width:100%; margin: 5px 0;" onclick="loadGallery('Amelia', this)">Amelia</button>
+                        <button class="nav-btn" style="width:100%; margin: 5px 0;" onclick="loadGallery('Emma', this)">Emma</button>
+                        <button class="nav-btn" style="width:100%; margin: 5px 0;" onclick="loadGallery('Evelyn', this)">Evelyn</button>
+                        <button class="nav-btn" style="width:100%; margin: 5px 0;" onclick="loadGallery('Toni', this)">Toni</button>
+                        <button class="nav-btn" style="width:100%; margin: 5px 0;" onclick="loadGallery('Sofia', this)">Sofia</button>
+                    </div>
+                    <div class="gallery-grid" id="gallery-items">
+                        <p style="grid-column: 1/-1; text-align:center; opacity: 0.5; padding-top: 50px;">Select a subject to view visual data...</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="quests" class="tab-content">
+                <h2 style="color:var(--gold)">Global Directives</h2>
+                <div class="details-box">
+                    <p>Status: <span style="color:var(--gold)">ONLINE</span></p>
+                    <p>All neural links are currently stable. Please refer to individual character archives for specific mission details.</p>
+                </div>
+            </section>
+
         </div>
     </div>
 
+    <div id="lightbox" class="lightbox" onclick="this.style.display='none'"><img id="lb-img" src=""></div>
     <audio id="squishSnd" src="squish.mp3"></audio>
 
     <script>
+        const githubUser = 'DrMuramasa';
+        const repoName = 'StarmakerWeb';
+
         const characterData = {
             "josef": {
-                name: "Josef",
-                bio: "A key household figure. Interactions with him influence major route branches.",
-                sprite: "images/josef_sprite.png",
-                bg: "images/josef_bg.jpg",
-                quests: [
-                    { name: "Beer Strategy", title: "The Friday Beer Strategy", desc: "Unlock his route via Friday interactions.", 
-                      steps: [{t: "Meet at entrance on Friday", r: "Anna 3 Hearts Required"}] }
-                ]
+                name: "Josef", bio: "Household head.",
+                sprite: "images/characters/Josef/josef_sprite.png", bg: "images/characters/Josef/Josef_BG.jpg",
+                quests: [{ name: "Beer Strategy", title: "Friday Beer", desc: "Unlock Josef's route.", steps: [{t: "Friday interaction", r: "Anna 3 Hearts"}] }]
             },
             "amelia": {
-                name: "Amelia",
-                bio: "Hardworking farm girl. Known for her routine at the local coffee shop.",
-                sprite: "images/amelia_sprite.png",
-                bg: "images/amelia_bg.jpg",
-                quests: [
-                    { name: "Coffee Shop", title: "Daily Grind", desc: "Meet Amelia during her work shift.", 
-                      steps: [{t: "Visit shop 3 times", r: ""}] }
-                ]
+                name: "Amelia", bio: "Coffee Boss",
+                sprite: "images/characters/Amelia/amelia_sprite.png", bg: "images/characters/Amelia/Amelia_BG.jpg",
+                quests: [{ name: "Coffee Shop", title: "Shift Work", desc: "Visit Amelia during work.", steps: [{t: "Work 3 shifts", r: ""}] }]
             }
         };
 
@@ -246,11 +240,12 @@
 
         function playSnd(btn) {
             const snd = document.getElementById('squishSnd');
-            snd.currentTime = 0; snd.play();
+            if(snd) { snd.currentTime = 0; snd.play(); }
             if(btn) { btn.classList.add('squish'); setTimeout(() => btn.classList.remove('squish'), 200); }
         }
 
-        function init() {
+        // --- Character Logic ---
+        function initCharacters() {
             const grid = document.getElementById('char-grid');
             for(let key in characterData) {
                 const char = characterData[key];
@@ -263,18 +258,15 @@
         }
 
         function openGuide(key) {
-            // Update browser history state for Back button support
             history.pushState({view: 'guide'}, ''); 
-            
             const char = characterData[key];
             document.getElementById('mosaic-view').style.display = 'none';
             document.getElementById('guide-view').style.display = 'block';
             document.getElementById('master-bg').style.backgroundImage = `url('${char.bg}')`;
-            
             document.getElementById('display-sprite').innerHTML = `<img src="${char.sprite}">`;
             document.getElementById('display-name').innerText = char.name;
             document.getElementById('display-bio').innerText = char.bio;
-
+            
             const qList = document.getElementById('quest-list');
             qList.innerHTML = "";
             char.quests.forEach((q, i) => {
@@ -295,10 +287,7 @@
             document.getElementById('q-title').innerText = q.title;
             document.getElementById('q-desc').innerText = q.desc;
             document.getElementById('q-steps').innerHTML = q.steps.map(s => `
-                <div class="step">
-                    <span class="bullet">▶</span>
-                    <div>${s.t}${s.r ? `<span class="req-tag">REQ: ${s.r}</span>` : ''}</div>
-                </div>`).join('');
+                <div class="step"><span class="bullet">▶</span><div>${s.t}${s.r ? `<span class="req-tag">REQ: ${s.r}</span>` : ''}</div></div>`).join('');
         }
 
         function closeGuide() {
@@ -307,22 +296,40 @@
             document.getElementById('master-bg').style.backgroundImage = "url('backgroundImg.gif')";
         }
 
-        // --- Back Button & Backspace Logic ---
-        window.onpopstate = function() {
-            // If the user presses the browser back button
-            closeGuide();
-        };
+        // --- Gallery Logic ---
+        async function loadGallery(folder, btn) {
+            playSnd(btn);
+            const grid = document.getElementById('gallery-items');
+            grid.innerHTML = "Opening vault...";
+            const url = `https://api.github.com/repos/${githubUser}/${repoName}/contents/images/characters/${folder}`;
+            try {
+                const res = await fetch(url);
+                const files = await res.json();
+                grid.innerHTML = "";
+                files.forEach(file => {
+                    if(file.name.match(/\.(png|jpg|gif|webp)$/i)) {
+                        const div = document.createElement('div');
+                        div.className = 'img-card';
+                        div.onclick = () => {
+                            document.getElementById('lb-img').src = file.download_url;
+                            document.getElementById('lightbox').style.display = 'flex';
+                        };
+                        div.innerHTML = `<img src="${file.download_url}">`;
+                        grid.appendChild(div);
+                    }
+                });
+            } catch (err) { grid.innerHTML = "Folder empty or not found."; }
+        }
 
-        window.onkeydown = function(e) {
-            // If the user presses the Backspace key (code 8)
-            // and the guide view is currently open
+        // --- Nav Handlers ---
+        window.onpopstate = () => closeGuide();
+        window.onkeydown = (e) => {
             if (e.keyCode === 8 && document.getElementById('guide-view').style.display === 'block') {
-                e.preventDefault(); // Prevent browser from actually navigating away
-                closeGuide();
+                e.preventDefault(); closeGuide();
             }
         };
 
-        init();
+        initCharacters();
     </script>
 </body>
 </html>
