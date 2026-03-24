@@ -177,28 +177,37 @@
         let favorites = JSON.parse(localStorage.getItem('sm_favorites')) || { images: [], chars: [] };
 
         async function loadGallery(folder) {
-            const grid = document.getElementById('gallery-items');
-            grid.innerHTML = "Syncing...";
-            sprites = []; galleryImgs = []; spriteIdx = 0;
+    const grid = document.getElementById('gallery-items');
+    grid.innerHTML = "Syncing...";
+    sprites = []; galleryImgs = []; spriteIdx = 0;
 
-            try {
-                const res = await fetch(`https://api.github.com/repos/DrMuramasa/StarmakerWeb/contents/images/characters/${folder}`);
-                const files = await res.json();
-                grid.innerHTML = "";
+    try {
+        const res = await fetch(`https://api.github.com/repos/DrMuramasa/StarmakerWeb/contents/images/characters/${folder}`);
+        const files = await res.json();
+        grid.innerHTML = "";
 
-                files.forEach(file => {
-                    const name = file.name.toLowerCase();
-                    if (name.includes('_sprite')) {
-                        sprites.push(file.download_url);
-                    } else if (!name.includes('_bg')) {
-                        galleryImgs.push(file.download_url);
-                        createCard(file.download_url, grid);
-                    }
-                });
-                renderSprite();
-                applyFilters();
-            } catch (err) { grid.innerHTML = "Access Denied."; }
-        }
+        files.forEach(file => {
+            const name = file.name.toLowerCase();
+            
+            // FIX: Only process files that are actually images (jpg, png, gif, webp)
+            const isImage = /\.(jpg|jpeg|png|gif|webp)$/.test(name);
+            
+            if (isImage) {
+                if (name.includes('_sprite')) {
+                    sprites.push(file.download_url);
+                } else if (!name.includes('_bg')) {
+                    galleryImgs.push(file.download_url);
+                    createCard(file.download_url, grid);
+                }
+            }
+        });
+        renderSprite();
+        applyFilters();
+    } catch (err) { 
+        grid.innerHTML = "Access Denied."; 
+        console.error(err); 
+    }
+}
 
         function createCard(url, container) {
             const isFav = favorites.images.includes(url);
