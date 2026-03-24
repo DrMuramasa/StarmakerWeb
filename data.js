@@ -169,16 +169,19 @@ function playSnd() {
 let isMuted = false;
 let previousVolume = 0.5;
 
+// --- UPDATED MUSIC ENGINE ---
+
 function initMusic() {
     const savedVol = localStorage.getItem('sm_volume') || 0.5;
+    const savedTime = localStorage.getItem('sm_music_time') || 0; // Get the last timestamp
+
     if (typeof bgMusic !== 'undefined') {
         bgMusic.volume = savedVol;
+        bgMusic.currentTime = savedTime; // Jump to where we left off
         
-        // Autoplay/Resume logic
         const playPromise = bgMusic.play();
         if (playPromise !== undefined) {
             playPromise.catch(() => {
-                // If browser blocks autoplay, wait for one click anywhere
                 document.addEventListener('click', () => {
                     bgMusic.play();
                 }, { once: true });
@@ -190,6 +193,21 @@ function initMusic() {
     if (slider) slider.value = savedVol;
     updateMuteIcon();
 }
+
+// THIS IS THE SECRET SAUCE:
+// Every 1 second, save the current time so if they click a link, we know where they were.
+setInterval(() => {
+    if (typeof bgMusic !== 'undefined' && !bgMusic.paused) {
+        localStorage.setItem('sm_music_time', bgMusic.currentTime);
+    }
+}, 1000);
+
+// Also save right when the user closes/leaves the page
+window.onbeforeunload = function() {
+    if (typeof bgMusic !== 'undefined') {
+        localStorage.setItem('sm_music_time', bgMusic.currentTime);
+    }
+};
 
 function updateVolume(val) {
     if (typeof bgMusic !== 'undefined') {
