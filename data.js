@@ -44,7 +44,7 @@ const characterData = {
     "emma": {
         name: "Emma",
         bio: "The high-energy fitness buff with a hidden supernatural curiosity.",
-        sprite: "images/characters/Emma/emmabase_sprite",
+        sprite: "images/characters/Emma/emmabase_sprite.png",
         bg: "images/characters/Emma/Emma_BG.png",
         quests: [
             { 
