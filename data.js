@@ -151,7 +151,8 @@ const characterData = {
 // 'var' allows the variable to be shared across pages without crashing
 if (typeof bgMusic === 'undefined') {
     var bgMusic = new Audio('audio/background_theme.mp3');
-    bgMusic.loop = true;
+        bgMusic.volume = localStorage.getItem('sm_volume') || 0.5; 
+        bgMusic.loop = true;
 }
 
 if (typeof squishSnd === 'undefined') {
