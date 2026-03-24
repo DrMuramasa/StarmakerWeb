@@ -6,6 +6,25 @@
     --box-border: rgba(212, 175, 55, 0.3);
 }
 
+@keyframes flicker {
+    0% { opacity: 0.8; text-shadow: 2px 0 10px var(--gold); }
+    5% { opacity: 0.5; text-shadow: none; }
+    10% { opacity: 0.9; text-shadow: 2px 0 20px var(--gold); }
+    15% { opacity: 0.8; }
+    30% { opacity: 1; }
+    100% { opacity: 1; }
+}
+
+.glitch-title {
+    font-size: 5rem;
+    color: var(--gold);
+    margin-bottom: 10px;
+    animation: flicker 3s infinite;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+}
+
+
 body {
     margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif;
     color: var(--text); background-color: #000;
