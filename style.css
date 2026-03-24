@@ -350,53 +350,63 @@ body {
 /* --- ADAPTIVE MOBILE ENGINE --- */
 
 @media screen and (max-width: 768px) {
-    /* Allow the main containers to grow with the content */
-    .container, 
-    .glass-panel, 
-    .gallery-layout {
-        height: auto !important;
-        min-height: auto !important;
-        display: block !important; /* Switch from grid to block for stacking */
-        overflow: visible !important;
+    /* 1. Global Reset - Prevents side-scrolling/wobbling */
+    html, body {
+        overflow-x: hidden;
+        width: 100%;
+        margin: 0;
+        padding: 0;
     }
 
-    .glass-panel {
-        padding: 15px !important;
-        margin: 10px !important;
-        width: calc(100% - 20px) !important; /* Keeps it inside screen edges */
-    }
-
-    /* Fix the Gallery Scroll Area so it doesn't have its own tiny scrollbar */
-    .gallery-scroll-area {
-        height: auto !important;
-        overflow: visible !important;
-        padding: 10px 0 !important;
-        border: none !important;
-    }
-
-    /* Ensure images stay inside the mosaic grid */
-    .gallery-grid {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr !important;
-        gap: 10px !important;
-        padding-bottom: 20px;
-    }
-
-    /* Fix for Characters Page sprites breaking out */
-    .char-card {
+    /* 2. Full-Width Header */
+    header {
         width: 100% !important;
-        max-width: 350px;
+        box-sizing: border-box; /* Ensures padding doesn't push it off-screen */
+        flex-direction: column !important;
+        height: auto !important;
+        padding: 15px !important;
+    }
+
+    /* 3. Sprite Viewer & Character Sprites (Out of Bounds Fix) */
+    .sprite-viewer, .sprite-window, .char-img-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+        height: auto !important;
+        min-height: 300px; /* Keeps a good size on phone */
+        overflow: hidden !important;
+    }
+
+    .sprite-window img, .char-img-container img {
+        max-width: 100% !important;
+        height: auto !important;
+        object-fit: contain; /* Prevents the image from stretching out of the box */
+    }
+
+    /* 4. Login Page Centering (Fixes the "Moving to the left" issue) */
+    .index-page .glass-panel {
+        width: 90% !important; /* Percentage is safer than VW for zooming */
+        max-width: 400px;
+        margin: 0 auto !important; /* Horizontal centering */
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        box-sizing: border-box;
+    }
+
+    /* 5. Force the "Black Box" (Glass Panel) to stay within screen */
+    .glass-panel {
+        width: 95% !important;
         margin: 10px auto !important;
         height: auto !important;
+        overflow: hidden !important; /* Clips anything trying to escape */
     }
 
-    .char-img-container {
-        height: 300px !important; /* Scale down the big character art for phones */
-    }
-
-    /* Scale down the Sprite Viewer at the bottom */
-    .sprite-window {
-        height: 350px !important;
+    /* 6. Layout Stacking */
+    .gallery-layout, .container {
+        display: block !important;
+        height: auto !important;
         width: 100% !important;
     }
 }
