@@ -148,6 +148,7 @@ const characterData = {
 };
 
 // --- GLOBAL SOUND ENGINE ---
+// 'var' allows the variable to be shared across pages without crashing
 if (typeof bgMusic === 'undefined') {
     var bgMusic = new Audio('audio/background_theme.mp3');
     bgMusic.loop = true;
@@ -158,10 +159,11 @@ if (typeof squishSnd === 'undefined') {
 }
 
 function playSnd() {
-    if (!squishSnd) return;
-    squishSnd.currentTime = 0;
-    squishSnd.volume = (bgMusic) ? bgMusic.volume : 0.5;
-    squishSnd.play().catch(() => {});
+    if (typeof squishSnd !== 'undefined') {
+        squishSnd.currentTime = 0;
+        squishSnd.volume = (typeof bgMusic !== 'undefined') ? bgMusic.volume : 0.5;
+        squishSnd.play().catch(() => {});
+    }
 }
 
 let isMuted = false;
@@ -169,29 +171,20 @@ let previousVolume = 0.5;
 
 function initMusic() {
     const savedVol = localStorage.getItem('sm_volume') || 0.5;
-    bgMusic.volume = savedVol;
-    
-    // 1. Set the slider value if it exists on the page
-    const slider = document.getElementById('volume-slider');
-    if (slider) slider.value = savedVol;
-
-    // 2. The "Resume" Logic:
-    // We try to play immediately. Because the user interacted with the 
-    // "Enter" button on index.html, the browser 'remembers' the permission.
-    const playPromise = bgMusic.play();
-
-    if (playPromise !== undefined) {
-        playPromise.catch(error => {
-            // If it fails (some browsers are stricter), it waits for 1 click on the new page
-            console.log("Autoplay prevented. Waiting for user interaction to resume music.");
-            document.addEventListener('click', () => {
-                bgMusic.play();
-            }, { once: true });
-        });
+    if (typeof bgMusic !== 'undefined') {
+        bgMusic.volume = savedVol;
+        
+        // Autoplay/Resume logic
+        const playPromise = bgMusic.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(() => {
+                // If browser blocks autoplay, wait for one click anywhere
+                document.addEventListener('click', () => {
+                    bgMusic.play();
+                }, { once: true });
+            });
+        }
     }
-
-    updateMuteIcon();
-}
     
     const slider = document.getElementById('volume-slider');
     if (slider) slider.value = savedVol;
@@ -199,15 +192,17 @@ function initMusic() {
 }
 
 function updateVolume(val) {
-    if (bgMusic) bgMusic.volume = val;
-    isMuted = (val == 0);
-    updateMuteIcon();
-    localStorage.setItem('sm_volume', val);
+    if (typeof bgMusic !== 'undefined') {
+        bgMusic.volume = val;
+        isMuted = (val == 0);
+        updateMuteIcon();
+        localStorage.setItem('sm_volume', val);
+    }
 }
 
 function toggleMute() {
     const slider = document.getElementById('volume-slider');
-    if (!bgMusic) return;
+    if (typeof bgMusic === 'undefined') return;
 
     if (!isMuted) {
         previousVolume = bgMusic.volume > 0 ? bgMusic.volume : 0.5;
@@ -225,5 +220,5 @@ function toggleMute() {
 
 function updateMuteIcon() {
     const btn = document.getElementById('mute-btn');
-    if (btn) btn.innerText = (isMuted || (bgMusic && bgMusic.volume === 0)) ? "🔈" : "🔊";
+    if (btn) btn.innerText = (isMuted || (typeof bgMusic !== 'undefined' && bgMusic.volume == 0)) ? "🔈" : "🔊";
 }
