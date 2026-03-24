@@ -366,7 +366,36 @@ window.addEventListener('touchend', e => {
     touchEndX = e.changedTouches[0].screenX;
     handleSwipe();
 }, false);
-        
+
+        // ALLOWING PHONE BACK BUTTON
+        // 1. When the Lightbox opens, push a "fake" state to history
+function openLightbox(imgSrc) {
+    activeView = "gallery";
+    const lb = document.getElementById('lightbox');
+    document.getElementById('lb-img').src = imgSrc;
+    lb.style.display = 'flex';
+    
+    // Add a marker in the browser history
+    history.pushState({ lightbox: true }, "");
+}
+
+// 2. Listen for the back button (popstate)
+window.onpopstate = function(event) {
+    const lb = document.getElementById('lightbox');
+    // If the lightbox is open, close it instead of going to the previous page
+    if (lb.style.display === 'flex') {
+        closeLightbox();
+    }
+};
+
+// 3. Update your close function to stay in sync
+function closeLightbox() {
+    document.getElementById('lightbox').style.display = 'none';
+    // If we are still on the "fake" history state, go back once
+    if (history.state && history.state.lightbox) {
+        history.back();
+    }
+}
     </script>
 </body>
 </html>
