@@ -204,3 +204,18 @@ header {
     accent-color: var(--gold);
     cursor: pointer;
 }
+
+.music-controls button {
+    transition: transform 0.2s ease;
+}
+
+.music-controls button:hover {
+    transform: scale(1.2);
+    text-shadow: 0 0 10px var(--gold);
+}
+
+.music-controls label {
+    font-size: 0.7rem;
+    color: var(--gold);
+    margin-right: 5px;
+}
