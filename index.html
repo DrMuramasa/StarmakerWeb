@@ -6,6 +6,22 @@
     <link rel="stylesheet" href="style.css">
     <script src="data.js"></script>
     <style>
+        /* System Shake Animation */
+        @keyframes screenShake {
+            0% { transform: translate(0,0); filter: hue-rotate(0deg); }
+            10% { transform: translate(-2px, 2px); filter: contrast(1.2); }
+            20% { transform: translate(2px, -2px); }
+            30% { transform: translate(-4px, 1px); filter: hue-rotate(10deg); }
+            40% { transform: translate(4px, -1px); }
+            50% { transform: translate(-1px, 2px); }
+            60% { transform: translate(1px, -2px); }
+            100% { transform: translate(0,0); filter: hue-rotate(0deg); }
+        }
+
+        .system-unstable {
+            animation: screenShake 0.2s infinite;
+        }
+
         .loader-container {
             display: none; 
             width: 300px;
@@ -27,7 +43,7 @@
             box-shadow: 0 0 10px var(--gold);
             transition: width 2s linear;
         }
-        /* Cursor blink effect */
+        
         #status-text::after {
             content: "|";
             animation: blink 0.7s infinite;
@@ -38,7 +54,7 @@
         }
     </style>
 </head>
-<body>
+<body id="main-body">
     <div class="bg-wrapper"></div>
     <div class="bg-overlay"></div>
 
@@ -70,8 +86,7 @@
         function typeWriter(text, elementId, speed = 50) {
             let i = 0;
             const element = document.getElementById(elementId);
-            element.innerHTML = ""; // Clear existing text
-            
+            element.innerHTML = ""; 
             function type() {
                 if (i < text.length) {
                     element.innerHTML += text.charAt(i);
@@ -83,8 +98,9 @@
         }
 
         function startBootSequence() {
-            playSnd(); // Interaction unlock for audio
+            playSnd(); 
 
+            const body = document.getElementById('main-body');
             const btn = document.getElementById('enter-btn');
             const loader = document.getElementById('loader');
             const fill = document.getElementById('fill');
@@ -92,23 +108,25 @@
             btn.style.display = 'none';
             loader.style.display = 'block';
 
-            // Start the typewriter effects
-            typeWriter("AUTHENTICATING...", "status-text", 70);
+            // Add the "Unstable" shake effect to the whole screen
+            body.classList.add('system-unstable');
+
+            typeWriter("CRACKING ENCRYPTION...", "status-text", 60);
             typeWriter("BYPASSING FIREWALLS...", "loader-msg", 40);
 
-            // Animate the bar
             setTimeout(() => {
                 fill.style.width = "100%";
             }, 100);
 
-            // Final transition
+            // Stabilize system just before entering
             setTimeout(() => {
+                body.classList.remove('system-unstable');
                 typeWriter("ACCESS GRANTED.", "status-text", 50);
-            }, 1500);
+            }, 1800);
 
             setTimeout(() => {
                 window.location.href = "characters.html";
-            }, 2500); // Slightly longer to let the "Access Granted" be seen
+            }, 2600); 
         }
     </script>
 </body>
