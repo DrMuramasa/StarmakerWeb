@@ -42,3 +42,31 @@ header {
 .grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
 .char-card { background: rgba(0,0,0,0.5); border: 1px solid var(--box-border); border-radius: 8px; overflow: hidden; cursor: pointer; text-align: center; }
 .char-card img { width: 100%; height: 300px; object-fit: cover; }
+
+/* Maximized View (Lightbox) */
+.lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Transparent black background */
+    background: rgba(0, 0, 0, 0.8); 
+    /* This creates the see-through frosted glass look */
+    backdrop-filter: blur(8px); 
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    cursor: zoom-out;
+}
+
+.lightbox img {
+    max-width: 90%;
+    max-height: 90%;
+    border: 2px solid var(--gold);
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    cursor: default;
+    /* Prevents the image from being transparent itself */
+    background: #000; 
+}
