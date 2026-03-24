@@ -315,6 +315,53 @@
                initMusic(); // Starts the music and fade effect
                // Optional: loadGallery('Amelia'); // Uncomment this if you want a character loaded by default
         });
+
+        //THIS SEGMENT IS FOR SWIPING ON PHONE
+        let touchstartX = 0;
+        let touchendX = 0;
+
+function handleGesture() {
+    const swipeThreshold = 50; // Minimum distance to be considered a swipe
+    if (touchendX < touchstartX - swipeThreshold) {
+        // Swiped Left -> Go Next
+        playSnd();
+        if (document.getElementById('lightbox').style.display === 'flex') {
+            activeView === "gallery" ? cycleGallery(1) : cycleSprite(1);
+        } else {
+            cycleSprite(1);
+        }
+    }
+    if (touchendX > touchstartX + swipeThreshold) {
+        // Swiped Right -> Go Back
+        playSnd();
+        if (document.getElementById('lightbox').style.display === 'flex') {
+            activeView === "gallery" ? cycleGallery(-1) : cycleSprite(-1);
+        } else {
+            cycleSprite(-1);
+        }
+    }
+}
+
+// Attach listeners to the areas where you want swiping to work
+const swipeAreas = [document.getElementById('lightbox'), document.getElementById('sprite-display')];
+
+swipeAreas.forEach(area => {
+    if(!area) return;
+    area.addEventListener('touchstart', e => {
+        touchstartX = e.changedTouches[0].screenX;
+    });
+
+    area.addEventListener('touchend', e => {
+        touchendX = e.changedTouches[0].screenX;
+        handleGesture();
+    });
+});
+
+// Helper for the Gallery cycling (to match your Sprite cycling)
+function cycleGallery(dir) {
+    galleryIdx = (galleryIdx + dir + galleryImgs.length) % galleryImgs.length;
+    document.getElementById('lb-img').src = galleryImgs[galleryIdx];
+}
     </script>
 </body>
 </html>
