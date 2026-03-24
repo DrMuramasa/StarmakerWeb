@@ -40,6 +40,110 @@ const characterData = {
                 steps: [{t: "Work 3 shifts", r: "Requires 1000 Subs"}] 
             }
         ]
+    },
+    "emma": {
+        name: "Emma",
+        bio: "The high-energy fitness buff with a hidden supernatural curiosity.",
+        sprite: "images/characters/Emma/emma_sprite.png",
+        bg: "images/characters/Emma/Emma_BG.png",
+        quests: [
+            { 
+                name: "Sauna Sessions", 
+                title: "Heat of the Moment", 
+                desc: "Meet Emma in the sauna once per week.", 
+                steps: [
+                    {t: "Visit 1 & 2", r: "Builds tension"},
+                    {t: "Visit 3 Choice", r: "Fight urges (Solo) or Reveal Mario (Sharing)"}
+                ] 
+            },
+            {
+                name: "Cryptid Hunter",
+                title: "The Farm Experiments",
+                desc: "Help Emma research local legends.",
+                steps: [
+                    {t: "Invite to Farm", r: "Unlocks research lab"},
+                    {t: "Tuesday Hunt", r: "Find Bigfoot, Lizardman, and Vampire"}
+                ]
+            }
+        ]
+    },
+    "evelyn": {
+        name: "Evelyn",
+        bio: "The brilliant and clinical scientist working out of a hidden lab.",
+        sprite: "images/characters/Evelyn/evelyn_sprite.png",
+        bg: "images/characters/Evelyn/Evelyn_BG.png",
+        quests: [
+            { 
+                name: "The Hidden Lab", 
+                title: "Warehouse Secrets", 
+                desc: "Find Evelyn's lab through the Foundry and Harbor.", 
+                steps: [
+                    {t: "Unlock Studio Raw Sex", r: "Triggers hospital meeting"},
+                    {t: "Path: Foundry > Harbor > Warehouse", r: "Accesses the Lab"}
+                ] 
+            },
+            {
+                name: "Alchemy",
+                title: "Genetic Modification",
+                desc: "Trade monster parts for powerful enhancements.",
+                steps: [
+                    {t: "Collect Materials", r: "Need Spit, Hair, and Tears"},
+                    {t: "Create Pills", r: "Unlocks Booba, Futa, and Cum mods"}
+                ]
+            }
+        ]
+    },
+    "toni": {
+        name: "Toni",
+        bio: "The street-racing mechanic with a heavy debt and a fast car.",
+        sprite: "images/characters/Toni/toni_sprite.png",
+        bg: "images/characters/Toni/Toni_BG.png",
+        quests: [
+            { 
+                name: "Squirt Racing", 
+                title: "The Badlands Debt", 
+                desc: "Win races to clear Toni's $60k debt.", 
+                steps: [
+                    {t: "Pay Entry Fees", r: "Requires 3x $20,000"},
+                    {t: "Win 3 Races vs Jack", r: "Clears debt and triggers alley hug"}
+                ] 
+            },
+            {
+                name: "Tech Support",
+                title: "Studio Fix",
+                desc: "Toni helps fix the internet at the studio.",
+                steps: [
+                    {t: "Complete Alley Scene", r: "Toni visits the studio"},
+                    {t: "Garage Invite", r: "Unlocks Toni as an employee"}
+                ]
+            }
+        ]
+    },
+    "sofia": {
+        name: "Sofia",
+        bio: "The determined investigator looking to bring down Mario.",
+        sprite: "images/characters/Sofia/sofia_sprite.png",
+        bg: "images/characters/Sofia/Sofia_BG.png",
+        quests: [
+            { 
+                name: "The Sting", 
+                title: "Arresting Mario", 
+                desc: "Coordinate with Sofia at the Gas Station on Fridays.", 
+                steps: [
+                    {t: "Sneak her in", r: "Leads to 3-some with Mario"},
+                    {t: "Use the Wire", r: "Arrests Mario and unlocks Sofia's home"}
+                ] 
+            },
+            {
+                name: "The Betrayal",
+                title: "Double Agent",
+                desc: "Tell Mario about Sofia's plan.",
+                steps: [
+                    {t: "Snitch to Mario", r: "Unlocks Guest Room Key"},
+                    {t: "Guest Room Access", r: "Unlocks special Sofia scenes"}
+                ]
+            }
+        ]
     }
 };
 
@@ -54,9 +158,9 @@ if (typeof squishSnd === 'undefined') {
 }
 
 function playSnd() {
+    if (!squishSnd) return;
     squishSnd.currentTime = 0;
-    // Uses volume from bgMusic for consistency
-    squishSnd.volume = (typeof bgMusic !== 'undefined') ? bgMusic.volume : 0.5;
+    squishSnd.volume = (bgMusic) ? bgMusic.volume : 0.5;
     squishSnd.play().catch(() => {});
 }
 
@@ -65,25 +169,24 @@ let previousVolume = 0.5;
 
 function initMusic() {
     const savedVol = localStorage.getItem('sm_volume') || 0.5;
-    bgMusic.volume = savedVol;
-    
-    // Attempt immediate play (works if user interacted with previous page)
-    bgMusic.play().catch(() => {
-        // Fallback: wait for the very first click on the document
-        document.addEventListener('click', () => {
-            bgMusic.play().catch(() => {});
-        }, { once: true });
-    });
-
-    const slider = document.getElementById('volume-slider');
-    if (slider) {
-        slider.value = savedVol;
+    if (bgMusic) {
+        bgMusic.volume = savedVol;
+        // Attempt immediate play
+        bgMusic.play().catch(() => {
+            // Wait for user gesture if blocked
+            document.addEventListener('click', () => {
+                bgMusic.play().catch(() => {});
+            }, { once: true });
+        });
     }
+    
+    const slider = document.getElementById('volume-slider');
+    if (slider) slider.value = savedVol;
     updateMuteIcon();
 }
 
 function updateVolume(val) {
-    bgMusic.volume = val;
+    if (bgMusic) bgMusic.volume = val;
     isMuted = (val == 0);
     updateMuteIcon();
     localStorage.setItem('sm_volume', val);
@@ -91,6 +194,8 @@ function updateVolume(val) {
 
 function toggleMute() {
     const slider = document.getElementById('volume-slider');
+    if (!bgMusic) return;
+
     if (!isMuted) {
         previousVolume = bgMusic.volume > 0 ? bgMusic.volume : 0.5;
         bgMusic.volume = 0;
@@ -107,5 +212,5 @@ function toggleMute() {
 
 function updateMuteIcon() {
     const btn = document.getElementById('mute-btn');
-    if (btn) btn.innerText = (isMuted || bgMusic.volume === 0) ? "🔈" : "🔊";
+    if (btn) btn.innerText = (isMuted || (bgMusic && bgMusic.volume === 0)) ? "🔈" : "🔊";
 }
