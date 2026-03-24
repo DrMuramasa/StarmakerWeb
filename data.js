@@ -50,3 +50,26 @@ function playSnd() {
     const snd = document.getElementById('squishSnd');
     if(snd) { snd.currentTime = 0; snd.play(); }
 }
+
+// Global Audio Setup
+const bgMusic = new Audio('audio/background_theme.mp3'); // Ensure path is correct
+bgMusic.loop = true;
+
+function initMusic() {
+    const savedVol = localStorage.getItem('sm_volume') || 0.5;
+    bgMusic.volume = savedVol;
+    
+    // Check if slider exists on page and set it
+    const slider = document.getElementById('volume-slider');
+    if(slider) slider.value = savedVol;
+
+    // Try to play (Browsers often block auto-play until first click)
+    document.addEventListener('click', () => {
+        bgMusic.play().catch(() => {}); 
+    }, { once: true });
+}
+
+function updateVolume(val) {
+    bgMusic.volume = val;
+    localStorage.setItem('sm_volume', val);
+}
