@@ -5,6 +5,30 @@
     <title>Starmaker | Home</title>
     <link rel="stylesheet" href="style.css">
     <script src="data.js"></script>
+    <style>
+        /* Loading Bar Styles */
+        .loader-container {
+            display: none; /* Hidden by default */
+            width: 300px;
+            margin: 20px auto;
+            text-align: left;
+        }
+        .loader-track {
+            width: 100%;
+            height: 4px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .loader-fill {
+            width: 0%;
+            height: 100%;
+            background: var(--gold);
+            box-shadow: 0 0 10px var(--gold);
+            transition: width 2s linear;
+        }
+    </style>
 </head>
 <body>
     <div class="bg-wrapper"></div>
@@ -12,26 +36,53 @@
 
     <header>
         <div style="color:var(--gold); font-weight:bold; letter-spacing:2px;">STARMAKER DATABASE</div>
-        <div class="music-controls" style="visibility: hidden;">
-            <button id="mute-btn">🔊</button>
-            <input type="range" id="volume-slider">
-        </div>
     </header>
 
     <div class="container">
         <div style="display: flex; align-items: center; justify-content: center; height: 80vh;">
-            <div class="glass-panel" style="text-align:center; padding: 60px; max-width: 800px;">
-                <h1 class="glitch-title">STARMAKER TERMINAL</h1>
-                <p style="letter-spacing: 3px; margin-bottom: 40px; opacity: 0.8;">ENCRYPTED SYSTEM TERMINAL</p>
+            <div class="glass-panel" id="main-panel" style="text-align:center; padding: 60px; max-width: 800px;">
+                <h1 class="glitch-title">SNAKE QUEEN</h1>
+                <p id="status-text" style="letter-spacing: 3px; margin-bottom: 40px; opacity: 0.8;">ENCRYPTED SYSTEM TERMINAL</p>
                 
-                <a href="characters.html" class="nav-btn" onclick="playSnd()" style="padding:15px 50px; font-size: 1.2rem; display: inline-block; text-decoration: none;">ENTER DATABASE</a>
+                <button id="enter-btn" class="nav-btn" onclick="startBootSequence()" style="padding:15px 50px; font-size: 1.2rem; cursor: pointer; background: none;">ENTER DATABASE</button>
+
+                <div class="loader-container" id="loader">
+                    <div style="font-size: 0.7rem; color: var(--gold); letter-spacing: 2px;">BYPASSING FIREWALL...</div>
+                    <div class="loader-track">
+                        <div class="loader-fill" id="fill"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Pre-load the music logic so it's ready the instant they click
         window.addEventListener('DOMContentLoaded', initMusic);
+
+        function startBootSequence() {
+            // 1. Play the "Squish" or Enter sound
+            playSnd();
+
+            // 2. Hide the button, show the loader
+            const btn = document.getElementById('enter-btn');
+            const loader = document.getElementById('loader');
+            const fill = document.getElementById('fill');
+            const status = document.getElementById('status-text');
+
+            btn.style.display = 'none';
+            loader.style.display = 'block';
+            status.innerText = "AUTHENTICATING...";
+
+            // 3. Animate the bar
+            setTimeout(() => {
+                fill.style.width = "100%";
+            }, 100);
+
+            // 4. Redirect after the bar finishes (2 seconds)
+            setTimeout(() => {
+                window.location.href = "characters.html";
+            }, 2100);
+        }
     </script>
 </body>
 </html>
