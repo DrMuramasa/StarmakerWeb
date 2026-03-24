@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Starmaker | Gallery</title>
+    <script src="data.js"></script> 
     <link rel="stylesheet" href="style.css">
     <style>
         /* Container Lock: Fixed height for 6 rows */
         .gallery-layout {
             display: grid;
-            grid-template-columns: 180px 1fr 380px; /* Widened right column for bigger sprites */
+            grid-template-columns: 180px 1fr 380px; 
             gap: 25px;
             height: 935px; 
             align-items: start;
@@ -76,7 +77,6 @@
             text-align: center;
         }
 
-        /* INCREASED SPRITE SIZE: Standard view is now 650px */
         .sprite-window {
             height: 650px; 
             display: flex;
@@ -108,19 +108,19 @@
     <div class="bg-wrapper"></div><div class="bg-overlay"></div>
     
     <header>
-    <div style="color:var(--gold); font-weight:bold; letter-spacing:2px;">STARMAKER DATABASE</div>
+        <div style="color:var(--gold); font-weight:bold; letter-spacing:2px;">STARMAKER DATABASE</div>
 
-    <div class="music-controls">
-        <button id="mute-btn" onclick="toggleMute()" style="background:none; border:none; color:var(--gold); cursor:pointer; font-size:1.1rem; padding:0;">🔊</button>
-        <label>VOL</label>
-        <input type="range" id="volume-slider" min="0" max="1" step="0.01" oninput="updateVolume(this.value)">
-    </div>
+        <div class="music-controls">
+            <button id="mute-btn" onclick="toggleMute()" style="background:none; border:none; color:var(--gold); cursor:pointer; font-size:1.1rem; padding:0;">🔊</button>
+            <label>VOL</label>
+            <input type="range" id="volume-slider" min="0" max="1" step="0.01" oninput="updateVolume(this.value)">
+        </div>
 
-    <nav>
-        <a href="index.html" class="nav-btn">Home</a>
-        <a href="characters.html" class="nav-btn">Characters</a>
-        <a href="gallery.html" class="nav-btn active">Gallery</a>
-    </nav>
+        <nav>
+            <a href="index.html" class="nav-btn">Home</a>
+            <a href="characters.html" class="nav-btn">Characters</a>
+            <a href="gallery.html" class="nav-btn active">Gallery</a>
+        </nav>
     </header>
 
     <div class="container">
@@ -133,11 +133,11 @@
                         <input type="checkbox" id="char-fav-only"> Show Favs Only
                     </div>
                     <div id="char-list">
-                        <button class="nav-btn char-link" style="width:100%; margin-bottom:10px;" onclick="playSnd(); "loadGallery('Amelia')">Amelia</button>
-                        <button class="nav-btn char-link" style="width:100%; margin-bottom:10px;" onclick="playSnd(); "loadGallery('Emma')">Emma</button>
-                        <button class="nav-btn char-link" style="width:100%; margin-bottom:10px;" onclick="playSnd(); "loadGallery('Evelyn')">Evelyn</button>
-                        <button class="nav-btn char-link" style="width:100%; margin-bottom:10px;" onclick="playSnd(); "loadGallery('Toni')">Toni</button>
-                        <button class="nav-btn char-link" style="width:100%; margin-bottom:10px;" onclick="playSnd(); "loadGallery('Sofia')">Sofia</button>
+                        <button class="nav-btn char-link" style="width:100%; margin-bottom:10px;" onclick="playSnd(); loadGallery('Amelia')">Amelia</button>
+                        <button class="nav-btn char-link" style="width:100%; margin-bottom:10px;" onclick="playSnd(); loadGallery('Emma')">Emma</button>
+                        <button class="nav-btn char-link" style="width:100%; margin-bottom:10px;" onclick="playSnd(); loadGallery('Evelyn')">Evelyn</button>
+                        <button class="nav-btn char-link" style="width:100%; margin-bottom:10px;" onclick="playSnd(); loadGallery('Toni')">Toni</button>
+                        <button class="nav-btn char-link" style="width:100%; margin-bottom:10px;" onclick="playSnd(); loadGallery('Sofia')">Sofia</button>
                     </div>
                 </div>
 
@@ -150,12 +150,12 @@
 
                 <div class="sprite-viewer">
                     <h3 style="color:var(--gold); margin-top:0;">SPRITE VIEWER</h3>
-                    <div class="sprite-window" id="sprite-display" onclick="openSpriteMax()">
+                    <div class="sprite-window" id="sprite-display" onclick="playSnd(); openSpriteMax()">
                          <p style="opacity:0.3">Select Archive</p>
                     </div>
                     <div>
-                        <button class="nav-btn" onclick="cycleSprite(-1)">◀</button>
-                        <button class="nav-btn" onclick="cycleSprite(1)">▶</button>
+                        <button class="nav-btn" onclick="playSnd(); cycleSprite(-1)">◀</button>
+                        <button class="nav-btn" onclick="playSnd(); cycleSprite(1)">▶</button>
                     </div>
                 </div>
 
@@ -172,7 +172,7 @@
         let spriteIdx = 0;
         let galleryImgs = [];
         let galleryIdx = 0;
-        let activeView = "gallery"; // TRACKS: "gallery" or "sprite"
+        let activeView = "gallery"; 
 
         let favorites = JSON.parse(localStorage.getItem('sm_favorites')) || { images: [], chars: [] };
 
@@ -206,7 +206,7 @@
             card.className = 'img-card';
             card.dataset.url = url;
             card.innerHTML = `
-                <img src="${url}" onclick="openLightboxByUrl('${url}')">
+                <img src="${url}" onclick="playSnd(); openLightboxByUrl('${url}')">
                 <button class="star-btn ${isFav ? 'active' : ''}" onclick="playSnd(); toggleFavImg('${url}', this); event.stopPropagation();">★</button>
             `;
             container.appendChild(card);
@@ -247,7 +247,6 @@
             if (!sprites.length) return;
             spriteIdx = (spriteIdx + dir + sprites.length) % sprites.length;
             renderSprite();
-            // If the lightbox is open AND we are in sprite mode, update the big image too
             const lb = document.getElementById('lightbox');
             if(lb.style.display === 'flex' && activeView === "sprite") {
                 document.getElementById('lb-img').src = sprites[spriteIdx];
@@ -255,7 +254,7 @@
         }
 
         function openLightboxByUrl(url) {
-            activeView = "gallery"; // User clicked a mosaic
+            activeView = "gallery"; 
             galleryIdx = galleryImgs.indexOf(url);
             document.getElementById('lb-img').src = url;
             document.getElementById('lightbox').style.display = 'flex';
@@ -263,12 +262,11 @@
 
         function openSpriteMax() {
             if (!sprites.length) return;
-            activeView = "sprite"; // User clicked a sprite
+            activeView = "sprite"; 
             document.getElementById('lb-img').src = sprites[spriteIdx];
             document.getElementById('lightbox').style.display = 'flex';
         }
 
-        // IMPROVED KEYBOARD LOGIC
         window.addEventListener('keydown', (e) => {
             const lb = document.getElementById('lightbox');
             const isMax = lb.style.display === 'flex';
@@ -279,7 +277,7 @@
                         galleryIdx = (galleryIdx + 1) % galleryImgs.length;
                         document.getElementById('lb-img').src = galleryImgs[galleryIdx];
                     } else {
-                        cycleSprite(1); // Navigates sprites only
+                        cycleSprite(1); 
                     }
                 } else {
                     cycleSprite(1);
@@ -291,7 +289,7 @@
                         galleryIdx = (galleryIdx - 1 + galleryImgs.length) % galleryImgs.length;
                         document.getElementById('lb-img').src = galleryImgs[galleryIdx];
                     } else {
-                        cycleSprite(-1); // Navigates sprites only
+                        cycleSprite(-1); 
                     }
                 } else {
                     cycleSprite(-1);
@@ -301,9 +299,6 @@
                 lb.style.display = 'none';
             }
         });
-        
-              // Initialize Music on Page Load
-              window.addEventListener('DOMContentLoaded', initMusic);
     </script>
 </body>
 </html>
