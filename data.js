@@ -30,7 +30,7 @@ const characterData = {
     "amelia": {
         name: "Amelia", 
         bio: "Cafe owner and fitness enthusiast.",
-        sprite: "images/characters/Amelia/amelia_sprite.png", 
+        sprite: "images/characters/Amelia/ameliaBase_sprite.png", 
         bg: "images/characters/Amelia/Amelia_BG.png",
         quests: [
             { 
@@ -44,7 +44,7 @@ const characterData = {
     "emma": {
         name: "Emma",
         bio: "The high-energy fitness buff with a hidden supernatural curiosity.",
-        sprite: "images/characters/Emma/emma_sprite.png",
+        sprite: "images/characters/Emma/emmabase_sprite",
         bg: "images/characters/Emma/Emma_BG.png",
         quests: [
             { 
@@ -70,7 +70,7 @@ const characterData = {
     "evelyn": {
         name: "Evelyn",
         bio: "The brilliant and clinical scientist working out of a hidden lab.",
-        sprite: "images/characters/Evelyn/evelyn_sprite.png",
+        sprite: "images/characters/Evelyn/Everlyn_sprite.png",
         bg: "images/characters/Evelyn/Evelyn_BG.png",
         quests: [
             { 
@@ -96,7 +96,7 @@ const characterData = {
     "toni": {
         name: "Toni",
         bio: "The street-racing mechanic with a heavy debt and a fast car.",
-        sprite: "images/characters/Toni/toni_sprite.png",
+        sprite: "images/characters/Toni/ToniBar_sprite.png",
         bg: "images/characters/Toni/Toni_BG.png",
         quests: [
             { 
@@ -122,7 +122,7 @@ const characterData = {
     "sofia": {
         name: "Sofia",
         bio: "The determined investigator looking to bring down Mario.",
-        sprite: "images/characters/Sofia/sofia_sprite.png",
+        sprite: "images/characters/Sofia/SofiaCasual_sprite.png",
         bg: "images/characters/Sofia/Sofia_BG.png",
         quests: [
             { 
