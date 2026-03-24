@@ -19,62 +19,52 @@
     <div class="container">
         <div class="glass-panel">
             <div id="mosaic-view">
-                <h2 style="color:var(--gold); border-bottom: 1px solid var(--box-border); padding-bottom: 10px;">SUBJECT ARCHIVES</h2>
+                <h2 style="color:var(--gold); border-bottom:1px solid var(--box-border);">SUBJECT ARCHIVES</h2>
                 <div id="char-grid" class="grid-view"></div>
             </div>
 
             <div id="guide-view" style="display:none;">
-                <button class="nav-btn" style="margin-bottom: 25px;" onclick="closeGuide()">← BACK</button>
-                <div style="display:grid; grid-template-columns: 320px 250px 1fr; gap: 20px;">
-                    <div class="sprite-viewer"><div id="display-sprite"></div><h2 id="display-name" style="color:var(--gold);"></h2><p id="display-bio"></p></div>
-                    <div id="quest-list" style="background:rgba(0,0,0,0.5); padding:15px; border-radius:10px;"></div>
-                    <div style="background:rgba(0,0,0,0.5); padding:20px; border-radius:10px;">
-                        <h2 id="q-title" style="color:var(--gold);"></h2>
-                        <div id="q-steps"></div>
+                <button class="nav-btn" onclick="closeGuide()">← BACK</button>
+                <div style="display:grid; grid-template-columns: 300px 1fr; gap:30px; margin-top:20px;">
+                    <div id="side-info">
+                        <img id="guide-sprite" style="width:100%; border:1px solid var(--gold);">
+                        <h2 id="guide-name" style="color:var(--gold);"></h2>
+                    </div>
+                    <div id="quest-area" style="background:rgba(255,255,255,0.05); padding:20px; border-radius:10px;">
+                        <h3 id="quest-title" style="color:var(--gold);"></h3>
+                        <div id="quest-steps"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="data.js"></script>
     <script>
+        const charData = {
+            "josef": { name: "Josef", sprite: "images/characters/Josef/josef_sprite.png", bg: "images/characters/Josef/Josef_BG.jpg", qTitle: "Friday Beer", qSteps: "Step 1: Get beer. Step 2: Talk to Josef." },
+            "amelia": { name: "Amelia", sprite: "images/characters/Amelia/amelia_sprite.png", bg: "images/characters/Amelia/Amelia_BG.png", qTitle: "Coffee Grind", qSteps: "Step 1: Work shifts. Step 2: Be fit." }
+        };
+
         function init() {
             const grid = document.getElementById('char-grid');
-            for(let key in characterData) {
-                const char = characterData[key];
+            Object.keys(charData).forEach(key => {
                 const card = document.createElement('div');
                 card.className = 'char-card';
                 card.onclick = () => openGuide(key);
-                card.innerHTML = `<img src="${char.sprite}"><h3>${char.name}</h3>`;
+                card.innerHTML = `<img src="${charData[key].sprite}"><h3>${charData[key].name}</h3>`;
                 grid.appendChild(card);
-            }
+            });
         }
 
         function openGuide(key) {
-            const char = characterData[key];
+            const char = charData[key];
             document.getElementById('mosaic-view').style.display = 'none';
             document.getElementById('guide-view').style.display = 'block';
+            document.getElementById('guide-sprite').src = char.sprite;
+            document.getElementById('guide-name').innerText = char.name;
+            document.getElementById('quest-title').innerText = char.qTitle;
+            document.getElementById('quest-steps').innerText = char.qSteps;
             document.getElementById('master-bg').style.backgroundImage = `url('${char.bg}')`;
-            document.getElementById('display-sprite').innerHTML = `<img src="${char.sprite}" style="width:100%">`;
-            document.getElementById('display-name').innerText = char.name;
-            document.getElementById('display-bio').innerText = char.bio;
-            
-            const qList = document.getElementById('quest-list');
-            qList.innerHTML = "";
-            char.quests.forEach((q, i) => {
-                const item = document.createElement('div');
-                item.style = "padding:10px; cursor:pointer; border-bottom:1px solid #333";
-                item.innerText = q.name;
-                item.onclick = () => showQuest(q);
-                qList.appendChild(item);
-            });
-            showQuest(char.quests[0]);
-        }
-
-        function showQuest(q) {
-            document.getElementById('q-title').innerText = q.title;
-            document.getElementById('q-steps').innerHTML = q.steps.map(s => `<p>▶ ${s.t} <br><small style="color:var(--req-color)">${s.r}</small></p>`).join('');
         }
 
         function closeGuide() {
@@ -82,7 +72,6 @@
             document.getElementById('guide-view').style.display = 'none';
             document.getElementById('master-bg').style.backgroundImage = "url('backgroundImg.gif')";
         }
-
         init();
     </script>
 </body>
