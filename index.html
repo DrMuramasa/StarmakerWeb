@@ -3,337 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Starmaker Interactive Guide</title>
+    <title>Snake Queen | Home</title>
+    <link rel="stylesheet" href="style.css"> 
     <style>
-        :root {
-            --panel-bg: rgba(0, 0, 0, 0.94);
-            --accent: #ffcc00;
-            --text: #ffffff;
-            --glass: rgba(255, 255, 255, 0.1);
-            --req-color: #ff4466;
-            --fav-color: #ffcc00;
-        }
-
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #050505;
-            color: var(--text);
-            min-height: 100vh;
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            transition: background-image 0.5s ease-in-out;
-            overflow-x: hidden;
-        }
-
-        .bg-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: -1;
-        }
-
-        /* --- Main Menu --- */
-        #main-menu { padding: 50px; max-width: 1400px; margin: 0 auto; }
-        .menu-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--accent); margin-bottom: 30px; padding-bottom: 15px; }
-        .controls { display: flex; gap: 10px; }
-        
-        button { 
-            background: var(--glass); color: white; border: 1px solid var(--glass); 
-            padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; 
-            text-transform: uppercase; transition: 0.2s;
-        }
-        button:hover { background: var(--accent); color: black; }
-        button.active-filter { background: var(--fav-color); color: black; border-color: var(--fav-color); }
-
-        .grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 25px; }
-        
-        /* Character Card */
-        .char-card { 
-            background: var(--panel-bg); border: 1px solid var(--glass); 
-            border-radius: 12px; overflow: hidden; cursor: pointer; 
-            transition: 0.3s; text-align: center; position: relative; outline: none;
-        }
-        .char-card:hover, .char-card:focus { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 10px 20px rgba(255,204,0,0.2); }
-        .char-card img { width: 100%; height: 340px; object-fit: cover; object-position: top; }
-        .char-card h3 { padding: 15px; margin: 0; font-size: 1.1em; letter-spacing: 1px; }
-        
-        /* Favorite Stars */
-        .star-icon {
-            position: absolute; top: 10px; right: 10px; font-size: 1.5em;
-            color: rgba(255,255,255,0.3); transition: 0.2s; z-index: 10;
-        }
-        .star-icon.is-fav { color: var(--fav-color); text-shadow: 0 0 10px rgba(255,204,0,0.5); }
-        .star-icon:hover { transform: scale(1.2); color: var(--fav-color); }
-
-        /* --- Guide View --- */
-        #guide-view { display: none; padding: 30px; max-width: 1600px; margin: 0 auto; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .guide-layout { display: grid; grid-template-columns: 320px 250px 1fr; gap: 20px; align-items: start; }
-
-        .profile-sidebar { background: var(--panel-bg); border-radius: 15px; border: 1px solid var(--glass); padding: 20px; text-align: center; position: sticky; top: 20px; }
-        .sprite-box { cursor: zoom-in; background: rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 15px; overflow: hidden; border: 1px solid var(--glass); transition: 0.3s; }
-        .sprite-box img { width: 100%; display: block; }
-        .char-bio { text-align: left; font-size: 0.95em; line-height: 1.5; color: #ddd; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; }
-
-        .quest-sidebar { background: var(--panel-bg); border-radius: 15px; overflow: hidden; border: 1px solid var(--glass); position: sticky; top: 20px; }
-        .q-nav { padding: 18px 20px; cursor: pointer; border-bottom: 1px solid var(--glass); color: #888; font-weight: bold; text-transform: uppercase; font-size: 0.8em; }
-        .q-nav.active { color: var(--accent); background: rgba(255,204,0,0.1); border-left: 6px solid var(--accent); }
-
-        .content-area { background: var(--panel-bg); padding: 40px; border-radius: 15px; border: 1px solid var(--glass); min-height: 600px; }
-        .step { display: flex; gap: 15px; margin-bottom: 25px; line-height: 1.6; }
-        .req { color: var(--req-color); font-size: 0.85em; font-weight: 800; margin-top: 8px; display: block; border-left: 2px solid var(--req-color); padding-left: 10px; }
-
-        /* --- Sprite Zoom Overlay --- */
-        #sprite-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center;
-        }
-        #sprite-overlay img { max-height: 90vh; max-width: 90vw; border: 2px solid var(--accent); box-shadow: 0 0 30px rgba(0,0,0,1); }
-        .overlay-star { position: absolute; top: 30px; right: 30px; font-size: 3em; cursor: pointer; }
-        .nav-hint { position: absolute; bottom: 20px; color: var(--accent); font-weight: bold; font-size: 0.8em; letter-spacing: 2px; text-align: center; width: 100%; }
-
-        /* Tables */
-        .quest-table { width:100%; border-collapse: collapse; margin-top:20px; background: rgba(255,255,255,0.02); }
-        .quest-table th { background: var(--accent); color: black; padding: 12px; text-align: left; }
-        .quest-table td { padding: 12px; border-bottom: 1px solid var(--glass); }
+        /* Shared Styles included directly for ease of copy-paste */
+        :root { --gold: #d4af37; --glass: rgba(0, 0, 0, 0.85); --text: #ffffff; --box-border: rgba(212, 175, 55, 0.3); }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; color: var(--text); background-color: #000; background-attachment: fixed; }
+        .bg-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('backgroundImg.gif') no-repeat center center; background-size: cover; z-index: -2; }
+        .bg-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: -1; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); position: sticky; top: 0; z-index: 100; }
+        .nav-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--gold); color: white; padding: 10px 25px; border-radius: 30px; cursor: pointer; font-weight: bold; transition: 0.2s; text-decoration: none; display: inline-block; margin-left: 10px; }
+        .nav-btn:hover, .nav-btn.active { background: var(--gold); color: black; box-shadow: 0 0 15px var(--gold); }
+        .container { max-width: 1750px; margin: 30px auto; padding: 0 20px; }
+        .glass-panel { background: var(--glass); backdrop-filter: blur(12px); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 20px; padding: 30px; min-height: 850px; }
     </style>
 </head>
 <body>
+    <div class="bg-wrapper"></div>
+    <div class="bg-overlay"></div>
 
-<div class="bg-overlay"></div>
+    <header>
+        <div style="color:var(--gold); font-weight:bold; letter-spacing:2px;">STARMAKER DATABASE</div>
+        <nav>
+            <a href="index.html" class="nav-btn active">Home</a>
+            <a href="characters.html" class="nav-btn">Characters</a>
+            <a href="gallery.html" class="nav-btn">Gallery</a>
+            <a href="quests.html" class="nav-btn">Quests</a>
+        </nav>
+    </header>
 
-<div id="sprite-overlay">
-    <span class="overlay-star" id="zoom-star" onclick="toggleFavorite(event)">★</span>
-    <img id="zoomed-sprite-img" src="" onclick="closeSpriteZoom()">
-    <div class="nav-hint">ARROWS TO BROWSE • ESC TO CLOSE</div>
-</div>
-
-<section id="main-menu">
-    <div class="menu-header">
-        <h1>STARMAKER ARCHIVES</h1>
-        <div class="controls">
-            <button id="fav-filter-btn" onclick="toggleFavFilter()">Favorites Only</button>
-            <button onclick="toggleViewMode()">List View</button>
+    <div class="container">
+        <div class="glass-panel">
+            <section id="home" style="text-align:center; padding: 150px 0;">
+                <h1 style="font-size: 4rem; color: var(--gold); text-shadow: 0 0 20px rgba(212,175,55,0.4);">SNAKE QUEEN</h1>
+                <p style="max-width: 600px; margin: 0 auto 40px; opacity: 0.8;">Neural Interface Online. Accessing subject archives and visual logs.</p>
+                <a href="characters.html" class="nav-btn" style="padding: 15px 60px; font-size: 1.1rem;">INITIALIZE DATABASE</a>
+            </section>
         </div>
     </div>
-    <div id="mosaic" class="grid-view"></div>
-</section>
-
-<section id="guide-view">
-    <button onclick="goBack()">← BACK TO ARCHIVES</button>
-    <div class="guide-layout">
-        <aside class="profile-sidebar">
-            <div class="sprite-box" onclick="openSpriteZoom()">
-                <img id="sidebar-sprite" src="">
-            </div>
-            <h2 id="char-name-display" style="color: var(--accent);"></h2>
-            <div id="char-bio-display" class="char-bio"></div>
-        </aside>
-        <aside class="quest-sidebar" id="quest-nav-container"></aside>
-        <main class="content-area">
-            <h2 id="quest-title"></h2>
-            <p id="quest-desc"></p>
-            <div id="quest-steps"></div>
-            <div id="quest-table-container"></div>
-        </main>
-    </div>
-</section>
-
-<script>
-    // 1. DATA CONFIGURATION (Edit your relative GitHub paths here)
-    const characterData = {
-        "josef": {
-            name: "Josef", title: "The Father",
-            bio: "Josef's presence in the house changes based on your choices. He can become a collaborator or be forced out.",
-            sprite: "images/josef_sprite.png", bg: "images/josef_bg.jpg",
-            quests: [
-                {
-                    name: "Entrance Method", title: "Friday Beer Strategy", desc: "How to handle Josef at the front door.",
-                    steps: [{t: "Give beer 3 Fridays in a row.", r: "Anna must have 3 hearts."}]
-                },
-                {
-                    name: "Isabella Method", title: "The Decision Matrix", desc: "Choices after the sharing event.",
-                    steps: [{t: "Choose 'You should tell' to make him leave.", r: ""}],
-                    table: `<table class="quest-table"><tr><th>Choice</th><th>Result</th></tr><tr><td>You should tell...</td><td style="color:red">Josef Leaves</td></tr><tr><td>Sandwich asses?</td><td style="color:gold">Josef Stays + Sharing</td></tr></table>`
-                }
-            ]
-        },
-        "amelia": {
-            name: "Amelia", title: "The Farm Girl",
-            bio: "A hardworking student and waitress. She values athleticism and consistent effort.",
-            sprite: "images/amelia_sprite.png", bg: "images/amelia_bg.jpg",
-            quests: [{name: "Main Route", title: "Heart of the Cafe", desc: "Winning Amelia over.", steps: [{t: "Work 3 shifts.", r: "Requires Fitness trait."}]}]
-        }
-    };
-
-    // 2. STATE MANAGEMENT
-    let favorites = JSON.parse(localStorage.getItem('starmaker_favs')) || [];
-    let onlyShowFavs = false;
-    let charKeys = Object.keys(characterData);
-    let currentIndex = 0;
-    let isZoomed = false;
-
-    // 3. INITIALIZATION
-    function init() {
-        renderGallery();
-    }
-
-    function renderGallery() {
-        const mosaic = document.getElementById('mosaic');
-        mosaic.innerHTML = '';
-        
-        charKeys.forEach((key, index) => {
-            const isFav = favorites.includes(key);
-            if (onlyShowFavs && !isFav) return;
-
-            const char = characterData[key];
-            const card = document.createElement('div');
-            card.className = 'char-card';
-            card.tabIndex = "0";
-            card.innerHTML = `
-                <span class="star-icon ${isFav ? 'is-fav' : ''}" onclick="toggleFavorite(event, '${key}')">★</span>
-                <img src="${char.sprite}" alt="${char.name}">
-                <h3>${char.name}</h3>
-            `;
-            card.onclick = (e) => { if(e.target.className.includes('star-icon')) return; openGuide(key); };
-            mosaic.appendChild(card);
-        });
-    }
-
-    // 4. FAVORITES LOGIC
-    function toggleFavorite(event, key) {
-        event.stopPropagation();
-        const targetKey = key || charKeys[currentIndex];
-        
-        if (favorites.includes(targetKey)) {
-            favorites = favorites.filter(k => k !== targetKey);
-        } else {
-            favorites.push(targetKey);
-        }
-        
-        localStorage.setItem('starmaker_favs', JSON.stringify(favorites));
-        renderGallery();
-        updateZoomStar();
-        
-        // Update sidebar star if in guide view (optional UI addition)
-        const star = document.querySelector(`.star-icon[onclick*="${targetKey}"]`);
-        if(star) star.classList.toggle('is-fav');
-    }
-
-    function toggleFavFilter() {
-        onlyShowFavs = !onlyShowFavs;
-        document.getElementById('fav-filter-btn').classList.toggle('active-filter');
-        renderGallery();
-    }
-
-    function updateZoomStar() {
-        const key = charKeys[currentIndex];
-        const star = document.getElementById('zoom-star');
-        star.className = `overlay-star ${favorites.includes(key) ? 'is-fav' : ''}`;
-    }
-
-    // 5. NAVIGATION & KEYBOARD
-    document.addEventListener('keydown', (e) => {
-        const guideVisible = document.getElementById('guide-view').style.display === 'block';
-
-        if (isZoomed || guideVisible) {
-            if (e.key === "ArrowRight") navigate(1);
-            if (e.key === "ArrowLeft") navigate(-1);
-            if (e.key === "Escape") closeSpriteZoom();
-            if (e.key === "Backspace" && !isZoomed) { e.preventDefault(); goBack(); }
-        }
-    });
-
-    function navigate(direction) {
-        // If filtering favorites, only navigate through favorites
-        let pool = onlyShowFavs ? charKeys.filter(k => favorites.includes(k)) : charKeys;
-        if (pool.length === 0) return;
-
-        let localIdx = pool.indexOf(charKeys[currentIndex]);
-        localIdx = (localIdx + direction + pool.length) % pool.length;
-        const nextKey = pool[localIdx];
-        
-        openGuide(nextKey, true);
-        if (isZoomed) updateZoomImage(nextKey);
-    }
-
-    // 6. VIEW TRANSITIONS
-    function openGuide(key, shouldPush = true) {
-        const char = characterData[key];
-        currentIndex = charKeys.indexOf(key);
-        
-        if (shouldPush) window.history.pushState({key}, char.name, `#${key}`);
-
-        document.getElementById('main-menu').style.display = 'none';
-        document.getElementById('guide-view').style.display = 'block';
-        document.body.style.backgroundImage = `url('${char.bg}')`;
-        
-        document.getElementById('sidebar-sprite').src = char.sprite;
-        document.getElementById('char-name-display').innerText = char.name;
-        document.getElementById('char-bio-display').innerText = char.bio;
-        
-        renderQuestList(key);
-    }
-
-    function goBack() { window.history.back(); }
-
-    window.onpopstate = (e) => {
-        if (e.state?.key) openGuide(e.state.key, false);
-        else {
-            document.getElementById('main-menu').style.display = 'block';
-            document.getElementById('guide-view').style.display = 'none';
-            document.body.style.backgroundImage = "none";
-            renderGallery();
-        }
-    };
-
-    // 7. ZOOM SYSTEM
-    function openSpriteZoom() {
-        isZoomed = true;
-        document.getElementById('sprite-overlay').style.display = 'flex';
-        updateZoomImage(charKeys[currentIndex]);
-        updateZoomStar();
-    }
-
-    function updateZoomImage(key) {
-        document.getElementById('zoomed-sprite-img').src = characterData[key].sprite;
-    }
-
-    function closeSpriteZoom() {
-        isZoomed = false;
-        document.getElementById('sprite-overlay').style.display = 'none';
-    }
-
-    // 8. QUEST RENDERING
-    function renderQuestList(key) {
-        const char = characterData[key];
-        const container = document.getElementById('quest-nav-container');
-        container.innerHTML = "";
-        char.quests.forEach((q, i) => {
-            const div = document.createElement('div');
-            div.className = `q-nav ${i === 0 ? 'active' : ''}`;
-            div.innerText = q.name;
-            div.onclick = () => updateQuestContent(key, i);
-            container.appendChild(div);
-        });
-        updateQuestContent(key, 0);
-    }
-
-    function updateQuestContent(key, idx) {
-        const quest = characterData[key].quests[idx];
-        document.querySelectorAll('.q-nav').forEach((el, i) => el.classList.toggle('active', i === idx));
-        document.getElementById('quest-title').innerText = quest.title;
-        document.getElementById('quest-desc').innerText = quest.desc;
-        document.getElementById('quest-steps').innerHTML = quest.steps.map(s => `
-            <div class="step"><span style="color:var(--accent)">▶</span> 
-            <div>${s.t}${s.r ? `<span class="req">REQ: ${s.r}</span>` : ''}</div></div>`).join('');
-        document.getElementById('quest-table-container').innerHTML = quest.table || '';
-    }
-
-    init();
-</script>
 </body>
 </html>
