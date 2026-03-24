@@ -39,34 +39,96 @@
 
     <script>
         let sprites = [];
-        let idx = 0;
+let spriteIdx = 0;
 
-        async function loadGallery(folder) {
-            const res = await fetch(`https://api.github.com/repos/DrMuramasa/StarmakerWeb/contents/images/characters/${folder}`);
-            const files = await res.json();
-            const grid = document.getElementById('gallery-grid');
-            grid.innerHTML = "";
-            sprites = [];
+let galleryImages = []; // New array to track gallery images for the lightbox
+let galleryIdx = 0;
 
-            files.forEach(file => {
-                if(file.name.includes('_sprite')) {
-                    sprites.push(file.download_url);
-                } else if(!file.name.includes('_bg')) {
-                    grid.innerHTML += `<div class="char-card"><img src="${file.download_url}"></div>`;
-                }
-            });
-            showSprite();
-        }
+async function loadGallery(folder) {
+    const grid = document.getElementById('gallery-grid');
+    grid.innerHTML = "<p style='color:var(--gold)'>Accessing neural link...</p>";
+    
+    // Reset arrays
+    sprites = [];
+    galleryImages = [];
+    spriteIdx = 0;
 
-        function showSprite() {
-            const win = document.getElementById('sprite-window');
-            win.innerHTML = sprites.length ? `<img src="${sprites[idx]}" style="max-height:100%;">` : "Empty";
-        }
+    try {
+        const res = await fetch(`https://api.github.com/repos/DrMuramasa/StarmakerWeb/contents/images/characters/${folder}`);
+        const files = await res.json();
+        
+        grid.innerHTML = "";
+        
+        files.forEach(file => {
+            const fname = file.name.toLowerCase();
+            
+            // 1. Handle Sprites
+            if(fname.includes('_sprite')) {
+                sprites.push(file.download_url);
+            } 
+            // 2. Handle Gallery Images (exclude backgrounds and sprites)
+            else if(!fname.includes('_bg')) {
+                const currentImgIdx = galleryImages.length;
+                galleryImages.push(file.download_url);
+                
+                const card = document.createElement('div');
+                card.className = 'img-card';
+                card.onclick = () => openLightbox(currentImgIdx);
+                card.innerHTML = `<img src="${file.download_url}">`;
+                grid.appendChild(card);
+            }
+        });
+        
+        showSprite();
+    } catch (e) {
+        grid.innerHTML = "<p>Connection error. System offline.</p>";
+    }
+}
 
-        function cycle(dir) {
-            idx = (idx + dir + sprites.length) % sprites.length;
-            showSprite();
-        }
+// --- LIGHTBOX LOGIC ---
+function openLightbox(index) {
+    galleryIdx = index;
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lb-img');
+    
+    lbImg.src = galleryImages[galleryIdx];
+    lb.style.display = 'flex';
+}
+
+function navigateGallery(dir) {
+    if(!galleryImages.length) return;
+    galleryIdx = (galleryIdx + dir + galleryImages.length) % galleryImages.length;
+    document.getElementById('lb-img').src = galleryImages[galleryIdx];
+}
+
+// --- SPRITE LOGIC ---
+function showSprite() {
+    const win = document.getElementById('sprite-window');
+    win.innerHTML = sprites.length ? `<img src="${sprites[spriteIdx]}" style="max-height:100%;">` : "No Sprites Found";
+}
+
+function cycleSprite(dir) {
+    if(!sprites.length) return;
+    spriteIdx = (spriteIdx + dir + sprites.length) % sprites.length;
+    showSprite();
+}
+
+// --- KEYBOARD CONTROLS ---
+window.addEventListener('keydown', (e) => {
+    const lb = document.getElementById('lightbox');
+    
+    // If the Lightbox is OPEN, arrow keys control the Gallery
+    if (lb.style.display === 'flex') {
+        if (e.key === "ArrowRight") navigateGallery(1);
+        if (e.key === "ArrowLeft") navigateGallery(-1);
+        if (e.key === "Escape") lb.style.display = 'none';
+    } 
+    // If Lightbox is CLOSED, arrow keys control the Sprite Viewer
+    else {
+        if (e.key === "ArrowRight") cycleSprite(1);
+        if (e.key === "ArrowLeft") cycleSprite(-1);
+    }
+});
     </script>
 </body>
 </html>
