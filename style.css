@@ -347,92 +347,70 @@ body {
 }
 
 /* --- Desktop Styles end here --- */
+/* --- ADAPTIVE MOBILE ENGINE --- */
 
-/* This ONLY triggers on screens smaller than 768px (Phones/Tablets) */
 @media screen and (max-width: 768px) {
-    /* 1. Reset the Gallery Layout from 3-columns to 1-column */
+    
+    /* 1. Center & Fluid Index Screen */
+    .index-page .glass-panel {
+        width: 85vw !important; /* Adaptive width */
+        max-width: 400px;
+        position: fixed;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0 !important;
+    }
+
+    /* 2. Header & Nav - No overlapping */
+    header {
+        flex-direction: column !important;
+        height: auto !important;
+        padding: 15px 5px !important;
+    }
+
+    nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px !important;
+        width: 100%;
+    }
+
+    .nav-btn {
+        font-size: 0.75rem !important;
+        padding: 8px 12px !important;
+        flex: 1 1 auto; /* Buttons fill the width naturally */
+    }
+
+    /* 3. The Gallery Layout (Stacked & Wide) */
     .gallery-layout {
         display: flex !important;
         flex-direction: column !important;
         height: auto !important;
-        width: 100% !important;
-        overflow-x: hidden;
     }
 
-    /* 2. Make each section take full width and stack */
-    .folder-list, 
-    .gallery-scroll-area, 
-    .sprite-viewer {
-        width: 100% !important;
-        max-width: 100% !important;
-        border: none !important;
-        border-bottom: 1px solid var(--box-border) !important;
-        height: auto !important;
-        padding: 10px 0 !important;
-    }
-
-    /* 3. Fix the Header (Stop the overlapping in image_1c5b07.png) */
-    header {
-        flex-direction: column !important;
-        height: auto !important;
-        padding: 10px !important;
-    }
-
-    .music-controls {
-        margin: 5px 0;
-        transform: scale(0.9); /* Shrink volume bar slightly for mobile */
-    }
-
-    nav {
-        gap: 5px !important;
-    }
-
-    .nav-btn {
-        padding: 5px 10px !important;
-        font-size: 0.8rem !important;
-    }
-
-    /* 4. Fix the Character List Buttons */
-    #char-list {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr !important; /* 2 buttons per row */
-        gap: 10px !important;
-        padding: 10px !important;
-    }
-
-    /* 5. Fix the Image Grid (image_1c5e0b.png) */
     .gallery-grid {
-        grid-template-columns: repeat(2, 1fr) !important; /* 2 images per row */
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important; /* Exactly 2 per row */
+        gap: 12px !important;
         width: 100% !important;
     }
 
     .img-card {
-        height: 150px !important; /* Smaller cards for mobile */
+        width: 100% !important;
+        aspect-ratio: 1 / 1; /* Perfectly square mosaics */
+        height: auto !important;
     }
 
-    /* 6. Scale the Sprite Viewer */
+    /* 4. Sprite Viewer Scaling */
     .sprite-window {
-        height: 300px !important;
+        height: 45vh !important; /* Uses 45% of whatever screen height is available */
     }
 
-    /* CENTERING OF INITIAL SCREEN AND GALLERY */
-
-@media screen and (max-width: 768px) {
-    /* Step 1: Center Login Screen */
-    .glass-panel {
-        width: 90% !important;
-        max-index: 400px;
-        margin: auto !important;
-        position: absolute;
-        top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    /* Step 2: 2-column Gallery Grid */
-    .gallery-grid {
+    /* 5. Character Buttons (Folder List) */
+    #char-list {
         display: grid !important;
-        grid-template-columns: 1fr 1fr !important; 
-        gap: 10px !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px;
     }
-}
 }
