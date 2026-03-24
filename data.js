@@ -74,6 +74,17 @@ function updateVolume(val) {
     localStorage.setItem('sm_volume', val);
 }
 
+// --- Sound Effects ---
+const squishSnd = new Audio('audio/squish.mp3'); // Ensure this path matches your file
+
+function playSnd() {
+    // Reset the sound to the start so it can be spammed/clicked quickly
+    squishSnd.currentTime = 0; 
+    // Use the same volume as the background music for consistency
+    squishSnd.volume = bgMusic.volume; 
+    squishSnd.play().catch(() => { /* Prevent errors if clicked before interaction */ });
+}
+
 // --- Music Engine ---
 let isMuted = false;
 let previousVolume = 0.5;
