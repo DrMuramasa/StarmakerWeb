@@ -180,3 +180,27 @@ header {
     max-height: 100%;
     object-fit: contain; /* Keeps character proportions correct */
 }
+
+/* Music Control Styling */
+.music-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(212, 175, 55, 0.1);
+    padding: 5px 15px;
+    border-radius: 20px;
+    border: 1px solid var(--box-border);
+}
+
+.music-controls label {
+    font-size: 0.7rem;
+    color: var(--gold);
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+#volume-slider {
+    width: 80px;
+    accent-color: var(--gold);
+    cursor: pointer;
+}
