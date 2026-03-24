@@ -18,72 +18,51 @@
 
     <div class="container">
         <div class="glass-panel">
-            <div class="gallery-layout">
-                <div class="folder-list">
+            <div style="display:grid; grid-template-columns: 200px 1fr 300px; gap:20px;">
+                <div id="folders">
                     <button class="nav-btn" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Amelia')">Amelia</button>
                     <button class="nav-btn" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Josef')">Josef</button>
                 </div>
-                <div class="gallery-scroll-area">
-                    <div class="gallery-grid" id="gallery-items"></div>
-                </div>
-                <div class="sprite-viewer">
-                    <h3>Sprite Sync</h3>
-                    <div class="sprite-window" id="sprite-display" onclick="openLightbox()"></div>
-                    <div style="margin-top:20px;">
-                        <button class="nav-btn" onclick="cycleSprite(-1)">◀</button>
-                        <button class="nav-btn" onclick="cycleSprite(1)">▶</button>
-                    </div>
+                <div id="gallery-grid" class="grid-view" style="max-height:70vh; overflow-y:auto;"></div>
+                <div style="text-align:center; background:rgba(0,0,0,0.4); padding:10px; border-radius:10px;">
+                    <h3>Sprite Viewer</h3>
+                    <div id="sprite-window" style="height:400px; display:flex; align-items:center; justify-content:center;"></div>
+                    <button class="nav-btn" onclick="cycle(-1)">◀</button>
+                    <button class="nav-btn" onclick="cycle(1)">▶</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="lightbox" class="lightbox" onclick="this.style.display='none'"><img id="lb-img"></div>
-
-    <script src="data.js"></script>
     <script>
         let sprites = [];
-        let currentIdx = 0;
+        let idx = 0;
 
         async function loadGallery(folder) {
-            const grid = document.getElementById('gallery-items');
-            grid.innerHTML = "Fetching...";
-            sprites = [];
-            
-            const url = `https://api.github.com/repos/DrMuramasa/StarmakerWeb/contents/images/characters/${folder}`;
-            const res = await fetch(url);
+            const res = await fetch(`https://api.github.com/repos/DrMuramasa/StarmakerWeb/contents/images/characters/${folder}`);
             const files = await res.json();
-            
+            const grid = document.getElementById('gallery-grid');
             grid.innerHTML = "";
+            sprites = [];
+
             files.forEach(file => {
                 if(file.name.includes('_sprite')) {
                     sprites.push(file.download_url);
                 } else if(!file.name.includes('_bg')) {
-                    const card = document.createElement('div');
-                    card.className = 'img-card';
-                    card.onclick = () => { document.getElementById('lb-img').src = file.download_url; document.getElementById('lightbox').style.display = 'flex'; };
-                    card.innerHTML = `<img src="${file.download_url}">`;
-                    grid.appendChild(card);
+                    grid.innerHTML += `<div class="char-card"><img src="${file.download_url}"></div>`;
                 }
             });
-            renderSprite();
+            showSprite();
         }
 
-        function renderSprite() {
-            const disp = document.getElementById('sprite-display');
-            disp.innerHTML = sprites.length ? `<img src="${sprites[currentIdx]}">` : "No Sprites";
+        function showSprite() {
+            const win = document.getElementById('sprite-window');
+            win.innerHTML = sprites.length ? `<img src="${sprites[idx]}" style="max-height:100%;">` : "Empty";
         }
 
-        function cycleSprite(dir) {
-            if(!sprites.length) return;
-            currentIdx = (currentIdx + dir + sprites.length) % sprites.length;
-            renderSprite();
-        }
-
-        function openLightbox() {
-            if(!sprites.length) return;
-            document.getElementById('lb-img').src = sprites[currentIdx];
-            document.getElementById('lightbox').style.display = 'flex';
+        function cycle(dir) {
+            idx = (idx + dir + sprites.length) % sprites.length;
+            showSprite();
         }
     </script>
 </body>
