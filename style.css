@@ -414,4 +414,25 @@ body {
     .sprite-window {
         height: 300px !important;
     }
+
+    /* CENTERING OF INITIAL SCREEN AND GALLERY */
+
+@media screen and (max-width: 768px) {
+    /* Step 1: Center Login Screen */
+    .glass-panel {
+        width: 90% !important;
+        max-index: 400px;
+        margin: auto !important;
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    /* Step 2: 2-column Gallery Grid */
+    .gallery-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important; 
+        gap: 10px !important;
+    }
+}
 }
