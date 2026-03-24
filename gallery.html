@@ -310,7 +310,10 @@
         });
 
 
-        window.addEventListener('DOMContentLoaded', initMusic);
+        window.addEventListener('DOMContentLoaded', () => {
+               initMusic(); // Starts the music and fade effect
+               // Optional: loadGallery('Amelia'); // Uncomment this if you want a character loaded by default
+        });
     </script>
 </body>
 </html>
