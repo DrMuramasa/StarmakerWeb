@@ -121,38 +121,26 @@ const characterData = {
     },
     "sofia": {
         name: "Sofia",
-        bio: "The determined investigator looking to bring down Mario.",
-        sprite: "images/characters/Sofia/SofiaCasual_sprite.png",
+        bio: "The determined investigator...",
+        sprite: "images/characters/Sofia/sofia_sprite.png",
         bg: "images/characters/Sofia/Sofia_BG.png",
         quests: [
             { 
                 name: "The Sting", 
-                title: "Arresting Mario", 
-                desc: "Coordinate with Sofia at the Gas Station on Fridays.", 
                 steps: [
-                    {t: "Sneak her in", r: "Leads to 3-some with Mario"},
-                    {t: "Use the Wire", r: "Arrests Mario and unlocks Sofia's home"}
+                    {t: "Sneak her in", r: "Leads to 3-some"},
+                    {t: "Use the Wire", r: "Arrests Mario"}
                 ] 
-            },
-            {
-                name: "The Betrayal",
-                title: "Double Agent",
-                desc: "Tell Mario about Sofia's plan.",
-                steps: [
-                    {t: "Snitch to Mario", r: "Unlocks Guest Room Key"},
-                    {t: "Guest Room Access", r: "Unlocks special Sofia scenes"}
-                ]
             }
         ]
-    }
-};
+    } // <--- NO COMMA HERE because Sofia is the last person!
+}; // <--- THIS IS LINE 199 (Closes the entire characterData object)
 
 // --- GLOBAL SOUND ENGINE ---
-// 'var' allows the variable to be shared across pages without crashing
 if (typeof bgMusic === 'undefined') {
     var bgMusic = new Audio('audio/background_theme.mp3');
-        bgMusic.volume = localStorage.getItem('sm_volume') || 0.5; 
-        bgMusic.loop = true;
+    bgMusic.volume = localStorage.getItem('sm_volume') || 0.5; 
+    bgMusic.loop = true;
 }
 
 if (typeof squishSnd === 'undefined') {
