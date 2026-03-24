@@ -2,13 +2,106 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Gallery | Starmaker</title>
+    <title>Starmaker | Gallery</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Specific page overrides to ensure the layout stays locked */
+        .gallery-layout {
+            display: grid;
+            grid-template-columns: 180px 1fr 320px;
+            gap: 25px;
+            height: calc(100vh - 120px); /* Adjusts for header height */
+            align-items: start;
+        }
+
+        .gallery-scroll-area {
+            height: 100%;
+            overflow-y: auto;
+            padding-right: 15px;
+            border-right: 1px solid var(--box-border);
+            border-left: 1px solid var(--box-border);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+            padding-bottom: 50px;
+        }
+
+        .img-card {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border: 2px solid var(--box-border);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+            background: #000;
+        }
+
+        .img-card:hover {
+            transform: scale(1.03);
+            border-color: var(--gold);
+        }
+
+        .img-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sprite-viewer {
+            background: rgba(0,0,0,0.4);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid var(--box-border);
+            text-align: center;
+            position: sticky;
+            top: 20px;
+        }
+
+        .sprite-window {
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .sprite-window img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* Maximized View Style */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #lb-img {
+            max-width: 90%;
+            max-height: 90%;
+            border: 1px solid var(--gold);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+    </style>
 </head>
 <body>
     <div class="bg-wrapper"></div><div class="bg-overlay"></div>
+    
     <header>
-        <div style="color:var(--gold); font-weight:bold;">STARMAKER DATABASE</div>
+        <div style="color:var(--gold); font-weight:bold; letter-spacing:2px;">STARMAKER DATABASE</div>
         <nav>
             <a href="index.html" class="nav-btn">Home</a>
             <a href="characters.html" class="nav-btn">Characters</a>
@@ -18,8 +111,10 @@
 
     <div class="container">
         <div class="glass-panel">
-            <div style="display:grid; grid-template-columns: 180px 1fr 320px; gap:25px; height: 80vh;">
-                <div id="folders">
+            <div class="gallery-layout">
+                
+                <div class="folder-list">
+                    <h3 style="color:var(--gold); font-size: 0.9rem;">SUBJECTS</h3>
                     <button class="nav-btn" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Amelia')">Amelia</button>
                     <button class="nav-btn" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Emma')">Emma</button>
                     <button class="nav-btn" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Evelyn')">Evelyn</button>
@@ -27,18 +122,22 @@
                     <button class="nav-btn" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Sofia')">Sofia</button>
                 </div>
 
-                <div id="gallery-grid" class="gallery-grid" style="overflow-y:auto;">
-                    <p style="text-align:center; color:var(--gold); margin-top:50px;">Select a subject to view archives.</p>
+                <div class="gallery-scroll-area">
+                    <div class="gallery-grid" id="gallery-items">
+                        </div>
                 </div>
 
                 <div class="sprite-viewer">
-                    <h3>Sprite Sync</h3>
-                    <div id="sprite-window" class="sprite-window" onclick="maxSprite()"></div>
-                    <div style="margin-top:15px;">
+                    <h3 style="color:var(--gold);">SPRITE SYNC</h3>
+                    <div class="sprite-window" id="sprite-display" onclick="openSpriteMax()">
+                        <p style="opacity:0.5;">Select Subject</p>
+                    </div>
+                    <div>
                         <button class="nav-btn" onclick="cycleSprite(-1)">◀</button>
                         <button class="nav-btn" onclick="cycleSprite(1)">▶</button>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -53,74 +152,101 @@
         let galleryImgs = [];
         let galleryIdx = 0;
 
-async function loadGallery(folder) {
-    const grid = document.getElementById('gallery-items');
-    grid.innerHTML = "<p style='color:var(--gold)'>Accessing...</p>";
-    sprites = []; galleryImgs = []; spriteIdx = 0;
-
-    const res = await fetch(`https://api.github.com/repos/DrMuramasa/StarmakerWeb/contents/images/characters/${folder}`);
-    const files = await res.json();
-    
-    grid.innerHTML = "";
-    files.forEach(file => {
-        const name = file.name.toLowerCase();
-        if(name.includes('_sprite')) {
-            sprites.push(file.download_url);
-        } else if(!name.includes('_bg')) {
-            const currentIdx = galleryImgs.length;
-            galleryImgs.push(file.download_url);
+        async function loadGallery(folder) {
+            const grid = document.getElementById('gallery-items');
+            grid.innerHTML = "<p style='color:var(--gold); padding:20px;'>Syncing Archives...</p>";
             
-            const card = document.createElement('div');
-            card.className = 'img-card';
-            card.onclick = () => openMaximized(currentIdx);
-            card.innerHTML = `<img src="${file.download_url}">`;
-            grid.appendChild(card);
+            // Clear previous data
+            sprites = [];
+            galleryImgs = [];
+            spriteIdx = 0;
+
+            try {
+                const res = await fetch(`https://api.github.com/repos/DrMuramasa/StarmakerWeb/contents/images/characters/${folder}`);
+                if (!res.ok) throw new Error("API Limit or Folder Not Found");
+                const files = await res.json();
+                
+                grid.innerHTML = ""; // Clear loader text
+
+                files.forEach(file => {
+                    const name = file.name.toLowerCase();
+                    // Identify Sprites
+                    if (name.includes('_sprite')) {
+                        sprites.push(file.download_url);
+                    } 
+                    // Identify Gallery Images (Exclude BGs)
+                    else if (!name.includes('_bg')) {
+                        const currentPos = galleryImgs.length;
+                        galleryImgs.push(file.download_url);
+                        
+                        const card = document.createElement('div');
+                        card.className = 'img-card';
+                        card.onclick = () => openLightbox(currentPos);
+                        card.innerHTML = `<img src="${file.download_url}" loading="lazy">`;
+                        grid.appendChild(card);
+                    }
+                });
+                
+                renderSprite();
+            } catch (err) {
+                grid.innerHTML = `<p style="color:red; padding:20px;">Error: ${err.message}</p>`;
+            }
         }
-    });
-    renderSprite();
-}
 
-function renderSprite() {
-    const win = document.getElementById('sprite-display');
-    win.innerHTML = sprites.length ? `<img src="${sprites[spriteIdx]}">` : "No Sprites";
-}
-
-function cycleSprite(dir) {
-    if(!sprites.length) return;
-    spriteIdx = (spriteIdx + dir + sprites.length) % sprites.length;
-    renderSprite();
-}
-
-function openMaximized(idx) {
-    galleryIdx = idx;
-    const lbImg = document.getElementById('lb-img');
-    lbImg.src = galleryImgs[galleryIdx];
-    document.getElementById('lightbox').style.display = 'flex';
-}
-
-// KEYBOARD NAVIGATION
-window.addEventListener('keydown', (e) => {
-    const lb = document.getElementById('lightbox');
-    const isMax = lb.style.display === 'flex';
-
-    if (e.key === "ArrowRight") {
-        if (isMax) {
-            galleryIdx = (galleryIdx + 1) % galleryImgs.length;
-            document.getElementById('lb-img').src = galleryImgs[galleryIdx];
-        } else {
-            cycleSprite(1);
+        function renderSprite() {
+            const disp = document.getElementById('sprite-display');
+            if (sprites.length > 0) {
+                disp.innerHTML = `<img src="${sprites[spriteIdx]}">`;
+            } else {
+                disp.innerHTML = "<p>No Sprites</p>";
+            }
         }
-    } else if (e.key === "ArrowLeft") {
-        if (isMax) {
-            galleryIdx = (galleryIdx - 1 + galleryImgs.length) % galleryImgs.length;
-            document.getElementById('lb-img').src = galleryImgs[galleryIdx];
-        } else {
-            cycleSprite(-1);
+
+        function cycleSprite(dir) {
+            if (sprites.length === 0) return;
+            spriteIdx = (spriteIdx + dir + sprites.length) % sprites.length;
+            renderSprite();
         }
-    } else if (e.key === "Escape") {
-        lb.style.display = 'none';
-    }
-});
+
+        function openLightbox(idx) {
+            galleryIdx = idx;
+            const lb = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lb-img');
+            lbImg.src = galleryImgs[galleryIdx];
+            lb.style.display = 'flex';
+        }
+
+        function openSpriteMax() {
+            if (sprites.length === 0) return;
+            const lb = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lb-img');
+            lbImg.src = sprites[spriteIdx];
+            lb.style.display = 'flex';
+        }
+
+        // KEYBOARD LOGIC
+        window.addEventListener('keydown', (e) => {
+            const lb = document.getElementById('lightbox');
+            const isMax = lb.style.display === 'flex';
+
+            if (e.key === "ArrowRight") {
+                if (isMax && galleryImgs.length > 0) {
+                    galleryIdx = (galleryIdx + 1) % galleryImgs.length;
+                    document.getElementById('lb-img').src = galleryImgs[galleryIdx];
+                } else {
+                    cycleSprite(1);
+                }
+            } else if (e.key === "ArrowLeft") {
+                if (isMax && galleryImgs.length > 0) {
+                    galleryIdx = (galleryIdx - 1 + galleryImgs.length) % galleryImgs.length;
+                    document.getElementById('lb-img').src = galleryImgs[galleryIdx];
+                } else {
+                    cycleSprite(-1);
+                }
+            } else if (e.key === "Escape") {
+                lb.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
