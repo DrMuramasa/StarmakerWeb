@@ -9,8 +9,8 @@
             --gold: #d4af37;
             --glass: rgba(0, 0, 0, 0.85);
             --text: #ffffff;
-            --accent: #4ade80;
             --req-color: #ff4466;
+            --box-border: rgba(212, 175, 55, 0.3);
         }
 
         body {
@@ -25,7 +25,6 @@
             transition: background-image 0.5s ease-in-out;
         }
 
-        /* --- Background --- */
         .bg-wrapper {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -41,7 +40,7 @@
             z-index: -1;
         }
 
-        /* --- UI Elements --- */
+        /* --- Header --- */
         header {
             display: flex;
             justify-content: space-between;
@@ -69,7 +68,7 @@
             box-shadow: 0 0 15px var(--gold);
         }
 
-        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .container { max-width: 1300px; margin: 30px auto; padding: 0 20px; }
         
         .glass-panel {
             background: var(--glass);
@@ -77,53 +76,86 @@
             border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 20px;
             padding: 40px;
-            min-height: 400px;
+            min-height: 500px;
         }
 
         /* --- Tab System --- */
         .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.5s ease; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- Main Menu --- */
-        .main-menu-hero { text-align: center; padding: 60px 0; }
-        .main-menu-hero h1 { font-size: 3.5rem; color: var(--gold); text-shadow: 0 0 20px rgba(212, 175, 55, 0.4); margin-bottom: 20px; }
-
-        /* --- Characters Section (From txt) --- */
-        .grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        /* --- Character Archive Grid --- */
+        .grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; }
         .char-card { 
-            background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); 
-            border-radius: 10px; overflow: hidden; cursor: pointer; transition: 0.3s; text-align: center;
+            background: rgba(0,0,0,0.6); border: 1px solid var(--box-border); 
+            border-radius: 8px; overflow: hidden; cursor: pointer; transition: 0.3s;
         }
-        .char-card:hover { transform: scale(1.05); border-color: var(--gold); }
-        .char-card img { width: 100%; height: 280px; object-fit: cover; }
-        .char-card h3 { padding: 10px; margin: 0; color: var(--gold); }
+        .char-card:hover { transform: translateY(-5px); border-color: var(--gold); box-shadow: 0 5px 15px rgba(212,175,55,0.3); }
+        .char-card img { width: 100%; height: 300px; object-fit: cover; border-bottom: 1px solid var(--box-border); }
+        .char-card h3 { padding: 12px; margin: 0; text-align: center; color: var(--gold); letter-spacing: 1px; }
 
+        /* --- Integrated Guide Look (Merging Image 1 & 2) --- */
         #guide-view { display: none; }
-        .guide-layout { display: grid; grid-template-columns: 300px 200px 1fr; gap: 20px; margin-top: 20px; }
-        .profile-sidebar, .quest-sidebar { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .sprite-box { background: rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 15px; }
-        .sprite-box img { width: 100%; display: block; }
-        .q-nav { padding: 12px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.1); color: #888; transition: 0.3s; }
-        .q-nav.active { color: var(--gold); border-left: 3px solid var(--gold); background: rgba(255,255,255,0.05); }
-        .step { display: flex; gap: 10px; margin-bottom: 15px; }
-        .bullet { color: var(--gold); font-weight: bold; }
-        .req { color: var(--req-color); font-weight: 800; display: block; border-left: 2px solid var(--req-color); padding-left: 10px; margin-top: 5px; font-size: 0.9em; }
+        .guide-layout { 
+            display: grid; 
+            grid-template-columns: 320px 250px 1fr; 
+            gap: 20px; 
+            align-items: start;
+        }
 
-        /* --- Gallery Grid --- */
-        .gallery-layout { display: grid; grid-template-columns: 200px 1fr; gap: 30px; }
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-        .img-card { aspect-ratio: 1/1; border: 4px solid #111; border-radius: 4px; overflow: hidden; cursor: pointer; transition: 0.3s; background: #000; }
-        .img-card:hover { border-color: var(--gold); transform: scale(1.02); }
-        .img-card img { width: 100%; height: 100%; object-fit: cover; }
+        /* Sidebar & Quest List Styling from Image 1/2 */
+        .profile-box, .quest-box, .details-box {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--box-border);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+        }
 
-        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; }
-        .lightbox img { max-width: 90%; max-height: 90%; border: 2px solid var(--gold); }
+        .sprite-container {
+            width: 100%;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        .sprite-container img { width: 100%; display: block; }
 
-        .settings-bar { position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 10px; border: 1px solid var(--gold); }
+        .q-item {
+            padding: 15px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            color: #aaa;
+            background: rgba(255,255,255,0.02);
+            transition: 0.2s;
+            font-weight: 600;
+        }
+        .q-item:hover { background: rgba(212,175,55,0.05); color: var(--text); }
+        .q-item.active { 
+            border-color: var(--gold); 
+            color: var(--gold); 
+            background: rgba(212, 175, 55, 0.1); 
+            box-shadow: 0 0 10px rgba(212,175,55,0.1);
+        }
 
-        @keyframes squish { 0% { transform: scale(1); } 40% { transform: scale(0.8, 1.2); } 100% { transform: scale(1); } }
-        .squish { animation: squish 0.25s ease-in-out; }
+        .step { display: flex; gap: 12px; margin-bottom: 20px; line-height: 1.5; }
+        .bullet { color: var(--gold); font-size: 1.2em; }
+        .req-tag { 
+            display: block; 
+            color: var(--req-color); 
+            font-weight: bold; 
+            font-size: 0.85em; 
+            text-transform: uppercase; 
+            margin-top: 5px;
+            padding-left: 10px;
+            border-left: 2px solid var(--req-color);
+        }
+
+        @keyframes squish { 0% { transform: scale(1); } 40% { transform: scale(0.9, 1.1); } 100% { transform: scale(1); } }
+        .squish { animation: squish 0.2s ease-in-out; }
     </style>
 </head>
 <body>
@@ -133,186 +165,139 @@
 
     <header>
         <div style="color:var(--gold); font-weight:bold; letter-spacing:2px;">STARMAKER DATABASE</div>
-        <div class="nav-tabs">
+        <nav class="nav-tabs">
             <button class="nav-btn active" onclick="switchTab('home', this)">Home</button>
             <button class="nav-btn" onclick="switchTab('characters', this)">Characters</button>
             <button class="nav-btn" onclick="switchTab('gallery', this)">Gallery</button>
-            <button class="nav-btn" onclick="switchTab('quests', this)">Quests</button>
-        </div>
+        </nav>
     </header>
 
     <div class="container">
         <div class="glass-panel">
             
             <section id="home" class="tab-content active">
-                <div class="main-menu-hero">
-                    <h1>SNAKE QUEEN</h1>
-                    <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto 30px;">
-                        Access the neural network database. Monitor character progress, view recovered visual data, and track active directives.
-                    </p>
-                    <button class="nav-btn" style="padding: 15px 40px; font-size: 1.1rem;" onclick="document.querySelectorAll('.nav-tabs .nav-btn')[1].click()">
-                        OPEN DATABASE
-                    </button>
+                <div style="text-align:center; padding: 100px 0;">
+                    <h1 style="font-size: 4rem; color: var(--gold); text-shadow: 0 0 20px rgba(212,175,55,0.5);">SNAKE QUEEN</h1>
+                    <button class="nav-btn" style="padding: 15px 50px; font-size: 1.2rem;" onclick="document.querySelectorAll('.nav-btn')[1].click()">ACCESS DATA</button>
                 </div>
             </section>
 
             <section id="characters" class="tab-content">
                 <div id="mosaic-view">
-                    <h2 style="color:var(--gold); border-bottom: 1px solid var(--gold); padding-bottom: 10px;">CHARACTER ARCHIVES</h2>
-                    <div id="mosaic-grid" class="grid-view"></div>
+                    <h2 style="color:var(--gold); margin-bottom: 30px; border-bottom: 1px solid var(--box-border); padding-bottom: 10px;">SUBJECT ARCHIVES</h2>
+                    <div id="char-grid" class="grid-view"></div>
                 </div>
 
                 <div id="guide-view">
-                    <button class="nav-btn" style="margin-bottom: 20px;" onclick="closeGuide()">← BACK TO ARCHIVES</button>
+                    <button class="nav-btn" style="margin-bottom: 25px;" onclick="closeGuide()">← BACK TO ARCHIVES</button>
                     <div class="guide-layout">
-                        <aside class="profile-sidebar">
-                            <div class="sprite-box" id="char-sprite"></div>
-                            <h2 id="char-name" style="color: var(--gold); margin: 10px 0;"></h2>
-                            <p id="char-bio" style="font-size: 0.9em; opacity: 0.8;"></p>
-                        </aside>
-                        <aside class="quest-sidebar" id="quest-nav-container"></aside>
-                        <main class="quest-details">
-                            <h2 id="quest-title" style="color: var(--gold); margin-top: 0;"></h2>
-                            <p id="quest-desc" style="font-style: italic; opacity: 0.7;"></p>
-                            <div id="quest-steps"></div>
-                        </main>
+                        <div class="profile-box">
+                            <div class="sprite-container" id="display-sprite"></div>
+                            <h2 id="display-name" style="color:var(--gold); text-transform: uppercase; margin: 10px 0;"></h2>
+                            <p id="display-bio" style="font-size: 0.9em; opacity: 0.7; line-height: 1.4;"></p>
+                        </div>
+                        <div class="quest-box" id="quest-list"></div>
+                        <div class="details-box">
+                            <h2 id="q-title" style="color:var(--gold); margin-top:0;"></h2>
+                            <p id="q-desc" style="font-style:italic; opacity: 0.6; margin-bottom: 25px;"></p>
+                            <div id="q-steps"></div>
+                        </div>
                     </div>
-                </div>
-            </section>
-
-            <section id="gallery" class="tab-content">
-                <div class="gallery-layout">
-                    <div class="gallery-sidebar">
-                        <h3 style="color:var(--gold)">Files</h3>
-                        <button class="nav-btn" style="width:100%; margin: 5px 0;" onclick="loadGallery('Emma', this)">Emma</button>
-                        <button class="nav-btn" style="width:100%; margin: 5px 0;" onclick="loadGallery('Evelyn', this)">Evelyn</button>
-                        <button class="nav-btn" style="width:100%; margin: 5px 0;" onclick="loadGallery('Toni', this)">Toni</button>
-                    </div>
-                    <div class="gallery-grid" id="gallery-items">
-                        <p style="text-align:center; grid-column: 1/-1; padding-top: 50px; opacity: 0.5;">Select a character...</p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="quests" class="tab-content">
-                <h2 style="color:var(--gold)">Active Directives</h2>
-                <div style="border-left: 3px solid var(--gold); padding-left: 20px; margin-top: 20px;">
-                    <p><strong>Status:</strong> Encrypted</p>
-                    <p>Quest tracking module is currently offline. Check back after the next system update.</p>
                 </div>
             </section>
 
         </div>
     </div>
 
-    <div id="lightbox" class="lightbox" onclick="this.style.display='none'"><img id="lb-img" src=""></div>
-    <audio id="bgMusic" loop src="StarmakerMainmenuTheme.mp3"></audio>
     <audio id="squishSnd" src="squish.mp3"></audio>
 
     <script>
-        const githubUser = 'DrMuramasa';
-        const repoName = 'StarmakerWeb';
-        const music = document.getElementById('bgMusic');
-        const squish = document.getElementById('squishSnd');
-
-        // Character Data from characterPage.txt
         const characterData = {
             "josef": {
                 name: "Josef",
-                bio: "Josef is a central figure in the household. Managing your relationship with him is key to certain routes.",
-                sprite: "images/characters/Josef/Josef_BG.jpg", 
-                bg: "images/characters/Josef/Josef_BG.jpg",
-                quests: [{
-                    name: "Friday Strategy",
-                    title: "The Friday Beer Strategy",
-                    desc: "Meet Josef on Friday at the entrance to trigger his route.",
-                    steps: [
-                        { t: "Wait for Anna to reach 3 Hearts.", r: "Friday Appearance unlocked." },
-                        { t: "Meet Josef on Friday and give beer for 3rd time.", r: "Select specific dialogue." }
-                    ]
-                }]
+                bio: "A key household figure. Interactions with him influence major route branches.",
+                sprite: "images/josef_sprite.png",
+                bg: "images/josef_bg.jpg",
+                quests: [
+                    { name: "Beer Strategy", title: "The Friday Beer Strategy", desc: "Unlock his route via Friday interactions.", 
+                      steps: [{t: "Meet at entrance on Friday", r: "Anna 3 Hearts Required"}] }
+                ]
             },
             "amelia": {
                 name: "Amelia",
-                bio: "A hardworking farm girl who balances her time at the coffee shop.",
-                sprite: "images/characters/Amelia/Amelia_Sprite.png",
-                bg: "images/characters/Amelia/Amelia_BG.jpg",
-                quests: [{
-                    name: "Main Route",
-                    title: "Coffee Shop Routine",
-                    desc: "Follow Amelia's daily schedule.",
-                    steps: [{ t: "Visit the Coffee Shop 3 times.", r: "Relationship starts." }]
-                }]
+                bio: "Hardworking farm girl. Known for her routine at the local coffee shop.",
+                sprite: "images/amelia_sprite.png",
+                bg: "images/amelia_bg.jpg",
+                quests: [
+                    { name: "Coffee Shop", title: "Daily Grind", desc: "Meet Amelia during her work shift.", 
+                      steps: [{t: "Visit shop 3 times", r: ""}] }
+                ]
             }
         };
 
-        window.onclick = () => { if(music.paused) music.play(); };
-
         function switchTab(id, btn) {
-            playSquish(btn);
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.nav-tabs .nav-btn').forEach(nav => nav.classList.remove('active'));
+            playSnd(btn);
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             btn.classList.add('active');
-            if (id !== 'characters') closeGuide();
+            if(id !== 'characters') closeGuide();
         }
 
-        function playSquish(btn) {
-            if(document.getElementById('soundOn')?.checked !== false) {
-                squish.currentTime = 0; squish.play();
-            }
-            if(btn) {
-                btn.classList.add('squish');
-                setTimeout(() => btn.classList.remove('squish'), 250);
-            }
+        function playSnd(btn) {
+            const snd = document.getElementById('squishSnd');
+            snd.currentTime = 0; snd.play();
+            if(btn) { btn.classList.add('squish'); setTimeout(() => btn.classList.remove('squish'), 200); }
         }
 
-        // --- Character Archive Logic ---
-        function initCharacterMosaic() {
-            const grid = document.getElementById('mosaic-grid');
-            for (const key in characterData) {
+        function init() {
+            const grid = document.getElementById('char-grid');
+            for(let key in characterData) {
                 const char = characterData[key];
                 const card = document.createElement('div');
                 card.className = 'char-card';
                 card.onclick = () => openGuide(key);
-                card.innerHTML = `<img src="${char.sprite}" onerror="this.src='https://via.placeholder.com/300x400?text=NO+IMAGE'"><h3>${char.name}</h3>`;
+                card.innerHTML = `<img src="${char.sprite}"><h3>${char.name}</h3>`;
                 grid.appendChild(card);
             }
         }
 
         function openGuide(key) {
+            // Update browser history state for Back button support
+            history.pushState({view: 'guide'}, ''); 
+            
             const char = characterData[key];
             document.getElementById('mosaic-view').style.display = 'none';
             document.getElementById('guide-view').style.display = 'block';
-            if (char.bg) document.getElementById('master-bg').style.backgroundImage = `url('${char.bg}')`;
+            document.getElementById('master-bg').style.backgroundImage = `url('${char.bg}')`;
+            
+            document.getElementById('display-sprite').innerHTML = `<img src="${char.sprite}">`;
+            document.getElementById('display-name').innerText = char.name;
+            document.getElementById('display-bio').innerText = char.bio;
 
-            document.getElementById('char-sprite').innerHTML = `<img src="${char.sprite}">`;
-            document.getElementById('char-name').innerText = char.name;
-            document.getElementById('char-bio').innerText = char.bio;
-
-            const nav = document.getElementById('quest-nav-container');
-            nav.innerHTML = "";
+            const qList = document.getElementById('quest-list');
+            qList.innerHTML = "";
             char.quests.forEach((q, i) => {
-                const d = document.createElement('div');
-                d.className = `q-nav ${i === 0 ? 'active' : ''}`;
-                d.innerText = q.name;
-                d.onclick = () => {
-                    document.querySelectorAll('.q-nav').forEach(n => n.classList.remove('active'));
-                    d.classList.add('active');
-                    displayQuest(q);
+                const item = document.createElement('div');
+                item.className = `q-item ${i===0?'active':''}`;
+                item.innerText = q.name;
+                item.onclick = () => {
+                    document.querySelectorAll('.q-item').forEach(el => el.classList.remove('active'));
+                    item.classList.add('active');
+                    showQuest(q);
                 };
-                nav.appendChild(d);
+                qList.appendChild(item);
             });
-            displayQuest(char.quests[0]);
+            showQuest(char.quests[0]);
         }
 
-        function displayQuest(q) {
-            document.getElementById('quest-title').innerText = q.title;
-            document.getElementById('quest-desc').innerText = q.desc;
-            document.getElementById('quest-steps').innerHTML = q.steps.map(s => `
+        function showQuest(q) {
+            document.getElementById('q-title').innerText = q.title;
+            document.getElementById('q-desc').innerText = q.desc;
+            document.getElementById('q-steps').innerHTML = q.steps.map(s => `
                 <div class="step">
                     <span class="bullet">▶</span>
-                    <div>${s.t}${s.r ? `<span class="req">REQUIREMENT: ${s.r}</span>` : ''}</div>
+                    <div>${s.t}${s.r ? `<span class="req-tag">REQ: ${s.r}</span>` : ''}</div>
                 </div>`).join('');
         }
 
@@ -322,32 +307,22 @@
             document.getElementById('master-bg').style.backgroundImage = "url('backgroundImg.gif')";
         }
 
-        // --- Gallery Logic ---
-        async function loadGallery(folder, btn) {
-            playSquish(btn);
-            const grid = document.getElementById('gallery-items');
-            grid.innerHTML = "Opening vault...";
-            const url = `https://api.github.com/repos/${githubUser}/${repoName}/contents/images/characters/${folder}`;
-            try {
-                const res = await fetch(url);
-                const files = await res.json();
-                grid.innerHTML = "";
-                files.forEach(file => {
-                    if(file.name.match(/\.(png|jpg|gif|webp)$/i)) {
-                        const div = document.createElement('div');
-                        div.className = 'img-card';
-                        div.onclick = () => {
-                            document.getElementById('lb-img').src = file.download_url;
-                            document.getElementById('lightbox').style.display = 'flex';
-                        };
-                        div.innerHTML = `<img src="${file.download_url}">`;
-                        grid.appendChild(div);
-                    }
-                });
-            } catch (err) { grid.innerHTML = "Error loading files."; }
-        }
+        // --- Back Button & Backspace Logic ---
+        window.onpopstate = function() {
+            // If the user presses the browser back button
+            closeGuide();
+        };
 
-        window.onload = () => { initCharacterMosaic(); };
+        window.onkeydown = function(e) {
+            // If the user presses the Backspace key (code 8)
+            // and the guide view is currently open
+            if (e.keyCode === 8 && document.getElementById('guide-view').style.display === 'block') {
+                e.preventDefault(); // Prevent browser from actually navigating away
+                closeGuide();
+            }
+        };
+
+        init();
     </script>
 </body>
 </html>
