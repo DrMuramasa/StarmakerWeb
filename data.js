@@ -73,3 +73,4 @@ function updateVolume(val) {
     bgMusic.volume = val;
     localStorage.setItem('sm_volume', val);
 }
+
