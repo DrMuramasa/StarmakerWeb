@@ -55,6 +55,7 @@
             cursor: pointer;
             font-weight: bold;
             transition: 0.2s;
+            margin-left: 10px;
         }
 
         .nav-btn:hover, .nav-btn.active {
@@ -71,31 +72,46 @@
             border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 20px;
             padding: 40px;
+            min-height: 400px;
         }
 
-        /* --- Gallery Grid (image_b9b1fd.png Style) --- */
+        /* --- Tab System --- */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.5s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* --- Main Menu --- */
+        .main-menu-hero {
+            text-align: center;
+            padding: 60px 0;
+        }
+        .main-menu-hero h1 {
+            font-size: 3.5rem;
+            color: var(--gold);
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            margin-bottom: 20px;
+        }
+
+        /* --- Gallery Grid --- */
         .gallery-layout { display: grid; grid-template-columns: 200px 1fr; gap: 30px; }
-        
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 20px;
         }
-
         .img-card {
             aspect-ratio: 1/1;
-            border: 4px solid #111; /* Dark frame like image_b9b1fd.png */
+            border: 4px solid #111;
             border-radius: 4px;
             overflow: hidden;
             cursor: pointer;
             transition: 0.3s;
             background: #000;
         }
-
         .img-card:hover { border-color: var(--gold); transform: scale(1.02); }
         .img-card img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* --- Lightbox / Zoom --- */
         .lightbox {
             display: none; position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -104,7 +120,6 @@
         }
         .lightbox img { max-width: 90%; max-height: 90%; border: 2px solid var(--gold); }
 
-        /* --- Settings --- */
         .settings-bar {
             position: fixed; bottom: 20px; right: 20px;
             background: rgba(0,0,0,0.8); padding: 15px;
@@ -127,29 +142,52 @@
     <header>
         <div style="color:var(--gold); font-weight:bold; letter-spacing:2px;">SNAKE QUEEN DATABASE</div>
         <div class="nav-tabs">
-            <button class="nav-btn" onclick="switchTab('chars', this)">Characters</button>
-            <button class="nav-btn active" onclick="switchTab('gallery', this)">Gallery</button>
+            <button class="nav-btn active" onclick="switchTab('home', this)">Home</button>
+            <button class="nav-btn" onclick="switchTab('gallery', this)">Gallery</button>
             <button class="nav-btn" onclick="switchTab('quests', this)">Quests</button>
         </div>
     </header>
 
     <div class="container">
         <div class="glass-panel">
+            
+            <section id="home" class="tab-content active">
+                <div class="main-menu-hero">
+                    <h1>SNAKE QUEEN</h1>
+                    <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto 30px;">
+                        Access the neural network database. Monitor character progress, view recovered visual data, and track active directives.
+                    </p>
+                    <button class="nav-btn" style="padding: 15px 40px; font-size: 1.1rem;" onclick="document.querySelectorAll('.nav-tabs .nav-btn')[1].click()">
+                        OPEN GALLERY
+                    </button>
+                </div>
+            </section>
+
             <section id="gallery" class="tab-content">
                 <div class="gallery-layout">
                     <div class="gallery-sidebar">
                         <h3 style="color:var(--gold)">Characters</h3>
-                        <button class="nav-btn" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Emma', this)">Emma</button>
-                        <button class="nav-btn" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Evelyn', this)">Evelyn</button>
-                        <button class="nav-btn" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Haniya', this)">Haniya</button>
-                        <button class="nav-btn" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Kirby', this)">Kirby</button>
-                        <button class="nav-btn" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Sofia', this)">Sofia</button>
-                        <button class="nav-btn" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Toni', this)">Toni</button>                                 
+                        <button class="nav-btn" style="width:100%; margin: 5px 0;" onclick="loadGallery('Emma', this)">Emma</button>
+                        <button class="nav-btn" style="width:100%; margin: 5px 0;" onclick="loadGallery('Evelyn', this)">Evelyn</button>
+                        <button class="nav-btn" style="width:100%; margin: 5px 0;" onclick="loadGallery('Haniya', this)">Haniya</button>
+                        <button class="nav-btn" style="width:100%; margin: 5px 0;" onclick="loadGallery('Kirby', this)">Kirby</button>
+                        <button class="nav-btn" style="width:100%; margin: 5px 0;" onclick="loadGallery('Sofia', this)">Sofia</button>
+                        <button class="nav-btn" style="width:100%; margin: 5px 0;" onclick="loadGallery('Toni', this)">Toni</button>
                     </div>
                     <div class="gallery-grid" id="gallery-items">
-                        </div>
+                        <p style="text-align:center; grid-column: 1/-1; padding-top: 50px; opacity: 0.5;">Select a character to initialize data stream...</p>
+                    </div>
                 </div>
             </section>
+
+            <section id="quests" class="tab-content">
+                <h2 style="color:var(--gold)">Active Directives</h2>
+                <div style="border-left: 3px solid var(--gold); padding-left: 20px; margin-top: 20px;">
+                    <p><strong>Status:</strong> Encrypted</p>
+                    <p>Quest tracking module is currently offline. Check back after the next system update.</p>
+                </div>
+            </section>
+
         </div>
     </div>
 
@@ -175,7 +213,20 @@
 
         function switchTab(id, btn) {
             playSquish(btn);
-            // Tab switching logic here
+            
+            // Hide all sections
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Deactivate all nav buttons
+            document.querySelectorAll('.nav-tabs .nav-btn').forEach(nav => {
+                nav.classList.remove('active');
+            });
+
+            // Show selected section and active button
+            document.getElementById(id).classList.add('active');
+            btn.classList.add('active');
         }
 
         function playSquish(btn) {
@@ -183,8 +234,10 @@
                 squish.currentTime = 0;
                 squish.play();
             }
-            btn.classList.add('squish');
-            setTimeout(() => btn.classList.remove('squish'), 250);
+            if(btn) {
+                btn.classList.add('squish');
+                setTimeout(() => btn.classList.remove('squish'), 250);
+            }
         }
 
         async function loadGallery(folder, btn) {
@@ -196,7 +249,7 @@
             
             try {
                 const res = await fetch(url);
-                if(!res.ok) throw new Error(`404: Folder '${folder}' not found at ${url}`);
+                if(!res.ok) throw new Error(`404: Folder '${folder}' not found.`);
                 
                 const files = await res.json();
                 grid.innerHTML = "";
@@ -215,14 +268,15 @@
                 });
             } catch (err) {
                 grid.innerHTML = `<div style="color:#ff7675; padding:20px; border:1px solid #ff7675; border-radius:10px;">
-                    <strong>ERROR:</strong> ${err.message}<br><br>
-                    Check that your folder is named exactly <b>${folder}</b> inside <b>images/characters/</b>
+                    <strong>ERROR:</strong> ${err.message}
                 </div>`;
             }
         }
 
-        // Auto-load first category
-        window.onload = () => loadGallery('snake_queen', document.querySelector('.gallery-sidebar .nav-btn'));
+        // On load, we only ensure the music is ready. The HTML handles the default 'active' state.
+        window.onload = () => {
+            console.log("System initialized. Home screen active.");
+        };
     </script>
 </body>
 </html>
