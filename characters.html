@@ -4,56 +4,32 @@
     <meta charset="UTF-8">
     <title>Snake Queen | Characters</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Copy the CSS block from index.html here, plus character specific styles: */
-        .grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; }
-        .char-card { background: rgba(0,0,0,0.6); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 8px; overflow: hidden; cursor: pointer; transition: 0.3s; position: relative; }
-        .char-card:hover { transform: translateY(-5px); border-color: #d4af37; }
-        .char-card img { width: 100%; height: 320px; object-fit: cover; }
-        .char-card h3 { padding: 12px; margin: 0; text-align: center; color: #d4af37; text-transform: uppercase; }
-        #guide-view { display: none; }
-        .guide-layout { display: grid; grid-template-columns: 320px 250px 1fr; gap: 20px; }
-        .fav-star { position: absolute; top: 10px; right: 10px; font-size: 1.5rem; color: rgba(255,255,255,0.2); transition: 0.2s; }
-        .fav-star.active { color: #d4af37; text-shadow: 0 0 10px #d4af37; }
-        /* Include the rest of your character/quest styles here */
-    </style>
 </head>
 <body>
-    <div class="bg-wrapper" id="master-bg"></div>
-    <div class="bg-overlay"></div>
-
+    <div class="bg-wrapper" id="master-bg"></div><div class="bg-overlay"></div>
     <header>
-        <div style="color:#d4af37; font-weight:bold;">STARMAKER DATABASE</div>
+        <div style="color:var(--gold); font-weight:bold;">STARMAKER DATABASE</div>
         <nav>
             <a href="index.html" class="nav-btn">Home</a>
             <a href="characters.html" class="nav-btn active">Characters</a>
             <a href="gallery.html" class="nav-btn">Gallery</a>
-            <a href="quests.html" class="nav-btn">Quests</a>
         </nav>
     </header>
 
     <div class="container">
         <div class="glass-panel">
             <div id="mosaic-view">
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid rgba(212, 175, 55, 0.3); margin-bottom: 25px;">
-                    <h2 style="color:#d4af37;">SUBJECT ARCHIVES</h2>
-                    <button class="nav-btn" onclick="toggleFavFilter()" id="fav-btn">Show Favorites Only</button>
-                </div>
+                <h2 style="color:var(--gold); border-bottom: 1px solid var(--box-border); padding-bottom: 10px;">SUBJECT ARCHIVES</h2>
                 <div id="char-grid" class="grid-view"></div>
             </div>
 
-            <div id="guide-view">
-                <button class="nav-btn" style="margin-bottom: 25px;" onclick="closeGuide()">← BACK TO ARCHIVES</button>
-                <div class="guide-layout">
-                    <div class="profile-box">
-                        <div class="sprite-container" id="display-sprite"></div>
-                        <h2 id="display-name" style="color:#d4af37;"></h2>
-                        <p id="display-bio"></p>
-                    </div>
-                    <div class="quest-box" id="quest-list"></div>
-                    <div class="details-box">
-                        <h2 id="q-title" style="color:#d4af37;"></h2>
-                        <p id="q-desc"></p>
+            <div id="guide-view" style="display:none;">
+                <button class="nav-btn" style="margin-bottom: 25px;" onclick="closeGuide()">← BACK</button>
+                <div style="display:grid; grid-template-columns: 320px 250px 1fr; gap: 20px;">
+                    <div class="sprite-viewer"><div id="display-sprite"></div><h2 id="display-name" style="color:var(--gold);"></h2><p id="display-bio"></p></div>
+                    <div id="quest-list" style="background:rgba(0,0,0,0.5); padding:15px; border-radius:10px;"></div>
+                    <div style="background:rgba(0,0,0,0.5); padding:20px; border-radius:10px;">
+                        <h2 id="q-title" style="color:var(--gold);"></h2>
                         <div id="q-steps"></div>
                     </div>
                 </div>
@@ -61,45 +37,52 @@
         </div>
     </div>
 
+    <script src="data.js"></script>
     <script>
-        const characterData = {
-            "josef": { name: "Josef", bio: "Household head.", sprite: "images/characters/Josef/josef_sprite.png", bg: "images/characters/Josef/Josef_BG.jpg", quests: [...] },
-            "amelia": { name: "Amelia", bio: "Coffee Boss", sprite: "images/characters/Amelia/amelia_sprite.png", bg: "images/characters/Amelia/Amelia_BG.png", quests: [...] }
-        };
-
-        let favorites = JSON.parse(localStorage.getItem('sm_favs')) || [];
-        let favFilter = false;
-
         function init() {
             const grid = document.getElementById('char-grid');
-            grid.innerHTML = "";
             for(let key in characterData) {
-                if(favFilter && !favorites.includes(key)) continue;
                 const char = characterData[key];
                 const card = document.createElement('div');
                 card.className = 'char-card';
-                card.innerHTML = `
-                    <span class="fav-star ${favorites.includes(key)?'active':''}" onclick="event.stopPropagation(); toggleFav('${key}')">★</span>
-                    <img src="${char.sprite}"><h3>${char.name}</h3>`;
                 card.onclick = () => openGuide(key);
+                card.innerHTML = `<img src="${char.sprite}"><h3>${char.name}</h3>`;
                 grid.appendChild(card);
             }
         }
 
-        function toggleFav(key) {
-            if(favorites.includes(key)) favorites = favorites.filter(k => k !== key);
-            else favorites.push(key);
-            localStorage.setItem('sm_favs', JSON.stringify(favorites));
-            init();
+        function openGuide(key) {
+            const char = characterData[key];
+            document.getElementById('mosaic-view').style.display = 'none';
+            document.getElementById('guide-view').style.display = 'block';
+            document.getElementById('master-bg').style.backgroundImage = `url('${char.bg}')`;
+            document.getElementById('display-sprite').innerHTML = `<img src="${char.sprite}" style="width:100%">`;
+            document.getElementById('display-name').innerText = char.name;
+            document.getElementById('display-bio').innerText = char.bio;
+            
+            const qList = document.getElementById('quest-list');
+            qList.innerHTML = "";
+            char.quests.forEach((q, i) => {
+                const item = document.createElement('div');
+                item.style = "padding:10px; cursor:pointer; border-bottom:1px solid #333";
+                item.innerText = q.name;
+                item.onclick = () => showQuest(q);
+                qList.appendChild(item);
+            });
+            showQuest(char.quests[0]);
         }
 
-        function toggleFavFilter() {
-            favFilter = !favFilter;
-            document.getElementById('fav-btn').innerText = favFilter ? "Showing Favorites" : "Show Favorites Only";
-            init();
+        function showQuest(q) {
+            document.getElementById('q-title').innerText = q.title;
+            document.getElementById('q-steps').innerHTML = q.steps.map(s => `<p>▶ ${s.t} <br><small style="color:var(--req-color)">${s.r}</small></p>`).join('');
         }
 
-        // Include your original openGuide, closeGuide, and showQuest JS here
+        function closeGuide() {
+            document.getElementById('mosaic-view').style.display = 'block';
+            document.getElementById('guide-view').style.display = 'none';
+            document.getElementById('master-bg').style.backgroundImage = "url('backgroundImg.gif')";
+        }
+
         init();
     </script>
 </body>
