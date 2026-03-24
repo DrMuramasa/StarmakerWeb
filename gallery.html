@@ -5,12 +5,13 @@
     <title>Starmaker | Gallery</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Specific page overrides to ensure the layout stays locked */
+        /* Container Lock: Exactly 6 rows high */
         .gallery-layout {
             display: grid;
             grid-template-columns: 180px 1fr 320px;
             gap: 25px;
-            height: calc(100vh - 120px); /* Adjusts for header height */
+            /* (140px image * 6) + (15px gap * 5) + padding */
+            height: 935px; 
             align-items: start;
         }
 
@@ -26,7 +27,6 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 15px;
-            padding-bottom: 50px;
         }
 
         .img-card {
@@ -35,20 +35,38 @@
             border: 2px solid var(--box-border);
             border-radius: 8px;
             overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.2s;
+            position: relative;
             background: #000;
         }
 
-        .img-card:hover {
-            transform: scale(1.03);
-            border-color: var(--gold);
-        }
+        .img-card img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
 
-        .img-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        /* Star Indicator */
+        .star-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0,0,0,0.6);
+            border: none;
+            color: #555;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            transition: 0.2s;
+        }
+        .star-btn.active { color: var(--gold); text-shadow: 0 0 10px var(--gold); }
+
+        .fav-toggle {
+            margin-bottom: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--gold);
+            cursor: pointer;
         }
 
         .sprite-viewer {
@@ -57,8 +75,6 @@
             padding: 20px;
             border: 1px solid var(--box-border);
             text-align: center;
-            position: sticky;
-            top: 20px;
         }
 
         .sprite-window {
@@ -70,13 +86,8 @@
             cursor: pointer;
         }
 
-        .sprite-window img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
+        .sprite-window img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
-        /* Maximized View Style */
         .lightbox {
             display: none;
             position: fixed;
@@ -89,12 +100,7 @@
             align-items: center;
         }
 
-        #lb-img {
-            max-width: 90%;
-            max-height: 90%;
-            border: 1px solid var(--gold);
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
-        }
+        #lb-img { max-width: 90%; max-height: 90%; border: 1px solid var(--gold); }
     </style>
 </head>
 <body>
@@ -114,24 +120,29 @@
             <div class="gallery-layout">
                 
                 <div class="folder-list">
-                    <h3 style="color:var(--gold); font-size: 0.9rem;">SUBJECTS</h3>
-                    <button class="nav-btn" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Amelia')">Amelia</button>
-                    <button class="nav-btn" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Emma')">Emma</button>
-                    <button class="nav-btn" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Evelyn')">Evelyn</button>
-                    <button class="nav-btn" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Toni')">Toni</button>
-                    <button class="nav-btn" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Sofia')">Sofia</button>
+                    <h3 style="color:var(--gold); font-size: 0.9rem;">CHARACTERS</h3>
+                    <div class="fav-toggle" onclick="toggleFavFilter('chars')">
+                        <input type="checkbox" id="char-fav-only"> Show Favs Only
+                    </div>
+                    <div id="char-list">
+                        <button class="nav-btn char-link" data-name="Amelia" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Amelia')">Amelia</button>
+                        <button class="nav-btn char-link" data-name="Amelia" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Emma')">Emma</button>
+                        <button class="nav-btn char-link" data-name="Amelia" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Evelyn')">Evelyn</button>
+                        <button class="nav-btn char-link" data-name="Amelia" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Toni')">Toni</button>
+                        <button class="nav-btn char-link" data-name="Amelia" style="width:100%; margin-bottom:10px;" onclick="loadGallery('Sofia')">Sofia</button>
+                    </div>
                 </div>
 
                 <div class="gallery-scroll-area">
-                    <div class="gallery-grid" id="gallery-items">
-                        </div>
+                    <div class="fav-toggle" onclick="toggleFavFilter('gallery')">
+                        <input type="checkbox" id="gal-fav-only"> Filter Favorites
+                    </div>
+                    <div class="gallery-grid" id="gallery-items"></div>
                 </div>
 
                 <div class="sprite-viewer">
-                    <h3 style="color:var(--gold);">SPRITE SYNC</h3>
-                    <div class="sprite-window" id="sprite-display" onclick="openSpriteMax()">
-                        <p style="opacity:0.5;">Select Subject</p>
-                    </div>
+                    <h3 style="color:var(--gold);">SPRITE VIEWER</h3>
+                    <div class="sprite-window" id="sprite-display" onclick="openSpriteMax()"></div>
                     <div>
                         <button class="nav-btn" onclick="cycleSprite(-1)">◀</button>
                         <button class="nav-btn" onclick="cycleSprite(1)">▶</button>
@@ -151,100 +162,115 @@
         let spriteIdx = 0;
         let galleryImgs = [];
         let galleryIdx = 0;
+        let currentFolder = "";
+
+        // Load Favorites from LocalStorage
+        let favorites = JSON.parse(localStorage.getItem('sm_favorites')) || { images: [], chars: [] };
 
         async function loadGallery(folder) {
+            currentFolder = folder;
             const grid = document.getElementById('gallery-items');
-            grid.innerHTML = "<p style='color:var(--gold); padding:20px;'>Syncing Archives...</p>";
-            
-            // Clear previous data
-            sprites = [];
-            galleryImgs = [];
-            spriteIdx = 0;
+            grid.innerHTML = "Loading...";
+            sprites = []; galleryImgs = []; spriteIdx = 0;
 
             try {
                 const res = await fetch(`https://api.github.com/repos/DrMuramasa/StarmakerWeb/contents/images/characters/${folder}`);
-                if (!res.ok) throw new Error("API Limit or Folder Not Found");
                 const files = await res.json();
-                
-                grid.innerHTML = ""; // Clear loader text
+                grid.innerHTML = "";
 
                 files.forEach(file => {
                     const name = file.name.toLowerCase();
-                    // Identify Sprites
                     if (name.includes('_sprite')) {
                         sprites.push(file.download_url);
-                    } 
-                    // Identify Gallery Images (Exclude BGs)
-                    else if (!name.includes('_bg')) {
-                        const currentPos = galleryImgs.length;
+                    } else if (!name.includes('_bg')) {
                         galleryImgs.push(file.download_url);
-                        
-                        const card = document.createElement('div');
-                        card.className = 'img-card';
-                        card.onclick = () => openLightbox(currentPos);
-                        card.innerHTML = `<img src="${file.download_url}" loading="lazy">`;
-                        grid.appendChild(card);
+                        createCard(file.download_url, grid);
                     }
                 });
-                
                 renderSprite();
-            } catch (err) {
-                grid.innerHTML = `<p style="color:red; padding:20px;">Error: ${err.message}</p>`;
+                applyFilters();
+            } catch (err) { grid.innerHTML = "Error loading files."; }
+        }
+
+        function createCard(url, container) {
+            const isFav = favorites.images.includes(url);
+            const card = document.createElement('div');
+            card.className = 'img-card';
+            card.dataset.url = url;
+            card.innerHTML = `
+                <img src="${url}" onclick="openLightboxByUrl('${url}')">
+                <button class="star-btn ${isFav ? 'active' : ''}" onclick="toggleFavImg('${url}', this)">★</button>
+            `;
+            container.appendChild(card);
+        }
+
+        function toggleFavImg(url, btn) {
+            if (favorites.images.includes(url)) {
+                favorites.images = favorites.images.filter(i => i !== url);
+                btn.classList.remove('active');
+            } else {
+                favorites.images.push(url);
+                btn.classList.add('active');
             }
+            localStorage.setItem('sm_favorites', JSON.stringify(favorites));
+            applyFilters();
+        }
+
+        function toggleFavFilter(type) {
+            if (type === 'chars') document.getElementById('char-fav-only').checked = !document.getElementById('char-fav-only').checked;
+            if (type === 'gallery') document.getElementById('gal-fav-only').checked = !document.getElementById('gal-fav-only').checked;
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const imgFavOnly = document.getElementById('gal-fav-only').checked;
+            const charFavOnly = document.getElementById('char-fav-only').checked;
+
+            // Filter Gallery
+            document.querySelectorAll('.img-card').forEach(card => {
+                const isFav = favorites.images.includes(card.dataset.url);
+                card.style.display = (imgFavOnly && !isFav) ? 'none' : 'block';
+            });
+
+            // Filter Character Buttons (Simulated by name for now)
+            document.querySelectorAll('.char-link').forEach(btn => {
+                // You can add logic here to mark characters as favorites too
+                btn.style.display = 'block'; 
+            });
         }
 
         function renderSprite() {
             const disp = document.getElementById('sprite-display');
-            if (sprites.length > 0) {
-                disp.innerHTML = `<img src="${sprites[spriteIdx]}">`;
-            } else {
-                disp.innerHTML = "<p>No Sprites</p>";
-            }
+            disp.innerHTML = sprites.length ? `<img src="${sprites[spriteIdx]}">` : "<p>Select Character</p>";
         }
 
         function cycleSprite(dir) {
-            if (sprites.length === 0) return;
+            if (!sprites.length) return;
             spriteIdx = (spriteIdx + dir + sprites.length) % sprites.length;
             renderSprite();
         }
 
-        function openLightbox(idx) {
-            galleryIdx = idx;
-            const lb = document.getElementById('lightbox');
-            const lbImg = document.getElementById('lb-img');
-            lbImg.src = galleryImgs[galleryIdx];
-            lb.style.display = 'flex';
+        function openLightboxByUrl(url) {
+            galleryIdx = galleryImgs.indexOf(url);
+            document.getElementById('lb-img').src = url;
+            document.getElementById('lightbox').style.display = 'flex';
         }
 
         function openSpriteMax() {
-            if (sprites.length === 0) return;
-            const lb = document.getElementById('lightbox');
-            const lbImg = document.getElementById('lb-img');
-            lbImg.src = sprites[spriteIdx];
-            lb.style.display = 'flex';
+            if (!sprites.length) return;
+            document.getElementById('lb-img').src = sprites[spriteIdx];
+            document.getElementById('lightbox').style.display = 'flex';
         }
 
-        // KEYBOARD LOGIC
         window.addEventListener('keydown', (e) => {
             const lb = document.getElementById('lightbox');
-            const isMax = lb.style.display === 'flex';
-
-            if (e.key === "ArrowRight") {
-                if (isMax && galleryImgs.length > 0) {
-                    galleryIdx = (galleryIdx + 1) % galleryImgs.length;
-                    document.getElementById('lb-img').src = galleryImgs[galleryIdx];
-                } else {
-                    cycleSprite(1);
-                }
-            } else if (e.key === "ArrowLeft") {
-                if (isMax && galleryImgs.length > 0) {
-                    galleryIdx = (galleryIdx - 1 + galleryImgs.length) % galleryImgs.length;
-                    document.getElementById('lb-img').src = galleryImgs[galleryIdx];
-                } else {
-                    cycleSprite(-1);
-                }
-            } else if (e.key === "Escape") {
-                lb.style.display = 'none';
+            if (lb.style.display === 'flex') {
+                if (e.key === "ArrowRight") { galleryIdx = (galleryIdx + 1) % galleryImgs.length; document.getElementById('lb-img').src = galleryImgs[galleryIdx]; }
+                if (e.key === "ArrowLeft") { galleryIdx = (galleryIdx - 1 + galleryImgs.length) % galleryImgs.length; document.getElementById('lb-img').src = galleryImgs[galleryIdx]; }
+                if (e.key === "Escape") lb.style.display = 'none';
+            } else {
+                if (e.key === "ArrowRight") cycleSprite(1);
+                if (e.key === "ArrowLeft") cycleSprite(-1);
             }
         });
     </script>
