@@ -348,66 +348,70 @@ body {
 
 /* --- Desktop Styles end here --- */
 
-/* This block ONLY activates when the screen is narrower than 768px */
+/* This ONLY triggers on screens smaller than 768px (Phones/Tablets) */
 @media screen and (max-width: 768px) {
-    
-    /* 1. Stack the Header & Nav */
+    /* 1. Reset the Gallery Layout from 3-columns to 1-column */
+    .gallery-layout {
+        display: flex !important;
+        flex-direction: column !important;
+        height: auto !important;
+        width: 100% !important;
+        overflow-x: hidden;
+    }
+
+    /* 2. Make each section take full width and stack */
+    .folder-list, 
+    .gallery-scroll-area, 
+    .sprite-viewer {
+        width: 100% !important;
+        max-width: 100% !important;
+        border: none !important;
+        border-bottom: 1px solid var(--box-border) !important;
+        height: auto !important;
+        padding: 10px 0 !important;
+    }
+
+    /* 3. Fix the Header (Stop the overlapping in image_1c5b07.png) */
     header {
-        flex-direction: column;
-        height: auto;
-        padding: 10px;
-        gap: 15px;
+        flex-direction: column !important;
+        height: auto !important;
+        padding: 10px !important;
+    }
+
+    .music-controls {
+        margin: 5px 0;
+        transform: scale(0.9); /* Shrink volume bar slightly for mobile */
     }
 
     nav {
-        width: 100%;
-        justify-content: center;
-        gap: 5px;
-        flex-wrap: wrap; /* Allows buttons to drop to a 2nd row if needed */
+        gap: 5px !important;
     }
 
     .nav-btn {
-        flex: 1 1 auto; /* Buttons grow to fit the width */
-        text-align: center;
-        font-size: 0.75rem;
-        padding: 8px 5px;
+        padding: 5px 10px !important;
+        font-size: 0.8rem !important;
     }
 
-    /* 2. Fix the Gallery (The 3-column issue) */
-    .gallery-layout {
-        display: flex; /* Switch from Grid to Flexbox */
-        flex-direction: column; /* Stack columns vertically */
-        height: auto;
-        gap: 20px;
+    /* 4. Fix the Character List Buttons */
+    #char-list {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important; /* 2 buttons per row */
+        gap: 10px !important;
+        padding: 10px !important;
     }
 
-    /* Remove the fixed 180px and 380px widths from desktop */
-    .folder-list, .gallery-scroll-area, .sprite-viewer {
-        width: 100% !important; 
-        max-width: 100%;
-        border: none;
-        border-bottom: 1px solid var(--box-border);
-        padding-bottom: 20px;
-    }
-
-    /* 3. Make the Image Grid look better on small screens */
+    /* 5. Fix the Image Grid (image_1c5e0b.png) */
     .gallery-grid {
-        grid-template-columns: repeat(2, 1fr); /* 2 images per row on phone */
-        gap: 10px;
+        grid-template-columns: repeat(2, 1fr) !important; /* 2 images per row */
+        width: 100% !important;
     }
 
-    /* 4. Fix Character Archives Grid */
-    #char-grid {
-        grid-template-columns: 1fr; /* 1 character per row on phone */
-        justify-items: center;
+    .img-card {
+        height: 150px !important; /* Smaller cards for mobile */
     }
 
-    .char-card {
-        width: 90%;
-    }
-
-    /* 5. Scale the Sprite Window so it doesn't fall off the screen */
+    /* 6. Scale the Sprite Viewer */
     .sprite-window {
-        height: 350px;
+        height: 300px !important;
     }
 }
