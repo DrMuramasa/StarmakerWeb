@@ -169,16 +169,29 @@ let previousVolume = 0.5;
 
 function initMusic() {
     const savedVol = localStorage.getItem('sm_volume') || 0.5;
-    if (bgMusic) {
-        bgMusic.volume = savedVol;
-        // Attempt immediate play
-        bgMusic.play().catch(() => {
-            // Wait for user gesture if blocked
+    bgMusic.volume = savedVol;
+    
+    // 1. Set the slider value if it exists on the page
+    const slider = document.getElementById('volume-slider');
+    if (slider) slider.value = savedVol;
+
+    // 2. The "Resume" Logic:
+    // We try to play immediately. Because the user interacted with the 
+    // "Enter" button on index.html, the browser 'remembers' the permission.
+    const playPromise = bgMusic.play();
+
+    if (playPromise !== undefined) {
+        playPromise.catch(error => {
+            // If it fails (some browsers are stricter), it waits for 1 click on the new page
+            console.log("Autoplay prevented. Waiting for user interaction to resume music.");
             document.addEventListener('click', () => {
-                bgMusic.play().catch(() => {});
+                bgMusic.play();
             }, { once: true });
         });
     }
+
+    updateMuteIcon();
+}
     
     const slider = document.getElementById('volume-slider');
     if (slider) slider.value = savedVol;
