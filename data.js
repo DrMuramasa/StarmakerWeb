@@ -85,31 +85,41 @@ function playSnd() {
     squishSnd.play().catch(() => { /* Prevent errors if clicked before interaction */ });
 }
 
-// --- Music Engine ---
+// --- 1. Sound Engine ---
+let bgMusic;
+try {
+    bgMusic = new Audio('audio/background_theme.mp3');
+    bgMusic.loop = true;
+} catch (e) {
+    console.error("Music file not found, but gallery will still load.");
+}
+
+const squishSnd = new Audio('audio/squish.mp3');
+
+function playSnd() {
+    squishSnd.currentTime = 0;
+    squishSnd.volume = bgMusic ? bgMusic.volume : 0.5;
+    squishSnd.play().catch(() => {});
+}
+
+// --- 2. Music Controls ---
 let isMuted = false;
 let previousVolume = 0.5;
-// IMPORTANT: Update this path to your actual music file
-const bgMusic = new Audio('audio/background_theme.mp3'); 
-bgMusic.loop = true;
 
 function initMusic() {
-    // Load volume from browser memory
     const savedVol = localStorage.getItem('sm_volume') || 0.5;
-    bgMusic.volume = savedVol;
+    if (bgMusic) bgMusic.volume = savedVol;
     
     const slider = document.getElementById('volume-slider');
-    if(slider) slider.value = savedVol;
-    
-    updateMuteIcon();
+    if (slider) slider.value = savedVol;
 
-    // Browser safety: Start music on the first click anywhere
     document.addEventListener('click', () => {
-        bgMusic.play().catch(() => { /* Handle auto-play block */ });
+        if (bgMusic) bgMusic.play().catch(() => {});
     }, { once: true });
 }
 
 function updateVolume(val) {
-    bgMusic.volume = val;
+    if (bgMusic) bgMusic.volume = val;
     isMuted = (val == 0);
     updateMuteIcon();
     localStorage.setItem('sm_volume', val);
@@ -118,25 +128,22 @@ function updateVolume(val) {
 function toggleMute() {
     const slider = document.getElementById('volume-slider');
     if (!isMuted) {
-        previousVolume = bgMusic.volume > 0 ? bgMusic.volume : 0.5;
-        bgMusic.volume = 0;
-        if(slider) slider.value = 0;
+        previousVolume = bgMusic ? bgMusic.volume : 0.5;
+        if (bgMusic) bgMusic.volume = 0;
+        if (slider) slider.value = 0;
         isMuted = true;
     } else {
-        bgMusic.volume = previousVolume;
-        if(slider) slider.value = previousVolume;
+        if (bgMusic) bgMusic.volume = previousVolume;
+        if (slider) slider.value = previousVolume;
         isMuted = false;
     }
     updateMuteIcon();
-    localStorage.setItem('sm_volume', bgMusic.volume);
 }
 
 function updateMuteIcon() {
     const btn = document.getElementById('mute-btn');
-    if (btn) {
-        btn.innerText = (isMuted || bgMusic.volume === 0) ? "🔈" : "🔊";
-    }
+    if (btn) btn.innerText = (isMuted) ? "🔈" : "🔊";
 }
 
-// Auto-run when any page finishes loading
+// --- 3. Run Logic ---
 window.addEventListener('DOMContentLoaded', initMusic);
