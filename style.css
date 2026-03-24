@@ -181,6 +181,52 @@ header {
     object-fit: contain; /* Keeps character proportions correct */
 }
 
+/* Sticky Header Logic */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 5%;
+    background: rgba(0, 0, 0, 0.9);
+    border-bottom: 1px solid var(--box-border);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+
+/* Music UI */
+.music-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(212, 175, 55, 0.1);
+    padding: 8px 18px;
+    border-radius: 30px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.music-controls label {
+    font-size: 0.7rem;
+    color: var(--gold);
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+#volume-slider {
+    width: 100px;
+    accent-color: var(--gold);
+    cursor: pointer;
+    height: 4px;
+}
+
+/* Active Page Highlight */
+.nav-btn.active {
+    background: var(--gold);
+    color: black;
+    box-shadow: 0 0 15px var(--gold);
+}
+
 /* Music Control Styling */
 .music-controls {
     display: flex;
