@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>STARMAKER | Characters</title>
     <link rel="stylesheet" href="style.css">
     <script src="data.js"></script> 
@@ -35,14 +35,15 @@
 
             <div id="guide-view" style="display:none;">
                 <button class="nav-btn" onclick="closeGuide()">← BACK TO ARCHIVES</button>
-                <div style="display:grid; grid-template-columns: 300px 1fr; gap:30px; margin-top:20px;">
-                    <div id="side-info">
+                
+                <div class="char-detail-layout" style="display:grid; grid-template-columns: 300px 1fr; gap:30px; margin-top:20px;">
+                    <div id="side-info" class="char-img-container">
                         <img id="guide-sprite" style="width:100%; border:1px solid var(--gold); border-radius: 5px;">
                         <h2 id="guide-name" style="color:var(--gold); letter-spacing: 2px;"></h2>
                     </div>
-                    <div id="quest-area" style="background:rgba(255,255,255,0.05); padding:20px; border-radius:10px; border: 1px solid var(--box-border);">
-                        <h3 id="quest-title" style="color:var(--gold); border-bottom: 1px solid var(--box-border); padding-bottom: 5px;"></h3>
-                        <div id="quest-steps" style="line-height: 1.6; margin-top: 15px;"></div>
+                    
+                    <div id="quest-area" class="quest-section" style="background:rgba(255,255,255,0.05); padding:20px; border-radius:10px; border: 1px solid var(--box-border);">
+                        <div id="quest-list"></div>
                     </div>
                 </div>
             </div>
@@ -50,60 +51,23 @@
     </div>
 
     <script>
-    // Expanded local data to match your Subject Archives
     const charData = {
-        "josef": { 
-            name: "Josef", 
-            sprite: "images/characters/Josef/josef_sprite.png", 
-            bg: "images/characters/Josef/Josef_BG.jpg", 
-            qTitle: "Friday Beer Strategy", 
-            qSteps: ["Reach 3 Hearts with Anna", "Give Beer on Friday (x2)", "Reach 4 Hearts with Anna", "Give 3rd Beer & Explain Starmaker"] 
-        },
-        "amelia": { 
-            name: "Amelia", 
-            sprite: "images/characters/Amelia/ameliaBase_sprite.png", 
-            bg: "images/characters/Amelia/Amelia_BG.png", 
-            qTitle: "Coffee Grind", 
-            qSteps: ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] 
-        },
-        "emma": { 
-            name: "Emma", 
-            sprite: "images/characters/Emma/emmabase_sprite.png", 
-            bg: "images/characters/Emma/Emma_BG.png", 
-            qTitle: "Cryptid Hunter", 
-            qSteps: ["Visit Sauna 3 times", "Invite to the Farm", "Collect 3 Monster parts (Tuesday)"] 
-        },
-        "evelyn": { 
-            name: "Evelyn", 
-            sprite: "images/characters/Evelyn/Everlyn_sprite.png", 
-            bg: "images/characters/Evelyn/Evelyn_BG.png", 
-            qTitle: "The Hidden Lab", 
-            qSteps: ["Unlock Studio Raw Sex", "Path: Foundry > Harbor > Warehouse", "Trade materials for Genetic Mods"] 
-        },
-        "toni": { 
-            name: "Toni", 
-            sprite: "images/characters/Toni/ToniBar_sprite.png", 
-            bg: "images/characters/Toni/Toni_BG.png", 
-            qTitle: "Squirt Racing", 
-            qSteps: ["Pay $60k Total Debt", "Win 3 Races vs Jack", "Invite to Garage"] 
-        },
-        "sofia": { 
-            name: "Sofia", 
-            sprite: "images/characters/Sofia/SofiaCasual_sprite.png", 
-            bg: "images/characters/Sofia/Sofia_BG.png", 
-            qTitle: "The Sting Operation", 
-            qSteps: ["Meet at Gas Station (Fridays)", "Sneak Sofia into the Studio", "Arrest Mario OR Snitch to Mario"] 
-        }
+        "josef": { name: "Josef", sprite: "images/characters/Josef/josef_sprite.png", bg: "images/characters/Josef/Josef_BG.jpg", qTitle: "Friday Beer Strategy", qSteps: ["Reach 3 Hearts with Anna", "Give Beer on Friday (x2)", "Reach 4 Hearts with Anna", "Give 3rd Beer & Explain Starmaker"] },
+        "amelia": { name: "Amelia", sprite: "images/characters/Amelia/ameliaBase_sprite.png", bg: "images/characters/Amelia/Amelia_BG.png", qTitle: "Coffee Grind", qSteps: ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] },
+        "emma": { name: "Emma", sprite: "images/characters/Emma/emmabase_sprite.png", bg: "images/characters/Emma/Emma_BG.png", qTitle: "Cryptid Hunter", qSteps: ["Visit Sauna 3 times", "Invite to the Farm", "Collect 3 Monster parts (Tuesday)"] },
+        "evelyn": { name: "Evelyn", sprite: "images/characters/Evelyn/Everlyn_sprite.png", bg: "images/characters/Evelyn/Evelyn_BG.png", qTitle: "The Hidden Lab", qSteps: ["Unlock Studio Raw Sex", "Path: Foundry > Harbor > Warehouse", "Trade materials for Genetic Mods"] },
+        "toni": { name: "Toni", sprite: "images/characters/Toni/ToniBar_sprite.png", bg: "images/characters/Toni/Toni_BG.png", qTitle: "Squirt Racing", qSteps: ["Pay $60k Total Debt", "Win 3 Races vs Jack", "Invite to Garage"] },
+        "sofia": { name: "Sofia", sprite: "images/characters/Sofia/SofiaCasual_sprite.png", bg: "images/characters/Sofia/Sofia_BG.png", qTitle: "The Sting Operation", qSteps: ["Meet at Gas Station (Fridays)", "Sneak Sofia into the Studio", "Arrest Mario OR Snitch to Mario"] }
     };
 
     function init() {
         const grid = document.getElementById('char-grid');
-        grid.innerHTML = ""; // Clear grid
+        grid.innerHTML = "";
         Object.keys(charData).forEach(key => {
             const card = document.createElement('div');
             card.className = 'char-card';
             card.onclick = () => {
-                playSnd(); 
+                if(typeof playSnd === 'function') playSnd(); 
                 openGuide(key);
             };
             card.innerHTML = `<img src="${charData[key].sprite}"><h3>${charData[key].name}</h3>`;
@@ -118,38 +82,59 @@
         
         document.getElementById('guide-sprite').src = char.sprite;
         document.getElementById('guide-name').innerText = char.name;
-        document.getElementById('quest-title').innerText = char.qTitle;
-        
-        // Build the steps as a bulleted list
-        const stepsContainer = document.getElementById('quest-steps');
-        stepsContainer.innerHTML = ""; // Clear old steps
-        const ul = document.createElement('ul');
-        ul.style.listStyle = "none";
-        ul.style.padding = "0";
-        
-        char.qSteps.forEach(step => {
-            const li = document.createElement('li');
-            li.style.marginBottom = "10px";
-            li.style.color = "white";
-            li.innerHTML = `<span style="color:var(--gold);">▶</span> ${step}`;
-            ul.appendChild(li);
-        });
-        stepsContainer.appendChild(ul);
-        
         document.getElementById('master-bg').style.backgroundImage = `url('${char.bg}')`;
+
+        // Implementation of Collapsible Quest Segments
+        const questList = document.getElementById('quest-list');
+        questList.innerHTML = `
+            <div class="quest-segment" onclick="this.classList.toggle('active'); if(typeof playSnd === 'function') playSnd();">
+                <div class="quest-header">
+                    <span style="color:var(--gold);">${char.qTitle}</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="quest-content">
+                    <ul style="list-style:none; padding:0; margin:0;">
+                        ${char.qSteps.map(step => `
+                            <li style="margin-bottom:10px; color:white;">
+                                <span style="color:var(--gold);">▶</span> ${step}
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            </div>
+        `;
+
+        // Push state for the back button logic
+        history.pushState({ guideOpen: true }, "");
     }
 
     function closeGuide() {
-        playSnd();
+        if(typeof playSnd === 'function') playSnd();
         document.getElementById('mosaic-view').style.display = 'block';
         document.getElementById('guide-view').style.display = 'none';
         document.getElementById('master-bg').style.backgroundImage = "url('backgroundImg.gif')";
+        
+        // If we are on the fake history state, go back
+        if (history.state && history.state.guideOpen) {
+            history.back();
+        }
     }
 
+    // Handle Phone Back Button
+    window.onpopstate = function(event) {
+        const guide = document.getElementById('guide-view');
+        if (guide.style.display === 'block') {
+            // Close the guide view if it's open instead of leaving the site
+            document.getElementById('mosaic-view').style.display = 'block';
+            guide.style.display = 'none';
+            document.getElementById('master-bg').style.backgroundImage = "url('backgroundImg.gif')";
+        }
+    };
+
     window.addEventListener('DOMContentLoaded', () => {
-        initMusic(); 
+        if(typeof initMusic === 'function') initMusic(); 
         init();      
     });
-</script>
+    </script>
 </body>
 </html>
