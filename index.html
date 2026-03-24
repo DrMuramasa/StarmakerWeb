@@ -6,9 +6,8 @@
     <link rel="stylesheet" href="style.css">
     <script src="data.js"></script>
     <style>
-        /* Loading Bar Styles */
         .loader-container {
-            display: none; /* Hidden by default */
+            display: none; 
             width: 300px;
             margin: 20px auto;
             text-align: left;
@@ -28,6 +27,15 @@
             box-shadow: 0 0 10px var(--gold);
             transition: width 2s linear;
         }
+        /* Cursor blink effect */
+        #status-text::after {
+            content: "|";
+            animation: blink 0.7s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
     </style>
 </head>
 <body>
@@ -40,14 +48,14 @@
 
     <div class="container">
         <div style="display: flex; align-items: center; justify-content: center; height: 80vh;">
-            <div class="glass-panel" id="main-panel" style="text-align:center; padding: 60px; max-width: 800px;">
+            <div class="glass-panel" style="text-align:center; padding: 60px; max-width: 800px;">
                 <h1 class="glitch-title">STARMAKER WORLD</h1>
-                <p id="status-text" style="letter-spacing: 3px; margin-bottom: 40px; opacity: 0.8;">ENCRYPTED SYSTEM TERMINAL</p>
+                <p id="status-text" style="letter-spacing: 3px; margin-bottom: 40px; opacity: 0.8; min-height: 1.2em;">ENCRYPTED SYSTEM TERMINAL</p>
                 
                 <button id="enter-btn" class="nav-btn" onclick="startBootSequence()" style="padding:15px 50px; font-size: 1.2rem; cursor: pointer; background: none;">ENTER DATABASE</button>
 
                 <div class="loader-container" id="loader">
-                    <div style="font-size: 0.7rem; color: var(--gold); letter-spacing: 2px;">BYPASSING FIREWALL...</div>
+                    <div id="loader-msg" style="font-size: 0.7rem; color: var(--gold); letter-spacing: 2px; height: 1em;"></div>
                     <div class="loader-track">
                         <div class="loader-fill" id="fill"></div>
                     </div>
@@ -59,29 +67,48 @@
     <script>
         window.addEventListener('DOMContentLoaded', initMusic);
 
-        function startBootSequence() {
-            // 1. Play the "Squish" or Enter sound
-            playSnd();
+        function typeWriter(text, elementId, speed = 50) {
+            let i = 0;
+            const element = document.getElementById(elementId);
+            element.innerHTML = ""; // Clear existing text
+            
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
 
-            // 2. Hide the button, show the loader
+        function startBootSequence() {
+            playSnd(); // Interaction unlock for audio
+
             const btn = document.getElementById('enter-btn');
             const loader = document.getElementById('loader');
             const fill = document.getElementById('fill');
-            const status = document.getElementById('status-text');
 
             btn.style.display = 'none';
             loader.style.display = 'block';
-            status.innerText = "AUTHENTICATING...";
 
-            // 3. Animate the bar
+            // Start the typewriter effects
+            typeWriter("AUTHENTICATING...", "status-text", 70);
+            typeWriter("BYPASSING FIREWALLS...", "loader-msg", 40);
+
+            // Animate the bar
             setTimeout(() => {
                 fill.style.width = "100%";
             }, 100);
 
-            // 4. Redirect after the bar finishes (2 seconds)
+            // Final transition
+            setTimeout(() => {
+                typeWriter("ACCESS GRANTED.", "status-text", 50);
+            }, 1500);
+
             setTimeout(() => {
                 window.location.href = "characters.html";
-            }, 2100);
+            }, 2500); // Slightly longer to let the "Access Granted" be seen
         }
     </script>
 </body>
