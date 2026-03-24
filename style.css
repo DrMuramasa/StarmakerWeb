@@ -1,3 +1,9 @@
+/* Fluid Typography: (Min Size, Scaling Speed, Max Size) */
+h1 { font-size: clamp(1.5rem, 6vw, 2.5rem); }
+h2 { font-size: clamp(1.2rem, 5vw, 2rem); }
+p, div, span { font-size: clamp(0.9rem, 2.5vw, 1.1rem); }
+.nav-btn { font-size: clamp(0.7rem, 2vw, 0.9rem); }
+
 :root {
     --gold: #d4af37;
     --glass: rgba(0, 0, 0, 0.85);
