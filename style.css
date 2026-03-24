@@ -350,67 +350,53 @@ body {
 /* --- ADAPTIVE MOBILE ENGINE --- */
 
 @media screen and (max-width: 768px) {
-    
-    /* 1. Center & Fluid Index Screen */
-    .index-page .glass-panel {
-        width: 85vw !important; /* Adaptive width */
-        max-width: 400px;
-        position: fixed;
-        top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
-        margin: 0 !important;
-    }
-
-    /* 2. Header & Nav - No overlapping */
-    header {
-        flex-direction: column !important;
-        height: auto !important;
-        padding: 15px 5px !important;
-    }
-
-    nav {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 5px !important;
-        width: 100%;
-    }
-
-    .nav-btn {
-        font-size: 0.75rem !important;
-        padding: 8px 12px !important;
-        flex: 1 1 auto; /* Buttons fill the width naturally */
-    }
-
-    /* 3. The Gallery Layout (Stacked & Wide) */
+    /* Allow the main containers to grow with the content */
+    .container, 
+    .glass-panel, 
     .gallery-layout {
-        display: flex !important;
-        flex-direction: column !important;
         height: auto !important;
+        min-height: auto !important;
+        display: block !important; /* Switch from grid to block for stacking */
+        overflow: visible !important;
     }
 
+    .glass-panel {
+        padding: 15px !important;
+        margin: 10px !important;
+        width: calc(100% - 20px) !important; /* Keeps it inside screen edges */
+    }
+
+    /* Fix the Gallery Scroll Area so it doesn't have its own tiny scrollbar */
+    .gallery-scroll-area {
+        height: auto !important;
+        overflow: visible !important;
+        padding: 10px 0 !important;
+        border: none !important;
+    }
+
+    /* Ensure images stay inside the mosaic grid */
     .gallery-grid {
         display: grid !important;
-        grid-template-columns: 1fr 1fr !important; /* Exactly 2 per row */
-        gap: 12px !important;
-        width: 100% !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+        padding-bottom: 20px;
     }
 
-    .img-card {
+    /* Fix for Characters Page sprites breaking out */
+    .char-card {
         width: 100% !important;
-        aspect-ratio: 1 / 1; /* Perfectly square mosaics */
+        max-width: 350px;
+        margin: 10px auto !important;
         height: auto !important;
     }
 
-    /* 4. Sprite Viewer Scaling */
-    .sprite-window {
-        height: 45vh !important; /* Uses 45% of whatever screen height is available */
+    .char-img-container {
+        height: 300px !important; /* Scale down the big character art for phones */
     }
 
-    /* 5. Character Buttons (Folder List) */
-    #char-list {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr !important;
-        gap: 8px;
+    /* Scale down the Sprite Viewer at the bottom */
+    .sprite-window {
+        height: 350px !important;
+        width: 100% !important;
     }
 }
