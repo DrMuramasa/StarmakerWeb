@@ -1,5 +1,4 @@
 const characterData = {
-    
     "josef": {
         name: "Josef", 
         bio: "Household head and primary guardian. Can be convinced to stay or leave depending on your influence.",
@@ -28,25 +27,23 @@ const characterData = {
             }
         ]
     },
-    
     "amelia": {
-        name: "Amelia", bio: "Cafe owner and fitness enthusiast.",
-        sprite: "images/characters/Amelia/amelia_sprite.png", 
-        bg: "images/characters/Amelia/Amelia_BG.png",
-        quests: [{ name: "Shift Work", title: "Cafe Grind", desc: "Work at the cafe.", steps: [{t: "Work 3 shifts", r: "Requires 1000 Subs"}] }]
-    },
-    "amelia": {
-        name: "Amelia", bio: "Cafe owner and fitness enthusiast.",
+        name: "Amelia", 
+        bio: "Cafe owner and fitness enthusiast.",
         sprite: "images/characters/Amelia/amelia_sprite.png", 
         bg: "images/characters/Amelia/Amelia_BG.png",
         quests: [
-            { name: "Coffee Shop", title: "Shift Work", desc: "Visit Amelia during work.", steps: [{t: "Work 3 shifts", r: "Requires 1000 Subs"}] }
+            { 
+                name: "Coffee Shop", 
+                title: "Shift Work", 
+                desc: "Visit Amelia during work.", 
+                steps: [{t: "Work 3 shifts", r: "Requires 1000 Subs"}] 
+            }
         ]
     }
 };
 
 // --- GLOBAL SOUND ENGINE ---
-// We use 'var' or check if it exists to prevent that "already declared" error
 if (typeof bgMusic === 'undefined') {
     var bgMusic = new Audio('audio/background_theme.mp3');
     bgMusic.loop = true;
@@ -58,7 +55,8 @@ if (typeof squishSnd === 'undefined') {
 
 function playSnd() {
     squishSnd.currentTime = 0;
-    squishSnd.volume = bgMusic.volume;
+    // Uses volume from bgMusic for consistency
+    squishSnd.volume = (typeof bgMusic !== 'undefined') ? bgMusic.volume : 0.5;
     squishSnd.play().catch(() => {});
 }
 
@@ -69,12 +67,19 @@ function initMusic() {
     const savedVol = localStorage.getItem('sm_volume') || 0.5;
     bgMusic.volume = savedVol;
     
-    const slider = document.getElementById('volume-slider');
-    if (slider) slider.value = savedVol;
+    // Attempt immediate play (works if user interacted with previous page)
+    bgMusic.play().catch(() => {
+        // Fallback: wait for the very first click on the document
+        document.addEventListener('click', () => {
+            bgMusic.play().catch(() => {});
+        }, { once: true });
+    });
 
-    document.addEventListener('click', () => {
-        bgMusic.play().catch(() => {});
-    }, { once: true });
+    const slider = document.getElementById('volume-slider');
+    if (slider) {
+        slider.value = savedVol;
+    }
+    updateMuteIcon();
 }
 
 function updateVolume(val) {
