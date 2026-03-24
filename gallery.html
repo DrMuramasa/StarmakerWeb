@@ -207,7 +207,7 @@
             card.dataset.url = url;
             card.innerHTML = `
                 <img src="${url}" onclick="openLightboxByUrl('${url}')">
-                <button class="star-btn ${isFav ? 'active' : ''}" onclick="toggleFavImg('${url}', this); event.stopPropagation();">★</button>
+                <button class="star-btn ${isFav ? 'active' : ''}" onclick="playSnd(); toggleFavImg('${url}', this); event.stopPropagation();">★</button>
             `;
             container.appendChild(card);
         }
