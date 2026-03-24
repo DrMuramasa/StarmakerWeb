@@ -284,3 +284,12 @@ header {
     color: var(--gold);
     margin-right: 5px;
 }
+
+body {
+    animation: fadeInPage 0.8s ease-in-out;
+}
+
+@keyframes fadeInPage {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
