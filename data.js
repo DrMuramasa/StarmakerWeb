@@ -45,81 +45,40 @@ const characterData = {
     }
 };
 
-// Shared Sound Function
-function playSnd() {
-    const snd = document.getElementById('squishSnd');
-    if(snd) { snd.currentTime = 0; snd.play(); }
-}
-
-// Global Audio Setup
-const bgMusic = new Audio('audio/background_theme.mp3'); // Ensure path is correct
-bgMusic.loop = true;
-
-function initMusic() {
-    const savedVol = localStorage.getItem('sm_volume') || 0.5;
-    bgMusic.volume = savedVol;
-    
-    // Check if slider exists on page and set it
-    const slider = document.getElementById('volume-slider');
-    if(slider) slider.value = savedVol;
-
-    // Try to play (Browsers often block auto-play until first click)
-    document.addEventListener('click', () => {
-        bgMusic.play().catch(() => {}); 
-    }, { once: true });
-}
-
-function updateVolume(val) {
-    bgMusic.volume = val;
-    localStorage.setItem('sm_volume', val);
-}
-
-// --- Sound Effects ---
-const squishSnd = new Audio('audio/squish.mp3'); // Ensure this path matches your file
-
-function playSnd() {
-    // Reset the sound to the start so it can be spammed/clicked quickly
-    squishSnd.currentTime = 0; 
-    // Use the same volume as the background music for consistency
-    squishSnd.volume = bgMusic.volume; 
-    squishSnd.play().catch(() => { /* Prevent errors if clicked before interaction */ });
-}
-
-// --- 1. Sound Engine ---
-let bgMusic;
-try {
-    bgMusic = new Audio('audio/background_theme.mp3');
+// --- GLOBAL SOUND ENGINE ---
+// We use 'var' or check if it exists to prevent that "already declared" error
+if (typeof bgMusic === 'undefined') {
+    var bgMusic = new Audio('audio/background_theme.mp3');
     bgMusic.loop = true;
-} catch (e) {
-    console.error("Music file not found, but gallery will still load.");
 }
 
-const squishSnd = new Audio('audio/squish.mp3');
+if (typeof squishSnd === 'undefined') {
+    var squishSnd = new Audio('audio/squish.mp3');
+}
 
 function playSnd() {
     squishSnd.currentTime = 0;
-    squishSnd.volume = bgMusic ? bgMusic.volume : 0.5;
+    squishSnd.volume = bgMusic.volume;
     squishSnd.play().catch(() => {});
 }
 
-// --- 2. Music Controls ---
 let isMuted = false;
 let previousVolume = 0.5;
 
 function initMusic() {
     const savedVol = localStorage.getItem('sm_volume') || 0.5;
-    if (bgMusic) bgMusic.volume = savedVol;
+    bgMusic.volume = savedVol;
     
     const slider = document.getElementById('volume-slider');
     if (slider) slider.value = savedVol;
 
     document.addEventListener('click', () => {
-        if (bgMusic) bgMusic.play().catch(() => {});
+        bgMusic.play().catch(() => {});
     }, { once: true });
 }
 
 function updateVolume(val) {
-    if (bgMusic) bgMusic.volume = val;
+    bgMusic.volume = val;
     isMuted = (val == 0);
     updateMuteIcon();
     localStorage.setItem('sm_volume', val);
@@ -128,22 +87,20 @@ function updateVolume(val) {
 function toggleMute() {
     const slider = document.getElementById('volume-slider');
     if (!isMuted) {
-        previousVolume = bgMusic ? bgMusic.volume : 0.5;
-        if (bgMusic) bgMusic.volume = 0;
+        previousVolume = bgMusic.volume > 0 ? bgMusic.volume : 0.5;
+        bgMusic.volume = 0;
         if (slider) slider.value = 0;
         isMuted = true;
     } else {
-        if (bgMusic) bgMusic.volume = previousVolume;
+        bgMusic.volume = previousVolume;
         if (slider) slider.value = previousVolume;
         isMuted = false;
     }
     updateMuteIcon();
+    localStorage.setItem('sm_volume', bgMusic.volume);
 }
 
 function updateMuteIcon() {
     const btn = document.getElementById('mute-btn');
-    if (btn) btn.innerText = (isMuted) ? "🔈" : "🔊";
+    if (btn) btn.innerText = (isMuted || bgMusic.volume === 0) ? "🔈" : "🔊";
 }
-
-// --- 3. Run Logic ---
-window.addEventListener('DOMContentLoaded', initMusic);
