@@ -3,42 +3,48 @@
         "name": "Josef", 
         "sprite": "images/characters/Josef/josef_sprite.png", 
         "bg": "images/characters/Josef/Josef_BG.jpg", 
-        "qTitle": "Friday Beer Strategy", 
-        "qSteps": ["Reach 3 Hearts with Anna", "Give Beer on Friday (x2)", "Reach 4 Hearts with Anna", "Give 3rd Beer & Explain Starmaker"] 
+        "quests": [
+            { "title": "Friday Beer Strategy", "steps": ["Reach 3 Hearts with Anna", "Give Beer on Friday (x2)", "Reach 4 Hearts with Anna", "Give 3rd Beer & Explain Starmaker"] }
+        ]
     },
     "amelia": { 
         "name": "Amelia", 
         "sprite": "images/characters/Amelia/ameliaBase_sprite.png", 
         "bg": "images/characters/Amelia/Amelia_BG.png", 
-        "qTitle": "Coffee Grind", 
-        "qSteps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] 
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
     },
     "emma": { 
         "name": "Emma", 
         "sprite": "images/characters/Emma/emmabase_sprite.png", 
         "bg": "images/characters/Emma/Emma_BG.png", 
-        "qTitle": "Cryptid Hunter", 
-        "qSteps": ["Visit Sauna 3 times", "Invite to the Farm", "Collect 3 Monster parts (Tuesday)"] 
+        "quests": [
+            { "title": "Cryptid Hunter", "steps": ["Visit Sauna 3 times", "Invite to the Farm", "Collect 3 Monster parts (Tuesday)"] }
+        ]
     },
     "evelyn": { 
         "name": "Evelyn", 
         "sprite": "images/characters/Evelyn/Everlyn_sprite.png", 
         "bg": "images/characters/Evelyn/Evelyn_BG.png", 
-        "qTitle": "The Hidden Lab", 
-        "qSteps": ["Unlock Studio Raw Sex", "Path: Foundry > Harbor > Warehouse", "Trade materials for Genetic Mods"] 
+        "quests": [
+            { "title": "The Hidden Lab", "steps": ["Unlock Studio Raw Sex", "Path: Foundry > Harbor > Warehouse", "Trade materials for Genetic Mods"] }
+        ]
     },
     "toni": { 
         "name": "Toni", 
         "sprite": "images/characters/Toni/ToniBar_sprite.png", 
         "bg": "images/characters/Toni/Toni_BG.png", 
-        "qTitle": "Squirt Racing", 
-        "qSteps": ["Pay $60k Total Debt", "Win 3 Races vs Jack", "Invite to Garage"] 
+        "quests": [
+            { "title": "Squirt Racing", "steps": ["Pay $60k Total Debt", "Win 3 Races vs Jack", "Invite to Garage"] }
+        ]
     },
     "sofia": { 
         "name": "Sofia", 
         "sprite": "images/characters/Sofia/SofiaCasual_sprite.png", 
         "bg": "images/characters/Sofia/Sofia_BG.png", 
-        "qTitle": "The Sting Operation", 
-        "qSteps": ["Meet at Gas Station (Fridays)", "Sneak Sofia into the Studio", "Arrest Mario OR Snitch to Mario"] 
+        "quests": [
+            { "title": "The Sting Operation", "steps": ["Meet at Gas Station (Fridays)", "Sneak Sofia into the Studio", "Arrest Mario OR Snitch to Mario"] }
+        ]
     }
 }
