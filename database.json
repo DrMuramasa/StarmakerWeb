@@ -4,7 +4,7 @@
         "sprite": "images/characters/Josef/josef_sprite.png", 
         "bg": "images/characters/Josef/Josef_BG.jpg", 
         "quests": [
-            { "title": "Friday Beer Strategy", "steps": ["Reach 3 Hearts with Anna", "Give Beer on Friday (x2)", "Reach 4 Hearts with Anna", "Give 3rd Beer & Explain Starmaker"] }
+            { "title": "Friday Beer Strategy", "steps": ["Reach 3 Hearts with Anna", "Give Beer on Friday (x2)", "Reach 4 Hearts with Anna", "Give 3rd Beer & Explain Starmaker"] },
             { "title": "Man of The House", "steps": ["After completing Friday's Quest", "Go Camping", "Have a 3some with Anna", "Fuck Isabella"] }
         ]
     },
@@ -21,7 +21,7 @@
         "sprite": "images/characters/Emma/emmabase_sprite.png", 
         "bg": "images/characters/Emma/Emma_BG.png", 
         "quests": [
-            { "title": "Secretary Seduction", "steps": ["Visit Sauna 3 times", "Have sex with her", "Either tell her to fight her urges or share her with Mario"] }
+            { "title": "Secretary Seduction", "steps": ["Visit Sauna 3 times", "Have sex with her", "Either tell her to fight her urges or share her with Mario"] },
             { "title": "Cryptid Hunter", "steps": ["Complete Secretary Seduction Quest", "Invite to the Farm", "Collect 3 Monster parts (Tuesday)"] }
         ]
     },
