@@ -97,6 +97,22 @@
             <label>VOL</label>
             <input type="range" id="volume-slider" min="0" max="1" step="0.01" oninput="updateVolume(this.value)">
         </div>
+    <div class="settings-container" style="position: relative;">
+    <button class="nav-btn" onclick="toggleSettings()" style="font-size: 1.2rem; padding: 5px 10px;">⚙️</button>
+    
+    <div id="settings-modal" class="glass-panel" style="display:none; position: absolute; top: 50px; right: 0; width: 250px; z-index: 1000; padding: 15px; border: 1px solid var(--gold);">
+        <h4 style="color:var(--gold); margin-top:0; border-bottom:1px solid var(--box-border); padding-bottom:5px;">SYSTEM SETTINGS</h4>
+        
+        <label style="color:gray; font-size:0.7rem; display:block; margin-bottom:10px;">BACKGROUND TRACK</label>
+        <div id="track-list" style="display:flex; flex-direction:column; gap:8px;">
+            <button class="nav-btn" style="font-size:0.8rem; text-align:left;" onclick="changeTrack('audio/home_theme.mp3', 'Home Theme')">01. Starmaker Main</button>
+            <button class="nav-btn" style="font-size:0.8rem; text-align:left;" onclick="changeTrack('audio/secrecy_beat.mp3', 'Investigation')">02. Secrecy Beat</button>
+            <button class="nav-btn" style="font-size:0.8rem; text-align:left;" onclick="changeTrack('audio/night_loop.mp3', 'City Night')">03. Midnight Pulse</button>
+        </div>
+        
+        <p id="current-track-name" style="color:var(--gold); font-size:0.6rem; margin-top:15px; opacity:0.6;">PLAYING: Home Theme</p>
+    </div>
+    </div>
         <nav>
             <a href="home.html" class="nav-btn active">Home</a>
             <a href="characters.html" class="nav-btn">Characters</a>
