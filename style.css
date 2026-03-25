@@ -419,6 +419,27 @@ body {
     border: 1px solid rgba(212, 175, 55, 0.3);
 }
 
+/* Custom Scrollbar for the Track List */
+#track-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+#track-list::-webkit-scrollbar-track {
+    background: rgba(212, 175, 55, 0.05);
+}
+
+#track-list::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 2px;
+}
+
+/* For Firefox */
+#track-list {
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold) rgba(0, 0, 0, 0.2);
+}
+
+
 /* --- Desktop Styles end here --- */
 
 /* --- CONSOLIDATED MASTER MOBILE ENGINE --- */
