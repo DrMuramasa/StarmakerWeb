@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>STARMAKER | Characters</title>
     <link rel="stylesheet" href="style.css">
-    <script src="data.js"></script> 
 </head>
 <body>
     <div class="bg-wrapper" id="master-bg"></div><div class="bg-overlay"></div>
@@ -23,24 +22,23 @@
         <div class="glass-panel">
             <div id="mosaic-view">
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--box-border); padding-bottom: 10px; flex-wrap: wrap; gap: 10px;">
-                    <h2 style="color:var(--gold); margin:0;">CHARACTER ARCHIVES</h2>
+                    <h2 style="color:var(--gold); margin:0; letter-spacing: 2px;">CHARACTER ARCHIVES</h2>
                     <input type="text" id="char-search" placeholder="Search name..." oninput="filterChars()" 
-                        style="background:rgba(0,0,0,0.5); border:1px solid var(--gold); color:white; padding:8px 15px; border-radius:20px; outline:none; width: 200px;">
+                        style="background:rgba(0,0,0,0.5); border:1px solid var(--gold); color:white; padding:8px 15px; border-radius:20px; outline:none; width: 220px;">
                 </div>
                 <div id="char-grid" class="grid-view" style="margin-top:20px;"></div>
             </div>
 
             <div id="guide-view" style="display:none;">
-                <button class="nav-btn" onclick="closeGuide()">← BACK</button>
+                <button class="nav-btn" onclick="closeGuide()">← BACK TO ARCHIVES</button>
                 <div class="char-detail-layout">
-                    <div class="char-img-container" style="position:relative;">
-                        <div id="fav-star" onclick="toggleFavorite()" style="position:absolute; top:10px; right:10px; font-size:2rem; cursor:pointer; text-shadow: 0 0 10px black;">☆</div>
+                    <div class="char-img-container">
                         <img id="guide-sprite" style="width:100%; border:1px solid var(--gold); border-radius: 5px;">
-                        <h2 id="guide-name" style="color:var(--gold); letter-spacing: 2px;"></h2>
+                        <h2 id="guide-name" style="color:var(--gold); letter-spacing: 2px; margin-top:10px;"></h2>
                     </div>
 
                     <div class="quest-menu-container">
-                        <h3 style="color:var(--gold); font-size: 0.9rem;">SELECT QUEST</h3>
+                        <h3 style="color:var(--gold); font-size: 0.9rem; letter-spacing:1px; margin-bottom:15px;">SELECT QUEST</h3>
                         <div id="quest-menu-list"></div>
                     </div>
 
@@ -54,30 +52,27 @@
 
     <script>
     let charData = {};
-    let activeCharKey = "";
-    let favorites = JSON.parse(localStorage.getItem('sm_favorites')) || [];
 
     async function loadData() {
         try {
             const response = await fetch('database.json');
+            if (!response.ok) throw new Error("Could not find database.json");
             charData = await response.json();
             renderGrid(charData);
-        } catch (err) { console.error("Database error:", err); }
+        } catch (err) { 
+            console.error("Database error:", err); 
+            document.getElementById('char-grid').innerHTML = `<p style="color:red;">Error: Ensure database.json is in the same folder.</p>`;
+        }
     }
 
-    // Renders the grid based on search/favorites
     function renderGrid(dataToRender) {
         const grid = document.getElementById('char-grid');
-        grid.innerHTML = Object.keys(dataToRender).map(key => {
-            const isFav = favorites.includes(key);
-            return `
-                <div class="char-card ${isFav ? 'fav-card' : ''}" onclick="openGuide('${key}')">
-                    <div class="mini-star">${isFav ? '★' : ''}</div>
-                    <img src="${dataToRender[key].sprite}">
-                    <h3>${dataToRender[key].name}</h3>
-                </div>
-            `;
-        }).join('');
+        grid.innerHTML = Object.keys(dataToRender).map(key => `
+            <div class="char-card" onclick="openGuide('${key}')">
+                <img src="${dataToRender[key].sprite}">
+                <h3>${dataToRender[key].name}</h3>
+            </div>
+        `).join('');
     }
 
     function filterChars() {
@@ -92,7 +87,6 @@
     }
 
     function openGuide(key) {
-        activeCharKey = key;
         if(typeof playSnd === 'function') playSnd();
         const char = charData[key];
         document.getElementById('mosaic-view').style.display = 'none';
@@ -100,9 +94,6 @@
         document.getElementById('guide-sprite').src = char.sprite;
         document.getElementById('guide-name').innerText = char.name;
         document.getElementById('master-bg').style.backgroundImage = `url('${char.bg}')`;
-
-        // Update Star Icon
-        updateStarUI();
 
         const menu = document.getElementById('quest-menu-list');
         menu.innerHTML = char.quests.map((q, index) => `
@@ -113,35 +104,25 @@
         history.pushState({ guideOpen: true }, "");
     }
 
-    function toggleFavorite() {
-        const index = favorites.indexOf(activeCharKey);
-        if (index > -1) {
-            favorites.splice(index, 1); // Remove
-        } else {
-            favorites.push(activeCharKey); // Add
-        }
-        localStorage.setItem('sm_favorites', JSON.stringify(favorites));
-        updateStarUI();
-        if(typeof playSnd === 'function') playSnd();
-    }
-
-    function updateStarUI() {
-        const star = document.getElementById('fav-star');
-        star.innerText = favorites.includes(activeCharKey) ? "★" : "☆";
-        star.style.color = favorites.includes(activeCharKey) ? "var(--gold)" : "white";
-    }
-
     function showSteps(charKey, questIndex) {
         if(typeof playSnd === 'function') playSnd();
         const quest = charData[charKey].quests[questIndex];
         const display = document.getElementById('step-display');
-        display.innerHTML = `<h3 style="color:var(--gold); margin-top:0;">${quest.title}</h3>
-            <ul style="list-style:none; padding:0;">${quest.steps.map(s => `<li style="margin-bottom:12px; color:white;"><span style="color:var(--gold);">▶</span> ${s}</li>`).join('')}</ul>`;
-        document.querySelectorAll('.quest-nav-item').forEach((el, i) => el.classList.toggle('active-quest', i === questIndex));
+        
+        display.innerHTML = `
+            <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid var(--box-border); padding-bottom:10px;">${quest.title}</h3>
+            <ul style="list-style:none; padding:0; line-height:1.6;">
+                ${quest.steps.map(s => `<li style="margin-bottom:12px; color:white;"><span style="color:var(--gold);">▶</span> ${s}</li>`).join('')}
+            </ul>
+        `;
+
+        document.querySelectorAll('.quest-nav-item').forEach((el, i) => {
+            el.classList.toggle('active-quest', i === questIndex);
+        });
     }
 
     function closeGuide() {
-        renderGrid(charData); // Refresh grid to show new stars
+        if(typeof playSnd === 'function') playSnd();
         document.getElementById('mosaic-view').style.display = 'block';
         document.getElementById('guide-view').style.display = 'none';
         document.getElementById('master-bg').style.backgroundImage = "url('backgroundImg.gif')";
