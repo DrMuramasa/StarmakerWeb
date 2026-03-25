@@ -486,6 +486,30 @@ body {
     background: rgba(212, 175, 55, 0.1);
 }
 
+#settings-modal {
+    /* This prevents the box from stretching to the bottom of the screen */
+    height: auto !important; 
+    display: flex;
+    flex-direction: column;
+    /* Optional: adds a nice glow to the border */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8); 
+}
+
+#track-list {
+    /* This height (approx 160px-180px) fits about 4 tracks perfectly */
+    max-height: 170px; 
+    overflow-y: auto;
+    margin-bottom: 10px;
+    padding-right: 5px;
+}
+
+/* Ensure the 'Playing' message stays at the bottom of the now-shorter box */
+#current-track-name {
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
+}
+
 /* --- Desktop Styles end here --- */
 
 /* --- CONSOLIDATED MASTER MOBILE ENGINE --- */
