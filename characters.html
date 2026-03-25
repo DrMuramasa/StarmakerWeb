@@ -28,13 +28,20 @@
 
             <div id="guide-view" style="display:none;">
                 <button class="nav-btn" onclick="closeGuide()">← BACK</button>
+                
                 <div class="char-detail-layout">
                     <div class="char-img-container">
-                        <img id="guide-sprite">
-                        <h2 id="guide-name" style="color:var(--gold);"></h2>
+                        <img id="guide-sprite" style="width:100%; border:1px solid var(--gold); border-radius: 5px;">
+                        <h2 id="guide-name" style="color:var(--gold); letter-spacing: 2px;"></h2>
                     </div>
-                    <div id="quest-area" class="quest-section">
-                        <div id="quest-list"></div>
+
+                    <div class="quest-menu-container">
+                        <h3 style="color:var(--gold); font-size: 0.9rem;">SELECT QUEST</h3>
+                        <div id="quest-menu-list"></div>
+                    </div>
+
+                    <div class="step-viewer" id="step-display">
+                        <p style="color:gray; font-style:italic;">Select a quest to view steps...</p>
                     </div>
                 </div>
             </div>
@@ -42,14 +49,14 @@
     </div>
 
     <script>
-    let charData = {}; // Global variable to store loaded data
+    let charData = {};
 
     async function loadData() {
         try {
             const response = await fetch('database.json');
             charData = await response.json();
             initGrid();
-        } catch (err) { console.error("Database failed to load:", err); }
+        } catch (err) { console.error("Database error:", err); }
     }
 
     function initGrid() {
@@ -63,6 +70,7 @@
     }
 
     function openGuide(key) {
+        if(typeof playSnd === 'function') playSnd();
         const char = charData[key];
         document.getElementById('mosaic-view').style.display = 'none';
         document.getElementById('guide-view').style.display = 'block';
@@ -70,21 +78,39 @@
         document.getElementById('guide-name').innerText = char.name;
         document.getElementById('master-bg').style.backgroundImage = `url('${char.bg}')`;
 
-        document.getElementById('quest-list').innerHTML = `
-            <div class="quest-segment" onclick="this.classList.toggle('active'); playSnd();">
-                <div class="quest-header">
-                    <span>${char.qTitle}</span>
-                    <span class="arrow">▼</span>
-                </div>
-                <div class="quest-content">
-                    <ul>${char.qSteps.map(s => `<li>${s}</li>`).join('')}</ul>
-                </div>
+        // Fill Column 2 with Quest Names
+        const menu = document.getElementById('quest-menu-list');
+        menu.innerHTML = char.quests.map((q, index) => `
+            <div class="quest-nav-item" onclick="showSteps('${key}', ${index})">
+                ${q.title}
             </div>
-        `;
+        `).join('');
+
+        // Clear Column 3
+        document.getElementById('step-display').innerHTML = '<p style="color:gray;">Select a quest to see details.</p>';
         history.pushState({ guideOpen: true }, "");
     }
 
+    function showSteps(charKey, questIndex) {
+        if(typeof playSnd === 'function') playSnd();
+        const quest = charData[charKey].quests[questIndex];
+        const display = document.getElementById('step-display');
+        
+        display.innerHTML = `
+            <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid var(--box-border); padding-bottom:10px;">${quest.title}</h3>
+            <ul style="list-style:none; padding:0; line-height:1.6;">
+                ${quest.steps.map(s => `<li style="margin-bottom:12px; color:white;"><span style="color:var(--gold);">▶</span> ${s}</li>`).join('')}
+            </ul>
+        `;
+
+        // Highlight Active Tab
+        document.querySelectorAll('.quest-nav-item').forEach((el, i) => {
+            el.classList.toggle('active-quest', i === questIndex);
+        });
+    }
+
     function closeGuide() {
+        if(typeof playSnd === 'function') playSnd();
         document.getElementById('mosaic-view').style.display = 'block';
         document.getElementById('guide-view').style.display = 'none';
         document.getElementById('master-bg').style.backgroundImage = "url('backgroundImg.gif')";
