@@ -377,6 +377,25 @@ body {
     border-color: var(--gold) !important;
 }
 
+
+/* FAVORITES LOOK FOR LIST OF CHARACTERS IN GALLERY */
+
+/* Favorite Character Buttons in Gallery */
+.char-btn.is-favorite {
+    color: #ff69b4 !important; /* Pink color */
+    border-color: #ff69b4 !important;
+}
+
+.char-btn.is-favorite::after {
+    content: " ❤️";
+    font-size: 0.8rem;
+}
+
+/* Optional: Subtle glow for favorites */
+.char-btn.is-favorite:hover {
+    box-shadow: 0 0 10px rgba(255, 105, 180, 0.4);
+}
+
 /* --- Desktop Styles end here --- */
 
 /* --- CONSOLIDATED MASTER MOBILE ENGINE --- */
