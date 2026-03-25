@@ -60,16 +60,6 @@
         }
         .star-btn.active { color: var(--gold); text-shadow: 0 0 10px var(--gold); }
 
-        .fav-toggle {
-            margin-bottom: 20px;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--gold);
-            cursor: pointer;
-        }
-
         /* FAVORITE CHARACTER STYLE */
         .char-link.is-favorite {
             color: #ff69b4 !important; /* Pink */
@@ -141,17 +131,16 @@
                 
                 <div class="folder-list">
                     <h3 style="color:var(--gold); font-size: 0.9rem; letter-spacing: 1px;">CHARACTERS</h3>
-                    <div class="fav-toggle" onclick="toggleCharFavFilter()">
-                        <input type="checkbox" id="char-fav-only" onclick="event.stopPropagation()"> Show Favs Only
-                    </div>
-                    <div id="char-list">
-                        </div>
+                    <button id="btn-char-fav" class="nav-btn" style="width:100%; margin-bottom:15px; font-size:0.7rem; transition: 0.3s;" onclick="toggleCharFavFilter()">
+                        SHOW FAVS: OFF
+                    </button>
+                    <div id="char-list"></div>
                 </div>
 
                 <div class="gallery-scroll-area">
-                    <div class="fav-toggle" onclick="toggleFavFilter('gallery')">
-                        <input type="checkbox" id="gal-fav-only"> Filter Favorites
-                    </div>
+                    <button id="btn-gal-fav" class="nav-btn" style="width:100%; margin-bottom:15px; font-size:0.7rem; transition: 0.3s;" onclick="toggleFavFilter('gallery')">
+                        FILTER FAVORITES: OFF
+                    </button>
                     <div class="gallery-grid" id="gallery-items"></div>
                 </div>
 
@@ -180,6 +169,10 @@
         let galleryImgs = [];
         let galleryIdx = 0;
         let activeView = "gallery"; 
+        
+        // Filter States
+        let charFilterActive = false;
+        let galFilterActive = false;
 
         // Shared Favorites Object
         let favorites = JSON.parse(localStorage.getItem('sm_favorites')) || { images: [], chars: [] };
@@ -187,9 +180,6 @@
         // --- CHARACTER SIDEBAR LOGIC ---
         function renderCharacterList() {
             const listContainer = document.getElementById('char-list');
-            const showFavsOnly = document.getElementById('char-fav-only').checked;
-            
-            // Character keys (ensure these match your GitHub folder names exactly)
             const characterKeys = ["Amelia", "Emma", "Evelyn", "Toni", "Sofia"]; 
             
             listContainer.innerHTML = "";
@@ -197,7 +187,7 @@
             characterKeys.forEach(key => {
                 const isFav = favorites.chars && favorites.chars.includes(key);
                 
-                if (showFavsOnly && !isFav) return;
+                if (charFilterActive && !isFav) return;
 
                 const btn = document.createElement('button');
                 btn.className = `nav-btn char-link ${isFav ? 'is-favorite' : ''}`;
@@ -205,10 +195,9 @@
                 btn.style.marginBottom = "10px";
                 btn.innerText = key;
 
-                // Left Click: Load Gallery
                 btn.onclick = () => { playSnd(); loadGallery(key); };
 
-                // Right Click: Toggle Favorite (Pink/Heart)
+                // Right Click to Favorite
                 btn.oncontextmenu = (e) => {
                     e.preventDefault();
                     toggleCharFav(key);
@@ -220,7 +209,6 @@
 
         function toggleCharFav(key) {
             if (!favorites.chars) favorites.chars = [];
-            
             if (favorites.chars.includes(key)) {
                 favorites.chars = favorites.chars.filter(c => c !== key);
             } else {
@@ -232,9 +220,13 @@
         }
 
         function toggleCharFavFilter() {
-            const checkbox = document.getElementById('char-fav-only');
-            checkbox.checked = !checkbox.checked;
+            charFilterActive = !charFilterActive;
+            const btn = document.getElementById('btn-char-fav');
+            btn.innerText = charFilterActive ? "SHOW FAVS: ON" : "SHOW FAVS: OFF";
+            btn.style.color = charFilterActive ? "#ff69b4" : "var(--gold)";
+            btn.style.borderColor = charFilterActive ? "#ff69b4" : "var(--box-border)";
             renderCharacterList();
+            if(typeof playSnd === 'function') playSnd();
         }
 
         // --- GALLERY CONTENT LOGIC ---
@@ -251,7 +243,6 @@
                 files.forEach(file => {
                     const name = file.name.toLowerCase();
                     const isImage = /\.(jpg|jpeg|png|gif|webp)$/.test(name);
-                    
                     if (isImage) {
                         if (name.includes('_sprite')) {
                             sprites.push(file.download_url);
@@ -278,6 +269,14 @@
                 <img src="${url}" onclick="playSnd(); openLightboxByUrl('${url}')">
                 <button class="star-btn ${isFav ? 'active' : ''}" onclick="playSnd(); toggleFavImg('${url}', this); event.stopPropagation();">★</button>
             `;
+            
+            // Right Click to Favorite Image
+            card.oncontextmenu = (e) => {
+                e.preventDefault();
+                const btn = card.querySelector('.star-btn');
+                toggleFavImg(url, btn);
+            };
+
             container.appendChild(card);
         }
 
@@ -291,21 +290,25 @@
             }
             localStorage.setItem('sm_favorites', JSON.stringify(favorites));
             applyFilters();
+            if(typeof playSnd === 'function') playSnd();
         }
 
         function toggleFavFilter(type) {
             if (type === 'gallery') {
-                const cb = document.getElementById('gal-fav-only');
-                cb.checked = !cb.checked;
+                galFilterActive = !galFilterActive;
+                const btn = document.getElementById('btn-gal-fav');
+                btn.innerText = galFilterActive ? "FILTER FAVORITES: ON" : "FILTER FAVORITES: OFF";
+                btn.style.color = galFilterActive ? "var(--gold)" : "white";
+                btn.style.borderColor = galFilterActive ? "var(--gold)" : "var(--box-border)";
             }
             applyFilters();
+            if(typeof playSnd === 'function') playSnd();
         }
 
         function applyFilters() {
-            const imgFavOnly = document.getElementById('gal-fav-only').checked;
             document.querySelectorAll('.img-card').forEach(card => {
                 const isFav = favorites.images.includes(card.dataset.url);
-                card.style.display = (imgFavOnly && !isFav) ? 'none' : 'block';
+                card.style.display = (galFilterActive && !isFav) ? 'none' : 'block';
             });
         }
 
@@ -340,7 +343,7 @@
             history.pushState({ lightbox: true }, "");
         }
 
-        // Key Listeners
+        // Navigation Keys
         window.addEventListener('keydown', (e) => {
             const lb = document.getElementById('lightbox');
             const isMax = lb.style.display === 'flex';
@@ -359,7 +362,7 @@
             else if (e.key === "Escape") { lb.style.display = 'none'; }
         });
 
-        // Swipe & Initialization
+        // Touch Swipe
         let touchStartX = 0;
         window.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, false);
         window.addEventListener('touchend', e => {
@@ -374,7 +377,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             if(typeof initMusic === 'function') initMusic();
-            renderCharacterList(); // Build the sidebar
+            renderCharacterList();
         });
     </script>
 </body>
