@@ -113,15 +113,18 @@
             
             <div id="settings-modal" class="glass-panel" style="display:none; position: absolute; top: 50px; right: 0; width: 250px; z-index: 1000; padding: 15px; border: 1px solid var(--gold); background: rgba(10, 10, 15, 0.98);">
                 <h4 style="color:var(--gold); margin-top:0; border-bottom:1px solid var(--box-border); padding-bottom:5px; font-size: 0.8rem;">SYSTEM SETTINGS</h4>
+                <label style="color:gray; font-size:0.7rem; display:block; margin-bottom:10px;">SELECT TRACK</label>
                 
-                <label style="color:gray; font-size:0.7rem; display:block; margin-bottom:10px;">BACKGROUND TRACK</label>
-                <div id="track-list" style="display:flex; flex-direction:column; gap:8px;">
-                    <button class="nav-btn" style="font-size:0.8rem; text-align:left;" onclick="changeTrack('audio/home_theme.mp3', 'Home Theme')">01. Starmaker Main</button>
-                    <button class="nav-btn" style="font-size:0.8rem; text-align:left;" onclick="changeTrack('audio/secrecy_beat.mp3', 'Investigation')">02. Secrecy Beat</button>
-                    <button class="nav-btn" style="font-size:0.8rem; text-align:left;" onclick="changeTrack('audio/night_loop.mp3', 'City Night')">03. Midnight Pulse</button>
-                </div>
+                <div id="track-list" style="display: flex; flex-direction: column; gap: 4px; max-height: 160px; overflow-y: auto; padding-right: 5px;">
+                    <button class="nav-btn" style="font-size:0.8rem; text-align:left; flex-shrink: 0;" onclick="changeTrack('audio/background_theme.mp3', 'Starmaker')">01. Starmaker Main</button>
+                    <button class="nav-btn" style="font-size:0.8rem; text-align:left; flex-shrink: 0;" onclick="changeTrack('audio/FallApart.mp3', 'Fall Apart')">02. Fall Apart</button>
+                    <button class="nav-btn" style="font-size:0.8rem; text-align:left; flex-shrink: 0;" onclick="changeTrack('audio/GoBack.mp3', 'Go Back')">03. Go Back</button>
+                    <button class="nav-btn" style="font-size:0.8rem; text-align:left; flex-shrink: 0;" onclick="changeTrack('audio/Neo.mp3', 'Neo')">03. Neo</button>
+                    </div>
                 
-                <p id="current-track-name" style="color:var(--gold); font-size:0.6rem; margin-top:15px; opacity:0.6;">PLAYING: Home Theme</p>
+                <p id="current-track-name" style="color:var(--gold); font-size:0.6rem; margin-top:15px; opacity:0.6; border-top: 1px solid var(--box-border); padding-top: 10px;">
+                    STATUS: ONLINE // <span id="track-display">Home Theme</span>
+                </p>
             </div>
         </div>
     </div>
