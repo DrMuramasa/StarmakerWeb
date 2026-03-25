@@ -396,6 +396,22 @@ body {
     box-shadow: 0 0 10px rgba(255, 105, 180, 0.4);
 }
 
+/* SETTINGS FOR THE SETTINGS FOR TRACKS */
+.settings-container {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#settings-modal {
+    background: rgba(10, 10, 15, 0.95) !important;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 5px var(--gold);
+}
+
+#settings-modal .nav-btn:hover {
+    background: var(--gold);
+    color: black;
+}
 /* --- Desktop Styles end here --- */
 
 /* --- CONSOLIDATED MASTER MOBILE ENGINE --- */
