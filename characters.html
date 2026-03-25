@@ -12,13 +12,6 @@
     
     <header>
         <div style="color:var(--gold); font-weight:bold; letter-spacing:2px;">STARMAKER DATABASE</div>
-
-        <div class="music-controls">
-            <button id="mute-btn" onclick="toggleMute()" style="background:none; border:none; color:var(--gold); cursor:pointer; font-size:1.1rem; padding:0;">🔊</button>
-            <label style="color:var(--gold); font-size: 0.8rem; margin-left: 5px;">VOL</label>
-            <input type="range" id="volume-slider" min="0" max="1" step="0.01" oninput="updateVolume(this.value)">
-        </div>
-
         <nav>
             <a href="home.html" class="nav-btn">Home</a>
             <a href="characters.html" class="nav-btn active">Characters</a>
@@ -29,20 +22,18 @@
     <div class="container">
         <div class="glass-panel">
             <div id="mosaic-view">
-                <h2 style="color:var(--gold); border-bottom:1px solid var(--box-border); padding-bottom: 10px; letter-spacing: 2px;">CHARACTER ARCHIVES</h2>
+                <h2 style="color:var(--gold); border-bottom:1px solid var(--box-border); padding-bottom: 10px;">CHARACTER ARCHIVES</h2>
                 <div id="char-grid" class="grid-view"></div>
             </div>
 
             <div id="guide-view" style="display:none;">
-                <button class="nav-btn" onclick="closeGuide()">← BACK TO ARCHIVES</button>
-                
-                <div class="char-detail-layout" style="display:grid; grid-template-columns: 300px 1fr; gap:30px; margin-top:20px;">
-                    <div id="side-info" class="char-img-container">
-                        <img id="guide-sprite" style="width:100%; border:1px solid var(--gold); border-radius: 5px;">
-                        <h2 id="guide-name" style="color:var(--gold); letter-spacing: 2px;"></h2>
+                <button class="nav-btn" onclick="closeGuide()">← BACK</button>
+                <div class="char-detail-layout">
+                    <div class="char-img-container">
+                        <img id="guide-sprite">
+                        <h2 id="guide-name" style="color:var(--gold);"></h2>
                     </div>
-                    
-                    <div id="quest-area" class="quest-section" style="background:rgba(255,255,255,0.05); padding:20px; border-radius:10px; border: 1px solid var(--box-border);">
+                    <div id="quest-area" class="quest-section">
                         <div id="quest-list"></div>
                     </div>
                 </div>
@@ -51,90 +42,57 @@
     </div>
 
     <script>
-    const charData = {
-        "josef": { name: "Josef", sprite: "images/characters/Josef/josef_sprite.png", bg: "images/characters/Josef/Josef_BG.jpg", qTitle: "Friday Beer Strategy", qSteps: ["Reach 3 Hearts with Anna", "Give Beer on Friday (x2)", "Reach 4 Hearts with Anna", "Give 3rd Beer & Explain Starmaker"] },
-        "amelia": { name: "Amelia", sprite: "images/characters/Amelia/ameliaBase_sprite.png", bg: "images/characters/Amelia/Amelia_BG.png", qTitle: "Coffee Grind", qSteps: ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] },
-        "emma": { name: "Emma", sprite: "images/characters/Emma/emmabase_sprite.png", bg: "images/characters/Emma/Emma_BG.png", qTitle: "Cryptid Hunter", qSteps: ["Visit Sauna 3 times", "Invite to the Farm", "Collect 3 Monster parts (Tuesday)"] },
-        "evelyn": { name: "Evelyn", sprite: "images/characters/Evelyn/Everlyn_sprite.png", bg: "images/characters/Evelyn/Evelyn_BG.png", qTitle: "The Hidden Lab", qSteps: ["Unlock Studio Raw Sex", "Path: Foundry > Harbor > Warehouse", "Trade materials for Genetic Mods"] },
-        "toni": { name: "Toni", sprite: "images/characters/Toni/ToniBar_sprite.png", bg: "images/characters/Toni/Toni_BG.png", qTitle: "Squirt Racing", qSteps: ["Pay $60k Total Debt", "Win 3 Races vs Jack", "Invite to Garage"] },
-        "sofia": { name: "Sofia", sprite: "images/characters/Sofia/SofiaCasual_sprite.png", bg: "images/characters/Sofia/Sofia_BG.png", qTitle: "The Sting Operation", qSteps: ["Meet at Gas Station (Fridays)", "Sneak Sofia into the Studio", "Arrest Mario OR Snitch to Mario"] }
-    };
+    let charData = {}; // Global variable to store loaded data
 
-    function init() {
+    async function loadData() {
+        try {
+            const response = await fetch('database.json');
+            charData = await response.json();
+            initGrid();
+        } catch (err) { console.error("Database failed to load:", err); }
+    }
+
+    function initGrid() {
         const grid = document.getElementById('char-grid');
-        grid.innerHTML = "";
-        Object.keys(charData).forEach(key => {
-            const card = document.createElement('div');
-            card.className = 'char-card';
-            card.onclick = () => {
-                if(typeof playSnd === 'function') playSnd(); 
-                openGuide(key);
-            };
-            card.innerHTML = `<img src="${charData[key].sprite}"><h3>${charData[key].name}</h3>`;
-            grid.appendChild(card);
-        });
+        grid.innerHTML = Object.keys(charData).map(key => `
+            <div class="char-card" onclick="openGuide('${key}')">
+                <img src="${charData[key].sprite}">
+                <h3>${charData[key].name}</h3>
+            </div>
+        `).join('');
     }
 
     function openGuide(key) {
         const char = charData[key];
         document.getElementById('mosaic-view').style.display = 'none';
         document.getElementById('guide-view').style.display = 'block';
-        
         document.getElementById('guide-sprite').src = char.sprite;
         document.getElementById('guide-name').innerText = char.name;
         document.getElementById('master-bg').style.backgroundImage = `url('${char.bg}')`;
 
-        // Implementation of Collapsible Quest Segments
-        const questList = document.getElementById('quest-list');
-        questList.innerHTML = `
-            <div class="quest-segment" onclick="this.classList.toggle('active'); if(typeof playSnd === 'function') playSnd();">
+        document.getElementById('quest-list').innerHTML = `
+            <div class="quest-segment" onclick="this.classList.toggle('active'); playSnd();">
                 <div class="quest-header">
-                    <span style="color:var(--gold);">${char.qTitle}</span>
+                    <span>${char.qTitle}</span>
                     <span class="arrow">▼</span>
                 </div>
                 <div class="quest-content">
-                    <ul style="list-style:none; padding:0; margin:0;">
-                        ${char.qSteps.map(step => `
-                            <li style="margin-bottom:10px; color:white;">
-                                <span style="color:var(--gold);">▶</span> ${step}
-                            </li>
-                        `).join('')}
-                    </ul>
+                    <ul>${char.qSteps.map(s => `<li>${s}</li>`).join('')}</ul>
                 </div>
             </div>
         `;
-
-        // Push state for the back button logic
         history.pushState({ guideOpen: true }, "");
     }
 
     function closeGuide() {
-        if(typeof playSnd === 'function') playSnd();
         document.getElementById('mosaic-view').style.display = 'block';
         document.getElementById('guide-view').style.display = 'none';
         document.getElementById('master-bg').style.backgroundImage = "url('backgroundImg.gif')";
-        
-        // If we are on the fake history state, go back
-        if (history.state && history.state.guideOpen) {
-            history.back();
-        }
+        if (history.state?.guideOpen) history.back();
     }
 
-    // Handle Phone Back Button
-    window.onpopstate = function(event) {
-        const guide = document.getElementById('guide-view');
-        if (guide.style.display === 'block') {
-            // Close the guide view if it's open instead of leaving the site
-            document.getElementById('mosaic-view').style.display = 'block';
-            guide.style.display = 'none';
-            document.getElementById('master-bg').style.backgroundImage = "url('backgroundImg.gif')";
-        }
-    };
-
-    window.addEventListener('DOMContentLoaded', () => {
-        if(typeof initMusic === 'function') initMusic(); 
-        init();      
-    });
+    window.onpopstate = () => { if (document.getElementById('guide-view').style.display === 'block') closeGuide(); };
+    window.addEventListener('DOMContentLoaded', loadData);
     </script>
 </body>
 </html>
