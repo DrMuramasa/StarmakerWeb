@@ -439,6 +439,33 @@ body {
     scrollbar-color: var(--gold) rgba(0, 0, 0, 0.2);
 }
 
+/* Custom Scrollbar for the Track List */
+#track-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+#track-list::-webkit-scrollbar-track {
+    background: rgba(212, 175, 55, 0.05);
+}
+
+#track-list::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 2px;
+}
+
+/* For Firefox Support */
+#track-list {
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold) rgba(0, 0, 0, 0.2);
+}
+
+/* Visual cue for the active song */
+.track-item.playing {
+    border-left: 3px solid var(--gold);
+    background: rgba(212, 175, 55, 0.1);
+    padding-left: 15px !important;
+    color: var(--gold); /* Optional: makes the text glow too */
+}
 
 /* --- Desktop Styles end here --- */
 
