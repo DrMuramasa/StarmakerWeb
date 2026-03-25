@@ -70,6 +70,17 @@
             cursor: pointer;
         }
 
+        /* FAVORITE CHARACTER STYLE */
+        .char-link.is-favorite {
+            color: #ff69b4 !important; /* Pink */
+            border-color: #ff69b4 !important;
+        }
+        .char-link.is-favorite::after {
+            content: " ❤️";
+            font-size: 0.7rem;
+            vertical-align: middle;
+        }
+
         .sprite-viewer {
             background: rgba(0,0,0,0.4);
             border-radius: 15px;
@@ -130,16 +141,11 @@
                 
                 <div class="folder-list">
                     <h3 style="color:var(--gold); font-size: 0.9rem; letter-spacing: 1px;">CHARACTERS</h3>
-                    <div class="fav-toggle" onclick="toggleFavFilter('chars')">
-                        <input type="checkbox" id="char-fav-only"> Show Favs Only
+                    <div class="fav-toggle" onclick="toggleCharFavFilter()">
+                        <input type="checkbox" id="char-fav-only" onclick="event.stopPropagation()"> Show Favs Only
                     </div>
                     <div id="char-list">
-                        <button class="nav-btn char-link" style="width:100%; margin-bottom:10px;" onclick="playSnd(); loadGallery('Amelia')">Amelia</button>
-                        <button class="nav-btn char-link" style="width:100%; margin-bottom:10px;" onclick="playSnd(); loadGallery('Emma')">Emma</button>
-                        <button class="nav-btn char-link" style="width:100%; margin-bottom:10px;" onclick="playSnd(); loadGallery('Evelyn')">Evelyn</button>
-                        <button class="nav-btn char-link" style="width:100%; margin-bottom:10px;" onclick="playSnd(); loadGallery('Toni')">Toni</button>
-                        <button class="nav-btn char-link" style="width:100%; margin-bottom:10px;" onclick="playSnd(); loadGallery('Sofia')">Sofia</button>
-                    </div>
+                        </div>
                 </div>
 
                 <div class="gallery-scroll-area">
@@ -175,40 +181,93 @@
         let galleryIdx = 0;
         let activeView = "gallery"; 
 
+        // Shared Favorites Object
         let favorites = JSON.parse(localStorage.getItem('sm_favorites')) || { images: [], chars: [] };
 
-        async function loadGallery(folder) {
-    const grid = document.getElementById('gallery-items');
-    grid.innerHTML = "Syncing...";
-    sprites = []; galleryImgs = []; spriteIdx = 0;
-
-    try {
-        const res = await fetch(`https://api.github.com/repos/DrMuramasa/StarmakerWeb/contents/images/characters/${folder}`);
-        const files = await res.json();
-        grid.innerHTML = "";
-
-        files.forEach(file => {
-            const name = file.name.toLowerCase();
+        // --- CHARACTER SIDEBAR LOGIC ---
+        function renderCharacterList() {
+            const listContainer = document.getElementById('char-list');
+            const showFavsOnly = document.getElementById('char-fav-only').checked;
             
-            // FIX: Only process files that are actually images (jpg, png, gif, webp)
-            const isImage = /\.(jpg|jpeg|png|gif|webp)$/.test(name);
+            // Character keys (ensure these match your GitHub folder names exactly)
+            const characterKeys = ["Amelia", "Emma", "Evelyn", "Toni", "Sofia"]; 
             
-            if (isImage) {
-                if (name.includes('_sprite')) {
-                    sprites.push(file.download_url);
-                } else if (!name.includes('_bg')) {
-                    galleryImgs.push(file.download_url);
-                    createCard(file.download_url, grid);
-                }
+            listContainer.innerHTML = "";
+
+            characterKeys.forEach(key => {
+                const isFav = favorites.chars && favorites.chars.includes(key);
+                
+                if (showFavsOnly && !isFav) return;
+
+                const btn = document.createElement('button');
+                btn.className = `nav-btn char-link ${isFav ? 'is-favorite' : ''}`;
+                btn.style.width = "100%";
+                btn.style.marginBottom = "10px";
+                btn.innerText = key;
+
+                // Left Click: Load Gallery
+                btn.onclick = () => { playSnd(); loadGallery(key); };
+
+                // Right Click: Toggle Favorite (Pink/Heart)
+                btn.oncontextmenu = (e) => {
+                    e.preventDefault();
+                    toggleCharFav(key);
+                };
+
+                listContainer.appendChild(btn);
+            });
+        }
+
+        function toggleCharFav(key) {
+            if (!favorites.chars) favorites.chars = [];
+            
+            if (favorites.chars.includes(key)) {
+                favorites.chars = favorites.chars.filter(c => c !== key);
+            } else {
+                favorites.chars.push(key);
             }
-        });
-        renderSprite();
-        applyFilters();
-    } catch (err) { 
-        grid.innerHTML = "Access Denied."; 
-        console.error(err); 
-    }
-}
+            localStorage.setItem('sm_favorites', JSON.stringify(favorites));
+            renderCharacterList();
+            if(typeof playSnd === 'function') playSnd();
+        }
+
+        function toggleCharFavFilter() {
+            const checkbox = document.getElementById('char-fav-only');
+            checkbox.checked = !checkbox.checked;
+            renderCharacterList();
+        }
+
+        // --- GALLERY CONTENT LOGIC ---
+        async function loadGallery(folder) {
+            const grid = document.getElementById('gallery-items');
+            grid.innerHTML = "Syncing...";
+            sprites = []; galleryImgs = []; spriteIdx = 0;
+
+            try {
+                const res = await fetch(`https://api.github.com/repos/DrMuramasa/StarmakerWeb/contents/images/characters/${folder}`);
+                const files = await res.json();
+                grid.innerHTML = "";
+
+                files.forEach(file => {
+                    const name = file.name.toLowerCase();
+                    const isImage = /\.(jpg|jpeg|png|gif|webp)$/.test(name);
+                    
+                    if (isImage) {
+                        if (name.includes('_sprite')) {
+                            sprites.push(file.download_url);
+                        } else if (!name.includes('_bg')) {
+                            galleryImgs.push(file.download_url);
+                            createCard(file.download_url, grid);
+                        }
+                    }
+                });
+                renderSprite();
+                applyFilters();
+            } catch (err) { 
+                grid.innerHTML = "Access Denied."; 
+                console.error(err); 
+            }
+        }
 
         function createCard(url, container) {
             const isFav = favorites.images.includes(url);
@@ -235,8 +294,10 @@
         }
 
         function toggleFavFilter(type) {
-            if (type === 'chars') document.getElementById('char-fav-only').checked = !document.getElementById('char-fav-only').checked;
-            if (type === 'gallery') document.getElementById('gal-fav-only').checked = !document.getElementById('gal-fav-only').checked;
+            if (type === 'gallery') {
+                const cb = document.getElementById('gal-fav-only');
+                cb.checked = !cb.checked;
+            }
             applyFilters();
         }
 
@@ -268,6 +329,7 @@
             galleryIdx = galleryImgs.indexOf(url);
             document.getElementById('lb-img').src = url;
             document.getElementById('lightbox').style.display = 'flex';
+            history.pushState({ lightbox: true }, "");
         }
 
         function openSpriteMax() {
@@ -275,127 +337,45 @@
             activeView = "sprite"; 
             document.getElementById('lb-img').src = sprites[spriteIdx];
             document.getElementById('lightbox').style.display = 'flex';
+            history.pushState({ lightbox: true }, "");
         }
 
+        // Key Listeners
         window.addEventListener('keydown', (e) => {
             const lb = document.getElementById('lightbox');
             const isMax = lb.style.display === 'flex';
-
             if (e.key === "ArrowRight") {
-                if (isMax) {
-                    if(activeView === "gallery") {
-                        galleryIdx = (galleryIdx + 1) % galleryImgs.length;
-                        document.getElementById('lb-img').src = galleryImgs[galleryIdx];
-                    } else {
-                        cycleSprite(1); 
-                    }
-                } else {
-                    cycleSprite(1);
-                }
-            } 
-            else if (e.key === "ArrowLeft") {
-                if (isMax) {
-                    if(activeView === "gallery") {
-                        galleryIdx = (galleryIdx - 1 + galleryImgs.length) % galleryImgs.length;
-                        document.getElementById('lb-img').src = galleryImgs[galleryIdx];
-                    } else {
-                        cycleSprite(-1); 
-                    }
-                } else {
-                    cycleSprite(-1);
-                }
-            } 
-            else if (e.key === "Escape") {
-                lb.style.display = 'none';
-            }
-        });
-
-
-        window.addEventListener('DOMContentLoaded', () => {
-               initMusic(); // Starts the music and fade effect
-               // Optional: loadGallery('Amelia'); // Uncomment this if you want a character loaded by default
-        });
-
-        //THIS SEGMENT IS FOR SWIPING ON PHONE
-
-        let touchStartX = 0;
-let touchEndX = 0;
-
-function handleSwipe() {
-    const swipeDistance = touchStartX - touchEndX;
-    const threshold = 70; // Minimum swipe distance in pixels
-
-    if (Math.abs(swipeDistance) > threshold) {
-        playSnd(); // Feedback sound
-        
-        if (swipeDistance > 0) {
-            // SWIPE LEFT -> NEXT
-            if (document.getElementById('lightbox').style.display === 'flex') {
-                if (activeView === "gallery") {
+                if (isMax && activeView === "gallery") {
                     galleryIdx = (galleryIdx + 1) % galleryImgs.length;
                     document.getElementById('lb-img').src = galleryImgs[galleryIdx];
-                } else {
-                    cycleSprite(1);
-                }
-            } else {
-                // If not in lightbox, swipe the sprite viewer
-                cycleSprite(1);
-            }
-        } else {
-            // SWIPE RIGHT -> PREVIOUS
-            if (document.getElementById('lightbox').style.display === 'flex') {
-                if (activeView === "gallery") {
+                } else { cycleSprite(1); }
+            } 
+            else if (e.key === "ArrowLeft") {
+                if (isMax && activeView === "gallery") {
                     galleryIdx = (galleryIdx - 1 + galleryImgs.length) % galleryImgs.length;
                     document.getElementById('lb-img').src = galleryImgs[galleryIdx];
-                } else {
-                    cycleSprite(-1);
-                }
-            } else {
-                cycleSprite(-1);
+                } else { cycleSprite(-1); }
+            } 
+            else if (e.key === "Escape") { lb.style.display = 'none'; }
+        });
+
+        // Swipe & Initialization
+        let touchStartX = 0;
+        window.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, false);
+        window.addEventListener('touchend', e => {
+            let touchEndX = e.changedTouches[0].screenX;
+            if (Math.abs(touchStartX - touchEndX) > 70) {
+                playSnd();
+                cycleSprite(touchStartX > touchEndX ? 1 : -1);
             }
-        }
-    }
-}
+        }, false);
 
-// Global listeners for touch
-window.addEventListener('touchstart', e => {
-    touchStartX = e.changedTouches[0].screenX;
-}, false);
+        window.onpopstate = () => { if (document.getElementById('lightbox').style.display === 'flex') document.getElementById('lightbox').style.display = 'none'; };
 
-window.addEventListener('touchend', e => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
-}, false);
-
-        // ALLOWING PHONE BACK BUTTON
-        // 1. When the Lightbox opens, push a "fake" state to history
-function openLightbox(imgSrc) {
-    activeView = "gallery";
-    const lb = document.getElementById('lightbox');
-    document.getElementById('lb-img').src = imgSrc;
-    lb.style.display = 'flex';
-    
-    // Add a marker in the browser history
-    history.pushState({ lightbox: true }, "");
-}
-
-// 2. Listen for the back button (popstate)
-window.onpopstate = function(event) {
-    const lb = document.getElementById('lightbox');
-    // If the lightbox is open, close it instead of going to the previous page
-    if (lb.style.display === 'flex') {
-        closeLightbox();
-    }
-};
-
-// 3. Update your close function to stay in sync
-function closeLightbox() {
-    document.getElementById('lightbox').style.display = 'none';
-    // If we are still on the "fake" history state, go back once
-    if (history.state && history.state.lightbox) {
-        history.back();
-    }
-}
+        window.addEventListener('DOMContentLoaded', () => {
+            if(typeof initMusic === 'function') initMusic();
+            renderCharacterList(); // Build the sidebar
+        });
     </script>
 </body>
 </html>
