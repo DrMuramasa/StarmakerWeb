@@ -12,6 +12,13 @@
     
     <header>
         <div style="color:var(--gold); font-weight:bold; letter-spacing:2px;">STARMAKER DATABASE</div>
+        
+        <div class="music-controls">
+            <button id="mute-btn" onclick="toggleMute()" style="background:none; border:none; color:var(--gold); cursor:pointer; font-size:1.1rem; padding:0;">🔊</button>
+            <label>VOL</label>
+            <input type="range" id="volume-slider" min="0" max="1" step="0.01" oninput="updateVolume(this.value)">
+        </div>
+
         <nav>
             <a href="home.html" class="nav-btn">Home</a>
             <a href="characters.html" class="nav-btn active">Characters</a>
@@ -52,15 +59,6 @@
     </div>
 
     <script>
-        
-    /* SOUND CONTROLS */
-        <div class="music-controls">
-            <button id="mute-btn" onclick="toggleMute()" style="background:none; border:none; color:var(--gold); cursor:pointer; font-size:1.1rem; padding:0;">🔊</button>
-            <label>VOL</label>
-            <input type="range" id="volume-slider" min="0" max="1" step="0.01" oninput="updateVolume(this.value)">
-        </div>
-
-        
     let charData = {};
 
     async function loadData() {
@@ -140,15 +138,12 @@
     }
 
     window.onpopstate = () => { if (document.getElementById('guide-view').style.display === 'block') closeGuide(); };
-    window.addEventListener('DOMContentLoaded', loadData);
-
-    window.addEventListener('DOMContentLoaded', () => {
-    // 1. Start the music/sound engine
-    if(typeof initMusic === 'function') initMusic(); 
     
-    // 2. Load your JSON data
-    loadData(); 
-});
+    // Combined the initialization here
+    window.addEventListener('DOMContentLoaded', () => {
+        if(typeof initMusic === 'function') initMusic(); 
+        loadData(); 
+    });
     </script>
 </body>
 </html>
