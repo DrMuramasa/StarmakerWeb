@@ -62,7 +62,7 @@
     <div class="bg-wrapper"></div>
     <div class="bg-overlay"></div>
 
-    <header style="display: flex; align-items: center; justify-content: space-between; padding: 10px 20px;">
+    header style="display: flex; align-items: center; justify-content: space-between; padding: 10px 20px;">
     <div style="color:var(--gold); font-weight:bold; letter-spacing:2px; flex-shrink: 0;">
         STARMAKER DATABASE
     </div>
@@ -84,16 +84,17 @@
                 
                 <label style="color:gray; font-size:0.7rem; display:block; margin-bottom:10px;">BACKGROUND TRACK</label>
                 <div id="track-list" style="display:flex; flex-direction:column; gap:8px;">
-                    <button class="nav-btn" style="font-size:0.8rem; text-align:left;" onclick="changeTrack('audio/home_theme.mp3', 'Home Theme')">01. Starmaker Main</button>
-                    <button class="nav-btn" style="font-size:0.8rem; text-align:left;" onclick="changeTrack('audio/secrecy_beat.mp3', 'Investigation')">02. Secrecy Beat</button>
-                    <button class="nav-btn" style="font-size:0.8rem; text-align:left;" onclick="changeTrack('audio/night_loop.mp3', 'City Night')">03. Midnight Pulse</button>
+                    <button class="nav-btn" style="font-size:0.8rem; text-align:left; flex-shrink: 0;" onclick="changeTrack('audio/background_theme.mp3', 'Starmaker')">01. Starmaker Main</button>
+                    <button class="nav-btn" style="font-size:0.8rem; text-align:left; flex-shrink: 0;" onclick="changeTrack('audio/FallApart.mp3', 'Fall Apart')">02. Fall Apart</button>
+                    <button class="nav-btn" style="font-size:0.8rem; text-align:left; flex-shrink: 0;" onclick="changeTrack('audio/GoBack.mp3', 'Go Back')">03. Go Back</button>
+                    <button class="nav-btn" style="font-size:0.8rem; text-align:left; flex-shrink: 0;" onclick="changeTrack('audio/Neo.mp3', 'Neo')">04. Neo</button>
                 </div>
                 
                 <p id="current-track-name" style="color:var(--gold); font-size:0.6rem; margin-top:15px; opacity:0.6;">PLAYING: Home Theme</p>
             </div>
         </div>
     </div>
-    <header>
+    </header>
 
     <div class="container">
         <div style="display: flex; align-items: center; justify-content: center; height: 80vh;">
