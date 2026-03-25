@@ -133,13 +133,13 @@ const characterData = {
                 ] 
             }
         ]
-    } // <--- NO COMMA HERE because Sofia is the last person!
-}; // <--- THIS IS LINE 199 (Closes the entire characterData object)
+    }
+};
 
 // --- GLOBAL SOUND ENGINE ---
 if (typeof bgMusic === 'undefined') {
+    // Default to background_theme, but check storage later in init
     var bgMusic = new Audio('audio/background_theme.mp3');
-    bgMusic.volume = localStorage.getItem('sm_volume') || 0.5; 
     bgMusic.loop = true;
 }
 
@@ -158,15 +158,20 @@ function playSnd() {
 let isMuted = false;
 let previousVolume = 0.5;
 
-// --- UPDATED MUSIC ENGINE ---
+// --- UPDATED MUSIC ENGINE WITH TRACK SWITCHING ---
 
-function initMusic() {
-    // 1. Pull the saved data from the user's browser
+function initMusic(defaultTrack = 'audio/background_theme.mp3') {
+    // 1. Check for saved preferences
+    const savedTrack = localStorage.getItem('sm_preferred_track') || defaultTrack;
     const savedVol = parseFloat(localStorage.getItem('sm_volume')) || 0.5;
     const savedTime = parseFloat(localStorage.getItem('sm_music_time')) || 0;
 
     if (typeof bgMusic !== 'undefined') {
-        // 2. Prepare the track (Silent but at the right timestamp)
+        // Update track source if it's different from what's currently loaded
+        if (!bgMusic.src.includes(savedTrack)) {
+            bgMusic.src = savedTrack;
+        }
+
         bgMusic.volume = 0; 
         bgMusic.currentTime = savedTime;
         
@@ -174,43 +179,72 @@ function initMusic() {
 
         if (playPromise !== undefined) {
             playPromise.then(() => {
-                // 3. SUCCESS: The song is playing, now fade it in
                 let currentFadeVol = 0;
                 const fadeStep = 0.05; 
                 const fadeInterval = setInterval(() => {
                     if (currentFadeVol < savedVol) {
                         currentFadeVol += fadeStep;
-                        // Use Math.min to ensure we don't go past the user's setting
                         bgMusic.volume = Math.min(currentFadeVol, savedVol);
                     } else {
                         clearInterval(fadeInterval);
                     }
                 }, 50); 
             }).catch(() => {
-                // 4. BLOCKED: Browser needs a click first
                 document.addEventListener('click', () => {
                     bgMusic.play();
-                    bgMusic.volume = savedVol; // Skip fade on manual click for instant feedback
+                    bgMusic.volume = savedVol;
                 }, { once: true });
             });
         }
     }
     
-    // 5. Sync the UI
+    // Sync UI
     const slider = document.getElementById('volume-slider');
     if (slider) slider.value = savedVol;
     updateMuteIcon();
+
+    // Update the "Playing" text in settings if it exists
+    const trackNameDisplay = document.getElementById('current-track-name');
+    const trackLabel = localStorage.getItem('sm_track_label') || "Default Theme";
+    if (trackNameDisplay) trackNameDisplay.innerText = "PLAYING: " + trackLabel;
 }
 
-// THIS IS THE SECRET SAUCE:
-// Every 1 second, save the current time so if they click a link, we know where they were.
+function changeTrack(path, label) {
+    if (typeof playSnd === 'function') playSnd();
+    
+    // Save preferences
+    localStorage.setItem('sm_preferred_track', path);
+    localStorage.setItem('sm_track_label', label);
+    
+    if (typeof bgMusic !== 'undefined') {
+        const currentVol = bgMusic.volume;
+        bgMusic.pause();
+        bgMusic.src = path;
+        bgMusic.currentTime = 0; // New tracks start from beginning
+        bgMusic.volume = currentVol;
+        bgMusic.play();
+    }
+
+    // Update UI
+    const display = document.getElementById('current-track-name');
+    if (display) display.innerText = "PLAYING: " + label;
+}
+
+function toggleSettings() {
+    if (typeof playSnd === 'function') playSnd();
+    const modal = document.getElementById('settings-modal');
+    if (modal) {
+        modal.style.display = modal.style.display === 'none' ? 'block' : 'none';
+    }
+}
+
+// Keep the interval for timestamp tracking
 setInterval(() => {
     if (typeof bgMusic !== 'undefined' && !bgMusic.paused) {
         localStorage.setItem('sm_music_time', bgMusic.currentTime);
     }
 }, 1000);
 
-// Also save right when the user closes/leaves the page
 window.onbeforeunload = function() {
     if (typeof bgMusic !== 'undefined') {
         localStorage.setItem('sm_music_time', bgMusic.currentTime);
