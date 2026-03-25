@@ -131,6 +131,14 @@
 
     window.onpopstate = () => { if (document.getElementById('guide-view').style.display === 'block') closeGuide(); };
     window.addEventListener('DOMContentLoaded', loadData);
+
+    window.addEventListener('DOMContentLoaded', () => {
+    // 1. Start the music/sound engine
+    if(typeof initMusic === 'function') initMusic(); 
+    
+    // 2. Load your JSON data
+    loadData(); 
+});
     </script>
 </body>
 </html>
