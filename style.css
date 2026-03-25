@@ -467,6 +467,25 @@ body {
     color: var(--gold); /* Optional: makes the text glow too */
 }
 
+#settings-modal {
+    height: auto; /* Allow the modal to shrink to fit the list */
+    max-height: 400px; /* Prevents the whole modal from ever getting too long */
+}
+
+/* This styles the scrollbar specifically for the track list */
+#track-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+#track-list::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 2px;
+}
+
+#track-list::-webkit-scrollbar-track {
+    background: rgba(212, 175, 55, 0.1);
+}
+
 /* --- Desktop Styles end here --- */
 
 /* --- CONSOLIDATED MASTER MOBILE ENGINE --- */
