@@ -377,30 +377,6 @@ body {
     border-color: var(--gold) !important;
 }
 
-/* FAVORITES SETUP */
-
-.mini-star {
-    position: absolute;
-    top: 5px;
-    right: 8px;
-    color: var(--gold);
-    font-size: 1.2rem;
-    pointer-events: none; /* User clicks the card, not the star */
-}
-
-.fav-card {
-    border: 1px solid var(--gold) !important;
-    background: rgba(212, 175, 55, 0.1) !important;
-}
-
-/* Ensure the Search Bar is usable on mobile */
-@media screen and (max-width: 768px) {
-    #char-search {
-        width: 100% !important;
-        margin-top: 10px;
-    }
-}
-
 /* --- Desktop Styles end here --- */
 
 /* --- CONSOLIDATED MASTER MOBILE ENGINE --- */
