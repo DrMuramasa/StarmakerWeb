@@ -412,6 +412,13 @@ body {
     background: var(--gold);
     color: black;
 }
+
+/* SETTINGS FOR TRACKS ICON */
+.settings-container .nav-btn {
+    text-shadow: 0 0 5px var(--gold);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
 /* --- Desktop Styles end here --- */
 
 /* --- CONSOLIDATED MASTER MOBILE ENGINE --- */
