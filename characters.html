@@ -35,12 +35,12 @@
                 <h4 style="color:var(--gold); margin-top:0; border-bottom:1px solid var(--box-border); padding-bottom:5px; font-size: 0.8rem;">SYSTEM SETTINGS</h4>
                 <label style="color:gray; font-size:0.7rem; display:block; margin-bottom:10px;">SELECT TRACK</label>
                 
-                <div id="track-list" style="display: flex; flex-direction: column; gap: 4px; max-height: 160px; overflow-y: auto; padding-right: 5px;">
-                    <button class="nav-btn" style="font-size:0.8rem; text-align:left; flex-shrink: 0;" onclick="changeTrack('audio/background_theme.mp3', 'Starmaker')">01. Starmaker Main</button>
-                    <button class="nav-btn" style="font-size:0.8rem; text-align:left; flex-shrink: 0;" onclick="changeTrack('audio/FallApart.mp3', 'Fall Apart')">02. Fall Apart</button>
-                    <button class="nav-btn" style="font-size:0.8rem; text-align:left; flex-shrink: 0;" onclick="changeTrack('audio/GoBack.mp3', 'Go Back')">03. Go Back</button>
-                    <button class="nav-btn" style="font-size:0.8rem; text-align:left; flex-shrink: 0;" onclick="changeTrack('audio/Neo.mp3', 'Neo')">04. Neo</button>
-                    </div>
+                <div id="track-list" style="display:flex; flex-direction:column; gap:8px; max-height: 180px; overflow-y: auto; padding-right: 5px;">
+                    <button class="track-item nav-btn" style="font-size:0.8rem; text-align:left; flex-shrink: 0;" onclick="changeTrack('audio/background_theme.mp3', 'Starmaker')">01. Starmaker Main</button>
+                    <button class="track-item nav-btn" style="font-size:0.8rem; text-align:left; flex-shrink: 0;" onclick="changeTrack('audio/FallApart.mp3', 'Fall Apart')">02. Fall Apart</button>
+                    <button class="track-item nav-btn" style="font-size:0.8rem; text-align:left; flex-shrink: 0;" onclick="changeTrack('audio/GoBack.mp3', 'Go Back')">03. Go Back</button>
+                    <button class="track-item nav-btn" style="font-size:0.8rem; text-align:left; flex-shrink: 0;" onclick="changeTrack('audio/Neo.mp3', 'Neo')">04. Neo</button>
+                </div>
                 
                 <p id="current-track-name" style="color:var(--gold); font-size:0.6rem; margin-top:15px; opacity:0.6; border-top: 1px solid var(--box-border); padding-top: 10px;">
                     STATUS: ONLINE // <span id="track-display">Home Theme</span>
