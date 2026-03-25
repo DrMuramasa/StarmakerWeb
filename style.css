@@ -352,6 +352,32 @@ body {
     }
 }
 
+/* THIS IS FOR THE LAYOUT OF THE CHARACTERS PAGE*/
+
+/* --- 3-COLUMN CHARACTER LAYOUT (Only affects Characters Page) --- */
+.char-detail-layout {
+    display: grid;
+    grid-template-columns: 280px 220px 1fr; 
+    gap: 25px;
+    margin-top: 20px;
+    align-items: start;
+}
+
+.quest-nav-item {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid var(--box-border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.active-quest {
+    background: rgba(212, 175, 55, 0.15) !important;
+    border-color: var(--gold) !important;
+}
+
+
 /* --- Desktop Styles end here --- */
 
 /* --- CONSOLIDATED MASTER MOBILE ENGINE --- */
