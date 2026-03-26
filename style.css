@@ -182,7 +182,7 @@ header {
         line-height: 1.1; letter-spacing: 2px;
     }
 
-    .glass-panel { display: flex !important; flex-direction: column !important; padding: 15px !important; height: auto !important; }
+    .glass-panel:not(#settings-modal) { display: flex !important; flex-direction: column !important; padding: 15px !important; height: auto !important; }
     .gallery-layout { display: flex !important; flex-direction: column !important; height: auto !important; gap: 20px !important; }
 
     /* THE 2-COLUMN GRID */
