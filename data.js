@@ -299,3 +299,12 @@ function updateMuteIcon() {
     const btn = document.getElementById('mute-btn');
     if (btn) btn.innerText = (isMuted || (typeof bgMusic !== 'undefined' && bgMusic.volume == 0)) ? "🔈" : "🔊";
 }
+
+function handleGesture() {
+    if (touchendX < touchstartX - 50) {
+        changeImage(1); // Swiped Left -> Next
+    }
+    if (touchendX > touchstartX + 50) {
+        changeImage(-1); // Swiped Right -> Previous
+    }
+}
