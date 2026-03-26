@@ -111,6 +111,11 @@
     </div>
 
     <script>
+
+        function toggleMenu() {
+                 const nav = document.getElementById('main-nav');
+                 nav.classList.toggle('active');
+        }
         // Load the music engine and volume settings
         window.addEventListener('DOMContentLoaded', initMusic);
 
