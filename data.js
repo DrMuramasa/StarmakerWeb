@@ -138,10 +138,14 @@ const characterData = {
 
 // --- 1. CORE UTILITIES (Defined First) ---
 
+// Single declaration of core variables
+let storedVol = localStorage.getItem('sm_volume');
+let previousVolume = storedVol !== null ? parseFloat(storedVol) : 0.5;
+let isMuted = localStorage.getItem('sm_muted') === 'true'; 
+
 function updateMuteIcon() {
     const btn = document.getElementById('mute-btn');
     if (btn) {
-        // Now checks the global isMuted state instead of volume level
         btn.innerText = isMuted ? "🔈" : "🔊"; 
     }
 }
@@ -166,11 +170,6 @@ function updateVolume(val) {
     }
 }
 
-// FIX: Properly check for 0 without JavaScript treating it as "false"
-let storedVol = localStorage.getItem('sm_volume');
-let previousVolume = storedVol !== null ? parseFloat(storedVol) : 0.5;
-let isMuted = localStorage.getItem('sm_muted') === 'true'; 
-
 function toggleMute() {
     const slider = document.getElementById('volume-slider');
     if (typeof bgMusic === 'undefined') return;
@@ -186,32 +185,6 @@ function toggleMute() {
         let restoreVol = previousVolume > 0 ? previousVolume : 0.5;
         bgMusic.volume = restoreVol; 
         if (slider) slider.value = restoreVol;
-        isMuted = false;
-    }
-    
-    // Save state
-    localStorage.setItem('sm_muted', isMuted);
-    updateMuteIcon();
-}
-
-// Initialize mute state from localStorage or default to false
-let isMuted = localStorage.getItem('sm_muted') === 'true'; 
-let previousVolume = parseFloat(localStorage.getItem('sm_volume')) || 0.5;
-
-function toggleMute() {
-    const slider = document.getElementById('volume-slider');
-    if (typeof bgMusic === 'undefined') return;
-
-    if (!isMuted) {
-        // Muting
-        previousVolume = bgMusic.volume > 0 ? bgMusic.volume : 0.5;
-        bgMusic.volume = 0; // Update the audio object directly
-        if (slider) slider.value = 0;
-        isMuted = true;
-    } else {
-        // Unmuting
-        bgMusic.volume = previousVolume; // Update the audio object directly
-        if (slider) slider.value = previousVolume;
         isMuted = false;
     }
     
