@@ -246,17 +246,16 @@ function changeTrack(path, label) {
 }
 
 // --- NAVIGATION & SETTINGS TOGGLES ---
-
 function toggleSettings() {
     if (typeof playSnd === 'function') playSnd();
     const modal = document.getElementById('settings-modal');
     if (!modal) return;
     
-    // Toggle using a specific class or direct display
-    if (modal.style.display === 'flex') {
-        modal.style.display = 'none';
+    // Toggle using explicit style property to override CSS !important
+    if (modal.style.getPropertyValue('display') === 'flex') {
+        modal.style.setProperty('display', 'none', 'important');
     } else {
-        modal.style.display = 'flex';
+        modal.style.setProperty('display', 'flex', 'important');
     }
 }
 
@@ -267,52 +266,14 @@ function toggleMenu() {
     
     if (nav) {
         nav.classList.toggle('active');
-        // Close settings if menu is closed to prevent "ghost" overlays
+        // Auto-close settings if menu closes
         if (!nav.classList.contains('active') && modal) {
-            modal.style.display = 'none';
+            modal.style.setProperty('display', 'none', 'important');
         }
     }
 }
 
-setInterval(() => {
-    if (typeof bgMusic !== 'undefined' && !bgMusic.paused) {
-        localStorage.setItem('sm_music_time', bgMusic.currentTime);
-    }
-}, 1000);
-
-function updateVolume(val) {
-    if (typeof bgMusic !== 'undefined') {
-        bgMusic.volume = val;
-        isMuted = (val == 0);
-        updateMuteIcon();
-        localStorage.setItem('sm_volume', val);
-    }
-}
-
-function toggleMute() {
-    const slider = document.getElementById('volume-slider');
-    if (typeof bgMusic === 'undefined') return;
-
-    if (!isMuted) {
-        previousVolume = bgMusic.volume > 0 ? bgMusic.volume : 0.5;
-        bgMusic.volume = 0;
-        if (slider) slider.value = 0;
-        isMuted = true;
-    } else {
-        bgMusic.volume = previousVolume;
-        if (slider) slider.value = previousVolume;
-        isMuted = false;
-    }
-    updateMuteIcon();
-    localStorage.setItem('sm_volume', bgMusic.volume);
-}
-
-function updateMuteIcon() {
-    const btn = document.getElementById('mute-btn');
-    if (btn) btn.innerText = (isMuted || (typeof bgMusic !== 'undefined' && bgMusic.volume == 0)) ? "🔈" : "🔊";
-}
-
-// --- SWIPE ENGINE (TOUCH DELEGATION) ---
+// --- ULTIMATE GLOBAL SWIPE ENGINE ---
 let touchstartX = 0;
 let touchendX = 0;
 
@@ -326,30 +287,34 @@ function handleGesture() {
     }
 }
 
-// Run this on window load to ensure all DOM elements are present
-window.addEventListener('DOMContentLoaded', () => {
-    const attachSwipes = () => {
-        const targets = ['.sprite-window', '#lightbox-modal', '.sprite-viewer', '.char-image-box'];
-        targets.forEach(selector => {
-            const el = document.querySelector(selector);
-            if (el) {
-                el.addEventListener('touchstart', e => {
-                    touchstartX = e.changedTouches[0].screenX;
-                }, {passive: true});
+// Listen to the ENTIRE document (Delegation)
+document.addEventListener('touchstart', e => {
+    // Check if we are touching a mosaic lightbox, a character sprite, or the viewer
+    const isSwipeable = e.target.closest('.lightbox') || 
+                        e.target.closest('.sprite-window') || 
+                        e.target.closest('.char-image-box') ||
+                        e.target.closest('#lightbox-modal');
+    
+    if (isSwipeable) {
+        touchstartX = e.changedTouches[0].screenX;
+    }
+}, {passive: true});
 
-                el.addEventListener('touchend', e => {
-                    touchendX = e.changedTouches[0].screenX;
-                    handleGesture();
-                }, {passive: true});
-            }
-        });
-    };
+document.addEventListener('touchend', e => {
+    const isSwipeable = e.target.closest('.lightbox') || 
+                        e.target.closest('.sprite-window') || 
+                        e.target.closest('.char-image-box') ||
+                        e.target.closest('#lightbox-modal');
 
-    attachSwipes();
-    // Re-attach swipes if you are dynamically loading characters
-    document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('char-btn')) {
-            setTimeout(attachSwipes, 100); 
-        }
-    });
-});
+    if (isSwipeable) {
+        touchendX = e.changedTouches[0].screenX;
+        handleGesture();
+    }
+}, {passive: true});
+
+// Cleanup Logic for tracks
+setInterval(() => {
+    if (typeof bgMusic !== 'undefined' && !bgMusic.paused) {
+        localStorage.setItem('sm_music_time', bgMusic.currentTime);
+    }
+}, 1000);
