@@ -143,8 +143,20 @@ header {
 .char-btn.is-favorite { color: #ff69b4 !important; border-color: #ff69b4 !important; }
 .char-btn.is-favorite::after { content: " ❤️"; font-size: 0.8rem; }
 
-/* --- UPDATED MASTER MOBILE ENGINE --- */
+
+/* --- MASTER MOBILE ENGINE --- */
+/* --- GLOBAL TOUCH SETTINGS (Outside Media Query) --- */
+* {
+    touch-action: pan-y; /* Allows vertical scrolling */
+}
+
+.sprite-window, .lightbox, #lightbox-modal {
+    touch-action: none !important; /* Forces JS to handle swiping */
+}
+
+/* --- THE FULL CONSOLIDATED MOBILE ENGINE --- */
 @media screen and (max-width: 768px) {
+    /* 1. Header & Navigation (Fixed) */
     header { padding: 10px 15px; flex-direction: row !important; }
     .hamburger { display: block; }
     
@@ -154,14 +166,23 @@ header {
         gap: 25px; z-index: 1000; justify-content: flex-start; overflow-y: auto;
     }
     #main-nav.active { display: flex; }
+    .nav-links, .nav-controls { flex-direction: column; width: 100%; gap: 20px; }
+    #settings-modal { position: static; width: 100%; margin-top: 10px; max-height: 300px !important; }
 
-    /* Fix for Sprite going outside the box */
+    /* 2. Index Page Title (Fixed scaling) */
+    .hero-title, .index-main-text h1, .glitch-title {
+        font-size: 2.5rem !important; 
+        line-height: 1.1;
+        word-wrap: break-word;
+        letter-spacing: 2px;
+    }
+
+    /* 3. Character Archives & Gallery Layout */
     .glass-panel { 
-        display: flex; 
-        flex-direction: column; 
-        overflow: hidden; /* This keeps everything inside the rounded corners */
-        height: auto;
-        min-height: auto; 
+        display: flex !important; 
+        flex-direction: column !important; 
+        padding: 15px !important;
+        height: auto !important;
     }
 
     .gallery-layout { 
@@ -171,31 +192,46 @@ header {
         gap: 20px !important;
     }
 
-    /* THE 2-COLUMN GRID FIX */
+    /* THE 2-COLUMN GRID (Kept from previous fix) */
     .gallery-grid { 
         display: grid !important; 
-        grid-template-columns: 1fr 1fr !important; /* Forces 2 columns */
-        gap: 10px !important; 
+        grid-template-columns: 1fr 1fr !important; 
+        gap: 12px !important; 
         width: 100% !important;
     }
 
-    .img-card { 
-        width: 100% !important; 
-        max-width: none !important;
-        aspect-ratio: 1 / 1;
+    /* 4. Character Bio/Quest Specific View (Fixes broken Josef page) */
+    .char-detail-layout, .character-details-container { 
+        display: flex !important; 
+        flex-direction: column !important; 
+        width: 100% !important;
     }
 
-    /* Sprite Viewer Containment */
+    .char-image-box {
+        width: 100% !important;
+        max-height: 40vh;
+        overflow: hidden;
+    }
+
+    /* 5. Sprite Section Containment (Fixes cutout look) */
     .sprite-viewer { 
         width: 100% !important; 
-        margin-top: 20px;
+        min-height: 400px;
         background: rgba(0,0,0,0.6);
+        border: 1px solid var(--box-border);
         border-radius: 12px;
-        overflow: hidden; /* Ensures the sprite stays in its box */
+        margin-top: 20px;
+        overflow: visible !important;
     }
 
     .sprite-window { 
-        height: 300px !important; /* Slightly smaller for phone space */
+        height: 300px !important; 
         width: 100% !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
+
+    /* 6. Quest & Typography tweaks */
+    .quest-nav-item { padding: 10px; font-size: 0.9rem; }
 }
