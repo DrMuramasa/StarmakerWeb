@@ -307,9 +307,26 @@ function toggleSettings() {
 function toggleCRT() {
     if (typeof playSnd === 'function') playSnd();
     const overlay = document.getElementById('global-crt');
+    const badge = document.getElementById('tcr-badge');
+    const btn = document.querySelector('button[onclick="toggleCRT()"]');
+    
     if (overlay) {
         overlay.classList.toggle('active');
-        localStorage.setItem('sm_crt_enabled', overlay.classList.contains('active'));
+        const isActive = overlay.classList.contains('active');
+        localStorage.setItem('sm_crt_enabled', isActive);
+        
+        // Update Indicator Badge
+        if (badge) {
+            if (isActive) badge.classList.add('active');
+            else badge.classList.remove('active');
+        }
+        
+        // Update Button Text & Colors
+        if (btn) {
+            btn.innerText = isActive ? "📺 TCR MODE: ON" : "📺 TCR MODE: OFF";
+            btn.style.color = isActive ? "#00ff00" : "#ff4466";
+            btn.style.borderColor = isActive ? "#00ff00" : "#ff4466";
+        }
     }
 }
 
@@ -376,37 +393,63 @@ window.addEventListener('DOMContentLoaded', () => {
         crtDiv.id = 'global-crt';
         crtDiv.className = 'crt-overlay';
         document.body.appendChild(crtDiv);
-
-        if (localStorage.getItem('sm_crt_enabled') === 'true') {
-            crtDiv.classList.add('active');
-        }
     }
 
-    // 3. Inject Glitch Screen Globally
+    // 3. Inject TCR Indicator Badge into the Header
+    const headerTitle = document.querySelector('header div');
+    let badge = document.getElementById('tcr-badge');
+    if (headerTitle && !badge) {
+        badge = document.createElement('span');
+        badge.id = 'tcr-badge';
+        badge.className = 'tcr-indicator';
+        badge.innerText = 'TCR';
+        // Insert it right after "STARMAKER DATABASE"
+        headerTitle.appendChild(badge); 
+    }
+
+    // 4. Inject Glitch Screen Globally
     if (!document.getElementById('glitch-screen')) {
         const glitchDiv = document.createElement('div');
         glitchDiv.id = 'glitch-screen';
         document.body.appendChild(glitchDiv);
     }
 
-    // 4. Intercept Page Links for Glitch Transition
+    // 5. Apply Saved TCR State on Page Load
+    const isCrtEnabled = localStorage.getItem('sm_crt_enabled') === 'true';
+    if (isCrtEnabled) {
+        document.getElementById('global-crt').classList.add('active');
+        if (badge) badge.classList.add('active');
+    }
+    
+    const crtBtn = document.querySelector('button[onclick="toggleCRT()"]');
+    if (crtBtn) {
+        crtBtn.innerText = isCrtEnabled ? "📺 TCR MODE: ON" : "📺 TCR MODE: OFF";
+        crtBtn.style.color = isCrtEnabled ? "#00ff00" : "#ff4466";
+        crtBtn.style.borderColor = isCrtEnabled ? "#00ff00" : "#ff4466";
+    }
+
+    // 6. Intercept Page Links for Glitch Transition (Only if TCR is ON)
     document.querySelectorAll('a.nav-btn').forEach(link => {
         link.addEventListener('click', (e) => {
             const targetURL = link.getAttribute('href');
             
-            // Only trigger if it's an internal HTML link
             if (targetURL && targetURL.includes('.html')) {
-                e.preventDefault(); // Stop normal loading
-                
+                e.preventDefault(); 
                 if (typeof playSnd === 'function') playSnd(); 
                 
-                const glitch = document.getElementById('glitch-screen');
-                if (glitch) glitch.classList.add('active');
-                
-                // Wait 350ms for the CSS animation to finish, then load the page
-                setTimeout(() => {
+                // Check if TCR is enabled right now
+                if (localStorage.getItem('sm_crt_enabled') === 'true') {
+                    const glitch = document.getElementById('glitch-screen');
+                    if (glitch) glitch.classList.add('active');
+                    
+                    // Slightly faster transition
+                    setTimeout(() => {
+                        window.location.href = targetURL;
+                    }, 250); 
+                } else {
+                    // TCR is off, transition instantly
                     window.location.href = targetURL;
-                }, 350); 
+                }
             }
         });
     });
