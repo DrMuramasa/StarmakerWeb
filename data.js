@@ -362,19 +362,24 @@ setInterval(() => {
 }, 1000);
 
 // --- 6. PAGE LOAD INITIALIZATION ---
-// This ensures the volume and mute state are applied immediately when any page loads
 window.addEventListener('DOMContentLoaded', () => {
-    // Determine the correct volume to set
+    // 1. Audio Setup
     let targetVol = isMuted ? 0 : previousVolume;
-    
-    // Apply it to the slider visually
     const slider = document.getElementById('volume-slider');
     if (slider) slider.value = targetVol;
-    
-    // Apply it to the audio object
-    if (typeof bgMusic !== 'undefined') {
-        bgMusic.volume = targetVol;
-    }
-    
+    if (typeof bgMusic !== 'undefined') bgMusic.volume = targetVol;
     updateMuteIcon();
+
+    // 2. Inject CRT Overlay Globally
+    if (!document.getElementById('global-crt')) {
+        const crtDiv = document.createElement('div');
+        crtDiv.id = 'global-crt';
+        crtDiv.className = 'crt-overlay';
+        document.body.appendChild(crtDiv);
+
+        // Check user's saved preference
+        if (localStorage.getItem('sm_crt_enabled') === 'true') {
+            crtDiv.classList.add('active');
+        }
+    }
 });
