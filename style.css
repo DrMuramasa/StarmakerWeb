@@ -6,18 +6,8 @@ p, div, span { font-size: clamp(0.9rem, 2.5vw, 1.1rem); }
 
 /* --- GLOBAL HACKER CURSOR --- */
 body {
-    /* Sets the native crosshair cursor */
-    cursor: crosshair; 
-    
-    /* THE MAGIC OUTLINE: Uses text-shadow to outline the cursor lines */
-    text-shadow: 
-        1px 1px 0 #000,   /* Bottom-right shadow */
-       -1px -1px 0 #000,  /* Top-left shadow */
-        1px -1px 0 #000,  /* Top-right shadow */
-       -1px 1px 0 #000;   /* Bottom-left shadow */
-       
-    /* Color of the cursor lines */
-    color: #00ff00; /* Vibrant Green */
+    /* Draws a green crosshair with a black outline using a lag-free inline SVG */
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M11 0h2v11h11v2H13v11h-2V13H0v-2h11V0z" fill="%2300ff00" stroke="%23000000" stroke-width="2"/></svg>') 12 12, crosshair;
 }
 
 /* Ensure interactive elements still show the hand pointer */
