@@ -390,9 +390,25 @@
         window.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, false);
         window.addEventListener('touchend', e => {
             let touchEndX = e.changedTouches[0].screenX;
+            
+            // Check if the swipe was long enough
             if (Math.abs(touchStartX - touchEndX) > 70) {
-                playSnd();
-                cycleSprite(touchStartX > touchEndX ? 1 : -1);
+                if (typeof playSnd === 'function') playSnd();
+                
+                // Determine direction: 1 for swipe left (next), -1 for swipe right (prev)
+                let dir = touchStartX > touchEndX ? 1 : -1; 
+                
+                const lb = document.getElementById('lightbox');
+                const isMax = lb.style.display === 'flex';
+
+                // If lightbox is open AND we are viewing the gallery array
+                if (isMax && activeView === "gallery") {
+                    galleryIdx = (galleryIdx + dir + galleryImgs.length) % galleryImgs.length;
+                    document.getElementById('lb-img').src = galleryImgs[galleryIdx];
+                } else {
+                    // Otherwise, cycle the sprites
+                    cycleSprite(dir);
+                }
             }
         }, false);
 
