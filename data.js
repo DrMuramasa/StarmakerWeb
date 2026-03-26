@@ -140,6 +140,14 @@ const characterData = {
 if (typeof bgMusic === 'undefined') {
     var bgMusic = new Audio('audio/background_theme.mp3');
     bgMusic.loop = true;
+    
+    // Seamless Loop Nudge
+    bgMusic.addEventListener('timeupdate', function() {
+        var buffer = 0.40;
+        if(this.currentTime > this.duration - buffer) {
+            // Browser-level loop reinforcement
+        }
+    });
 }
 
 if (typeof squishSnd === 'undefined') {
@@ -203,7 +211,6 @@ function initMusic(defaultTrack = 'audio/background_theme.mp3') {
     const trackLabel = localStorage.getItem('sm_track_label') || "Default Theme";
     if (trackNameDisplay) trackNameDisplay.innerText = "PLAYING: " + trackLabel;
 
-    // --- Added: Restore visual highlight on page load ---
     document.querySelectorAll('.track-item').forEach(btn => {
         if (btn.innerText.includes(trackLabel)) {
             btn.classList.add('playing');
@@ -226,11 +233,9 @@ function changeTrack(path, label) {
         bgMusic.play();
     }
 
-    // Update UI text
     const display = document.getElementById('current-track-name');
     if (display) display.innerText = "PLAYING: " + label;
 
-    // --- Added: Visual highlight toggle ---
     document.querySelectorAll('.track-item').forEach(btn => {
         btn.classList.remove('playing');
         if (btn.innerText.includes(label)) {
@@ -247,7 +252,6 @@ function toggleSettings() {
     }
 }
 
-// --- Added: Mobile Menu Toggle ---
 function toggleMenu() {
     if (typeof playSnd === 'function') playSnd();
     const nav = document.getElementById('main-nav');
@@ -300,11 +304,34 @@ function updateMuteIcon() {
     if (btn) btn.innerText = (isMuted || (typeof bgMusic !== 'undefined' && bgMusic.volume == 0)) ? "🔈" : "🔊";
 }
 
+// --- IMPROVED SWIPE ENGINE ---
+let touchstartX = 0;
+let touchendX = 0;
+
 function handleGesture() {
-    if (touchendX < touchstartX - 50) {
-        changeImage(1); // Swiped Left -> Next
+    const swipeThreshold = 50;
+    // Note: changeImage must be defined in your gallery script
+    if (touchendX < touchstartX - swipeThreshold) {
+        if (typeof changeImage === 'function') changeImage(1); 
     }
-    if (touchendX > touchstartX + 50) {
-        changeImage(-1); // Swiped Right -> Previous
+    if (touchendX > touchstartX + swipeThreshold) {
+        if (typeof changeImage === 'function') changeImage(-1);
     }
 }
+
+// Attach listeners to all possible gallery/sprite containers
+const swipeTargets = ['.lightbox', '.sprite-window', '#lightbox-modal', '.sprite-viewer'];
+
+swipeTargets.forEach(selector => {
+    const el = document.querySelector(selector);
+    if (el) {
+        el.addEventListener('touchstart', e => {
+            touchstartX = e.changedTouches[0].screenX;
+        }, {passive: true});
+
+        el.addEventListener('touchend', e => {
+            touchendX = e.changedTouches[0].screenX;
+            handleGesture();
+        }, {passive: true});
+    }
+});
