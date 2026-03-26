@@ -303,6 +303,16 @@ function toggleSettings() {
     }
 }
 
+// --- CRT MODE TOGGLE ---
+function toggleCRT() {
+    if (typeof playSnd === 'function') playSnd();
+    const overlay = document.getElementById('global-crt');
+    if (overlay) {
+        overlay.classList.toggle('active');
+        localStorage.setItem('sm_crt_enabled', overlay.classList.contains('active'));
+    }
+}
+
 function toggleMenu() {
     if (typeof playSnd === 'function') playSnd();
     const nav = document.getElementById('main-nav');
