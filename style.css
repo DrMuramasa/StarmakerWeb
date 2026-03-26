@@ -184,10 +184,19 @@ header {
     #main-nav {
         display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
         background: rgba(5, 5, 10, 0.98); flex-direction: column; padding: 80px 20px;
-        gap: 25px; z-index: 1000; justify-content: flex-start; overflow-y: auto;
+        gap: 25px; z-index: 1000; justify-content: flex-start; 
+        align-items: center; /* <--- Centers the inner containers */
+        box-sizing: border-box; /* <--- Stops the padding from pushing it off-screen */
+        overflow-y: auto;
     }
     #main-nav.active { display: flex; }
-    .nav-links, .nav-controls { flex-direction: column; width: 100%; gap: 20px; }
+    
+    .nav-links, .nav-controls { 
+        flex-direction: column; 
+        width: 100%; 
+        gap: 20px; 
+        align-items: center; /* <--- Centers the buttons themselves */
+    }
 
     /* FIX: Tracks Settings Modal - Accordion Style for Mobile */
     #settings-modal { 
