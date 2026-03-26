@@ -307,7 +307,7 @@ function toggleSettings() {
 function toggleCRT() {
     if (typeof playSnd === 'function') playSnd();
     const overlay = document.getElementById('global-crt');
-    const badge = document.getElementById('tcr-badge');
+    const badge = document.getElementById('crt-badge');
     const btn = document.querySelector('button[onclick="toggleCRT()"]');
     
     if (overlay) {
@@ -323,7 +323,7 @@ function toggleCRT() {
         
         // Update Button Text & Colors
         if (btn) {
-            btn.innerText = isActive ? "📺 TCR MODE: ON" : "📺 TCR MODE: OFF";
+            btn.innerText = isActive ? "📺 CRT MODE: ON" : "📺 CRT MODE: OFF";
             btn.style.color = isActive ? "#00ff00" : "#ff4466";
             btn.style.borderColor = isActive ? "#00ff00" : "#ff4466";
         }
@@ -395,14 +395,14 @@ window.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(crtDiv);
     }
 
-    // 3. Inject TCR Indicator Badge into the Header
+    // 3. Inject CRT Indicator Badge into the Header
     const headerTitle = document.querySelector('header div');
-    let badge = document.getElementById('tcr-badge');
+    let badge = document.getElementById('crt-badge');
     if (headerTitle && !badge) {
         badge = document.createElement('span');
-        badge.id = 'tcr-badge';
-        badge.className = 'tcr-indicator';
-        badge.innerText = 'TCR';
+        badge.id = 'crt-badge';
+        badge.className = 'crt-indicator';
+        badge.innerText = 'CRT';
         // Insert it right after "STARMAKER DATABASE"
         headerTitle.appendChild(badge); 
     }
@@ -414,7 +414,7 @@ window.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(glitchDiv);
     }
 
-    // 5. Apply Saved TCR State on Page Load
+    // 5. Apply Saved CRT State on Page Load
     const isCrtEnabled = localStorage.getItem('sm_crt_enabled') === 'true';
     if (isCrtEnabled) {
         document.getElementById('global-crt').classList.add('active');
@@ -423,12 +423,12 @@ window.addEventListener('DOMContentLoaded', () => {
     
     const crtBtn = document.querySelector('button[onclick="toggleCRT()"]');
     if (crtBtn) {
-        crtBtn.innerText = isCrtEnabled ? "📺 TCR MODE: ON" : "📺 TCR MODE: OFF";
+        crtBtn.innerText = isCrtEnabled ? "📺 CRT MODE: ON" : "📺 CRT MODE: OFF";
         crtBtn.style.color = isCrtEnabled ? "#00ff00" : "#ff4466";
         crtBtn.style.borderColor = isCrtEnabled ? "#00ff00" : "#ff4466";
     }
 
-    // 6. Intercept Page Links for Glitch Transition (Only if TCR is ON)
+    // 6. Intercept Page Links for Glitch Transition (Only if CRT is ON)
     document.querySelectorAll('a.nav-btn').forEach(link => {
         link.addEventListener('click', (e) => {
             const targetURL = link.getAttribute('href');
@@ -437,7 +437,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault(); 
                 if (typeof playSnd === 'function') playSnd(); 
                 
-                // Check if TCR is enabled right now
+                // Check if CRT is enabled right now
                 if (localStorage.getItem('sm_crt_enabled') === 'true') {
                     const glitch = document.getElementById('glitch-screen');
                     if (glitch) glitch.classList.add('active');
@@ -447,7 +447,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         window.location.href = targetURL;
                     }, 250); 
                 } else {
-                    // TCR is off, transition instantly
+                    // CRT is off, transition instantly
                     window.location.href = targetURL;
                 }
             }
