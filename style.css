@@ -1,4 +1,4 @@
-/* Fluid Typography: (Min Size, Scaling Speed, Max Size) */
+/* Fluid Typography */
 h1 { font-size: clamp(1.5rem, 6vw, 2.5rem); }
 h2 { font-size: clamp(1.2rem, 5vw, 2rem); }
 p, div, span { font-size: clamp(0.9rem, 2.5vw, 1.1rem); }
@@ -30,268 +30,9 @@ p, div, span { font-size: clamp(0.9rem, 2.5vw, 1.1rem); }
     text-transform: uppercase;
 }
 
-
 body {
     margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif;
     color: var(--text); background-color: #000;
-}
-
-/* THE STICKY MENU */
-header {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 20px 5%;
-    background: rgba(0, 0, 0, 0.95); /* Solid enough to hide content behind it */
-    border-bottom: 1px solid var(--box-border);
-    position: sticky; 
-    top: 0; 
-    z-index: 1000;
-}
-
-.nav-btn {
-    background: rgba(255, 255, 255, 0.05); border: 1px solid var(--gold);
-    color: white; padding: 8px 20px; border-radius: 30px;
-    cursor: pointer; text-decoration: none; font-weight: bold; transition: 0.2s;
-}
-
-.nav-btn:hover, .nav-btn.active {
-    background: var(--gold); color: black; box-shadow: 0 0 15px var(--gold);
-}
-
-/* SHARED LAYOUTS */
-.bg-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('backgroundImg.gif') no-repeat center center; background-size: cover; z-index: -2; }
-.bg-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: -1; }
-.container { max-width: 1750px; margin: 20px auto; padding: 0 20px; }
-.glass-panel { background: var(--glass); backdrop-filter: blur(12px); border: 1px solid var(--box-border); border-radius: 20px; padding: 30px; min-height: 80vh; }
-
-/* Grid & Cards */
-.grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-.char-card { background: rgba(0,0,0,0.5); border: 1px solid var(--box-border); border-radius: 8px; overflow: hidden; cursor: pointer; text-align: center; }
-.char-card img { width: 100%; height: 300px; object-fit: cover; }
-
-/* Maximized View (Lightbox) */
-.lightbox {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    /* Transparent black background */
-    background: rgba(0, 0, 0, 0.8); 
-    /* This creates the see-through frosted glass look */
-    backdrop-filter: blur(8px); 
-    z-index: 2000;
-    justify-content: center;
-    align-items: center;
-    cursor: zoom-out;
-}
-
-.lightbox img {
-    max-width: 90%;
-    max-height: 90%;
-    border: 2px solid var(--gold);
-    box-shadow: 0 0 30px rgba(0,0,0,0.5);
-    cursor: default;
-    /* Prevents the image from being transparent itself */
-    background: #000; 
-}
-
-/* Fix for the Mosaic Grid */
-.gallery-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
-    gap: 15px; 
-    padding: 10px;
-    /* Ensures images don't stretch into strips */
-    align-content: start; 
-}
-
-.img-card { 
-    width: 100%; 
-    aspect-ratio: 1/1; 
-    border: 2px solid var(--box-border);
-    border-radius: 8px; 
-    overflow: hidden; 
-    cursor: pointer; 
-    transition: 0.3s; 
-}
-
-.img-card img { width: 100%; height: 100%; object-fit: cover; }
-.img-card:hover { border-color: var(--gold); transform: scale(1.02); }
-
-/* Transparent Maximized View */
-.lightbox { 
-    display: none; 
-    position: fixed; 
-    top: 0; left: 0; 
-    width: 100%; height: 100%; 
-    background: rgba(0, 0, 0, 0.7); /* Transparent background */
-    backdrop-filter: blur(10px); /* Frosted glass effect */
-    z-index: 2000; 
-    justify-content: center; 
-    align-items: center; 
-}
-
-.lightbox img { 
-    max-width: 90%; 
-    max-height: 90%; 
-    box-shadow: 0 0 50px rgba(0,0,0,0.8);
-    border: 1px solid var(--gold);
-}
-
-/* Main Layout Fix */
-.gallery-layout {
-    display: grid;
-    /* Column 1: Buttons (160px) | Column 2: Gallery (Flexible) | Column 3: Sprite (320px) */
-    grid-template-columns: 160px 1fr 320px;
-    gap: 20px;
-    height: 85vh; /* Prevents the page from growing infinitely */
-    align-items: start;
-}
-
-/* Mosaic Grid Fix */
-.gallery-scroll-area {
-    height: 100%;
-    overflow-y: auto; /* Internal scrolling only */
-    padding-right: 10px;
-}
-
-.gallery-grid {
-    display: grid;
-    /* Forces images to be at least 130px wide, fitting as many as possible */
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 12px;
-}
-
-.img-card {
-    width: 100%;
-    aspect-ratio: 1 / 1; /* Forces perfect squares */
-    border: 2px solid var(--box-border);
-    border-radius: 6px;
-    overflow: hidden;
-    cursor: pointer;
-    background: #111;
-}
-
-.img-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Prevents stretching */
-    display: block;
-}
-
-/* Sprite Container Fix */
-.sprite-viewer {
-    background: rgba(0,0,0,0.4);
-    border: 1px solid var(--box-border);
-    border-radius: 12px;
-    padding: 15px;
-    text-align: center;
-    position: sticky;
-    top: 0;
-}
-
-.sprite-window {
-    width: 100%;
-    height: 500px; /* Fixed height for the sprite box */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.sprite-window img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain; /* Keeps character proportions correct */
-}
-
-/* Sticky Header Logic */
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 5%;
-    background: rgba(0, 0, 0, 0.9);
-    border-bottom: 1px solid var(--box-border);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    backdrop-filter: blur(10px);
-}
-
-/* Music UI */
-.music-controls {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: rgba(212, 175, 55, 0.1);
-    padding: 8px 18px;
-    border-radius: 30px;
-    border: 1px solid rgba(212, 175, 55, 0.3);
-}
-
-.music-controls label {
-    font-size: 0.7rem;
-    color: var(--gold);
-    font-weight: bold;
-    letter-spacing: 1px;
-}
-
-#volume-slider {
-    width: 100px;
-    accent-color: var(--gold);
-    cursor: pointer;
-    height: 4px;
-}
-
-/* Active Page Highlight */
-.nav-btn.active {
-    background: var(--gold);
-    color: black;
-    box-shadow: 0 0 15px var(--gold);
-}
-
-/* Music Control Styling */
-.music-controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(212, 175, 55, 0.1);
-    padding: 5px 15px;
-    border-radius: 20px;
-    border: 1px solid var(--box-border);
-}
-
-.music-controls label {
-    font-size: 0.7rem;
-    color: var(--gold);
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-#volume-slider {
-    width: 80px;
-    accent-color: var(--gold);
-    cursor: pointer;
-}
-
-.music-controls button {
-    transition: transform 0.2s ease;
-}
-
-.music-controls button:hover {
-    transform: scale(1.2);
-    text-shadow: 0 0 10px var(--gold);
-}
-
-.music-controls label {
-    font-size: 0.7rem;
-    color: var(--gold);
-    margin-right: 5px;
-}
-
-body {
     animation: fadeInPage 0.8s ease-in-out;
 }
 
@@ -300,250 +41,169 @@ body {
     to { opacity: 1; }
 }
 
-/* --- MOBILE OPTIMIZATIONS --- */
-@media (max-width: 768px) {
-    /* Stack the Header elements */
-    header {
-        flex-direction: column;
-        height: auto;
-        padding: 10px;
-        gap: 10px;
-    }
-
-    nav {
-        width: 100%;
-        justify-content: center;
-        gap: 5px;
-    }
-
-    .nav-btn {
-        font-size: 0.7rem; /* Smaller text for small screens */
-        padding: 8px 10px;
-    }
-
-    /* GALLERY SPECIFIC: Stack the 3 columns into 1 */
-    .gallery-layout {
-        display: flex;
-        flex-direction: column;
-        height: auto; /* Let the page grow as long as it needs */
-    }
-
-    .folder-list, .gallery-scroll-area, .sprite-viewer {
-        width: 100%;
-        border: none;
-        border-bottom: 1px solid var(--box-border);
-        padding: 15px 0;
-    }
-
-    /* Adjust the grid so pictures aren't too tiny */
-    .gallery-grid {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    }
-
-    /* Shrink the Sprite Window so it fits on a phone screen */
-    .sprite-window {
-        height: 400px;
-    }
-
-    /* Make the glass panel less padded so we save space */
-    .glass-panel {
-        padding: 10px;
-        margin: 5px;
-    }
+/* --- HEADER & NAVIGATION --- */
+header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 5%;
+    background: rgba(0, 0, 0, 0.95);
+    border-bottom: 1px solid var(--box-border);
+    position: sticky; top: 0; z-index: 1000;
+    backdrop-filter: blur(10px);
 }
 
-/* THIS IS FOR THE LAYOUT OF THE CHARACTERS PAGE*/
-
-/* --- 3-COLUMN CHARACTER LAYOUT (Only affects Characters Page) --- */
-.char-detail-layout {
-    display: grid;
-    grid-template-columns: 280px 220px 1fr; 
-    gap: 25px;
-    margin-top: 20px;
-    align-items: start;
-}
-
-.quest-nav-item {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 15px;
-    margin-bottom: 10px;
-    border: 1px solid var(--box-border);
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.active-quest {
-    background: rgba(212, 175, 55, 0.15) !important;
-    border-color: var(--gold) !important;
-}
-
-
-/* FAVORITES LOOK FOR LIST OF CHARACTERS IN GALLERY */
-
-/* Favorite Character Buttons in Gallery */
-.char-btn.is-favorite {
-    color: #ff69b4 !important; /* Pink color */
-    border-color: #ff69b4 !important;
-}
-
-.char-btn.is-favorite::after {
-    content: " ❤️";
-    font-size: 0.8rem;
-}
-
-/* Optional: Subtle glow for favorites */
-.char-btn.is-favorite:hover {
-    box-shadow: 0 0 10px rgba(255, 105, 180, 0.4);
-}
-
-/* SETTINGS FOR THE SETTINGS FOR TRACKS */
-.settings-container {
+.nav-btn {
+    background: rgba(255, 255, 255, 0.05); border: 1px solid var(--gold);
+    color: white; padding: 8px 20px; border-radius: 30px;
+    cursor: pointer; text-decoration: none; font-weight: bold; transition: 0.2s;
     display: inline-block;
-    vertical-align: middle;
 }
+
+.nav-btn:hover, .nav-btn.active {
+    background: var(--gold); color: black; box-shadow: 0 0 15px var(--gold);
+}
+
+/* Hamburger Icon (Hidden on Desktop) */
+.hamburger {
+    display: none;
+    background: none;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 5px 12px;
+    border-radius: 4px;
+}
+
+/* --- SETTINGS MODAL & MUSIC --- */
+.settings-container { position: relative; display: inline-block; vertical-align: middle; }
 
 #settings-modal {
-    background: rgba(10, 10, 15, 0.95) !important;
+    display: none; /* Controlled by JS toggle */
+    position: absolute;
+    top: 50px; right: 0;
+    width: 250px;
+    height: auto !important;
+    background: rgba(10, 10, 15, 0.98);
     backdrop-filter: blur(15px);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 5px var(--gold);
+    border: 1px solid var(--gold);
+    padding: 15px;
+    z-index: 10000;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+    flex-direction: column;
 }
 
-#settings-modal .nav-btn:hover {
-    background: var(--gold);
-    color: black;
-}
-
-/* SETTINGS FOR TRACKS ICON */
-.settings-container .nav-btn {
-    text-shadow: 0 0 5px var(--gold);
-    border: 1px solid rgba(212, 175, 55, 0.3);
-}
-
-/* Custom Scrollbar for the Track List */
-#track-list::-webkit-scrollbar {
-    width: 4px;
-}
-
-#track-list::-webkit-scrollbar-track {
-    background: rgba(212, 175, 55, 0.05);
-}
-
-#track-list::-webkit-scrollbar-thumb {
-    background: var(--gold);
-    border-radius: 2px;
-}
-
-/* For Firefox */
 #track-list {
+    max-height: 170px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding-right: 5px;
     scrollbar-width: thin;
     scrollbar-color: var(--gold) rgba(0, 0, 0, 0.2);
 }
 
-/* Custom Scrollbar for the Track List */
-#track-list::-webkit-scrollbar {
-    width: 4px;
-}
+/* Unified Scrollbar Style */
+#track-list::-webkit-scrollbar { width: 4px; }
+#track-list::-webkit-scrollbar-track { background: rgba(212, 175, 55, 0.05); }
+#track-list::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
 
-#track-list::-webkit-scrollbar-track {
-    background: rgba(212, 175, 55, 0.05);
-}
-
-#track-list::-webkit-scrollbar-thumb {
-    background: var(--gold);
-    border-radius: 2px;
-}
-
-/* For Firefox Support */
-#track-list {
-    scrollbar-width: thin;
-    scrollbar-color: var(--gold) rgba(0, 0, 0, 0.2);
-}
-
-/* Visual cue for the active song */
 .track-item.playing {
     border-left: 3px solid var(--gold);
     background: rgba(212, 175, 55, 0.1);
     padding-left: 15px !important;
-    color: var(--gold); /* Optional: makes the text glow too */
+    color: var(--gold);
 }
 
-#settings-modal {
-    height: auto; /* Allow the modal to shrink to fit the list */
-    max-height: 400px; /* Prevents the whole modal from ever getting too long */
-}
-
-/* This styles the scrollbar specifically for the track list */
-#track-list::-webkit-scrollbar {
-    width: 4px;
-}
-
-#track-list::-webkit-scrollbar-thumb {
-    background: var(--gold);
-    border-radius: 2px;
-}
-
-#track-list::-webkit-scrollbar-track {
-    background: rgba(212, 175, 55, 0.1);
-}
-
-#settings-modal {
-    /* This prevents the box from stretching to the bottom of the screen */
-    height: auto !important; 
-    display: flex;
-    flex-direction: column;
-    /* Optional: adds a nice glow to the border */
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8); 
-}
-
-#track-list {
-    /* This height (approx 160px-180px) fits about 4 tracks perfectly */
-    max-height: 170px; 
-    overflow-y: auto;
-    margin-bottom: 10px;
-    padding-right: 5px;
-}
-
-/* Ensure the 'Playing' message stays at the bottom of the now-shorter box */
 #current-track-name {
     margin-top: auto;
     padding-top: 10px;
     border-top: 1px solid rgba(212, 175, 55, 0.2);
+    font-size: 0.6rem;
+    color: var(--gold);
+    opacity: 0.6;
 }
 
-/* --- Desktop Styles end here --- */
+.music-controls {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(212, 175, 55, 0.1);
+    padding: 5px 15px; border-radius: 20px;
+    border: 1px solid var(--box-border);
+}
 
-/* --- CONSOLIDATED MASTER MOBILE ENGINE --- */
+#volume-slider { width: 80px; accent-color: var(--gold); cursor: pointer; }
+
+/* --- SHARED LAYOUTS --- */
+.bg-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('backgroundImg.gif') no-repeat center center; background-size: cover; z-index: -2; }
+.bg-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: -1; }
+.container { max-width: 1750px; margin: 20px auto; padding: 0 20px; }
+.glass-panel { background: var(--glass); backdrop-filter: blur(12px); border: 1px solid var(--box-border); border-radius: 20px; padding: 30px; min-height: 80vh; }
+
+/* Gallery & Sprite Layout */
+.gallery-layout { display: grid; grid-template-columns: 160px 1fr 320px; gap: 20px; height: 85vh; align-items: start; }
+.gallery-scroll-area { height: 100%; overflow-y: auto; padding-right: 10px; }
+.gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+
+.img-card {
+    width: 100%; aspect-ratio: 1 / 1; border: 2px solid var(--box-border);
+    border-radius: 6px; overflow: hidden; cursor: pointer; background: #111; transition: 0.3s;
+}
+.img-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.img-card:hover { border-color: var(--gold); transform: scale(1.02); }
+
+.sprite-window { width: 100%; height: 500px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.sprite-window img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+/* Lightbox */
+.lightbox {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); z-index: 2000;
+    justify-content: center; align-items: center;
+}
+.lightbox img { max-width: 90%; max-height: 90%; border: 1px solid var(--gold); box-shadow: 0 0 50px rgba(0,0,0,0.8); background: #000; }
+
+/* Character Details */
+.char-detail-layout { display: grid; grid-template-columns: 280px 220px 1fr; gap: 25px; margin-top: 20px; align-items: start; }
+.quest-nav-item { background: rgba(255, 255, 255, 0.05); padding: 15px; margin-bottom: 10px; border: 1px solid var(--box-border); cursor: pointer; }
+.active-quest { background: rgba(212, 175, 55, 0.15) !important; border-color: var(--gold) !important; }
+
+/* Favorites */
+.char-btn.is-favorite { color: #ff69b4 !important; border-color: #ff69b4 !important; }
+.char-btn.is-favorite::after { content: " ❤️"; font-size: 0.8rem; }
+
+/* --- RESPONSIVE MASTER ENGINE --- */
 @media screen and (max-width: 768px) {
-    /* Full-width Reset */
-    html, body, .container, .main-content, .gallery-layout {
-        width: 100% !important;
-        max-width: 100vw !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        overflow-x: hidden !important;
-        display: block !important;
-        height: auto !important;
+    header { padding: 10px 15px; position: relative; }
+    
+    .hamburger { display: block; order: 2; }
+    
+    /* Brand stays left */
+    header div:first-child { order: 1; font-size: 0.8rem; }
+    
+    /* Music/Settings move to right, or hide if too cramped */
+    .header-right, .music-controls { order: 3; scale: 0.9; }
+
+    nav {
+        display: none; /* Hide for Hamburger toggle */
+        position: absolute;
+        top: 60px; left: 0; width: 100%;
+        background: rgba(10, 10, 15, 0.98);
+        flex-direction: column;
+        padding: 20px;
+        gap: 15px;
+        border-bottom: 1px solid var(--gold);
+        z-index: 999;
     }
 
-    /* Header & Nav */
-    header { width: 100% !important; box-sizing: border-box !important; flex-direction: column !important; height: auto !important; padding: 10px !important; }
-    nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px !important; }
+    nav.active { display: flex; }
 
-    /* Gallery (2 per row) */
-    .gallery-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 10px !important; width: 100% !important; }
-    .img-card { aspect-ratio: 1 / 1; width: 100% !important; height: auto !important; }
+    .gallery-layout { display: flex; flex-direction: column; height: auto; }
+    .gallery-grid { grid-template-columns: 1fr 1fr; width: 100%; }
+    .sprite-window { height: 350px; }
+    .glass-panel { padding: 15px; min-height: auto; }
 
-    /* Quest Stacking Logic (Portrait Only) */
     @media (orientation: portrait) {
-        .char-detail-layout { display: flex !important; flex-direction: column !important; }
-        .char-img-container { width: 100% !important; height: auto !important; max-height: 45vh; margin-bottom: 20px; }
-        .quest-section { width: 100% !important; }
+        .char-detail-layout { display: flex; flex-direction: column; }
     }
-
-    /* Quest Segments Styles */
-    .quest-segment { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--box-border); margin-bottom: 10px; border-radius: 4px; overflow: hidden; }
-    .quest-header { padding: 15px; background: rgba(0, 0, 0, 0.3); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-    .quest-content { display: none; padding: 15px; border-top: 1px solid var(--box-border); line-height: 1.4; }
-    .quest-segment.active .quest-content { display: block; }
-    .quest-segment.active .arrow { transform: rotate(180deg); }
 }
