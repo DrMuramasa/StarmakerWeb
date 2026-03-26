@@ -460,3 +460,20 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+// --- 7. HEADER LOGO NAVIGATION ---
+function goHome() {
+    if (typeof playSnd === 'function') playSnd(); 
+    
+    // Check if CRT is enabled for the glitch transition
+    if (localStorage.getItem('sm_crt_enabled') === 'true') {
+        const glitch = document.getElementById('glitch-screen');
+        if (glitch) glitch.classList.add('active');
+        
+        setTimeout(() => {
+            window.location.href = 'home.html';
+        }, 250); 
+    } else {
+        window.location.href = 'home.html';
+    }
+}
