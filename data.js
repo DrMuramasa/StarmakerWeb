@@ -145,7 +145,8 @@ if (typeof bgMusic === 'undefined') {
     bgMusic.addEventListener('timeupdate', function() {
         var buffer = 0.40;
         if(this.currentTime > this.duration - buffer) {
-            // Browser-level loop reinforcement
+            this.currentTime = 0; // Reinforced loop
+            this.play();
         }
     });
 }
@@ -244,19 +245,26 @@ function changeTrack(path, label) {
     });
 }
 
+// Toggle logic fixed for mobile "always open" issue
 function toggleSettings() {
     if (typeof playSnd === 'function') playSnd();
     const modal = document.getElementById('settings-modal');
     if (modal) {
-        modal.style.display = modal.style.display === 'none' ? 'flex' : 'none';
+        const isHidden = window.getComputedStyle(modal).display === 'none';
+        modal.style.display = isHidden ? 'flex' : 'none';
     }
 }
 
 function toggleMenu() {
     if (typeof playSnd === 'function') playSnd();
     const nav = document.getElementById('main-nav');
+    const modal = document.getElementById('settings-modal');
     if (nav) {
         nav.classList.toggle('active');
+        // If we close the menu, hide the settings track list too
+        if (!nav.classList.contains('active') && modal) {
+            modal.style.display = 'none';
+        }
     }
 }
 
@@ -304,13 +312,13 @@ function updateMuteIcon() {
     if (btn) btn.innerText = (isMuted || (typeof bgMusic !== 'undefined' && bgMusic.volume == 0)) ? "🔈" : "🔊";
 }
 
-// --- IMPROVED SWIPE ENGINE ---
+// --- GLOBAL DELEGATE SWIPE ENGINE ---
 let touchstartX = 0;
 let touchendX = 0;
 
 function handleGesture() {
     const swipeThreshold = 50;
-    // Note: changeImage must be defined in your gallery script
+    // Check which direction the user swiped
     if (touchendX < touchstartX - swipeThreshold) {
         if (typeof changeImage === 'function') changeImage(1); 
     }
@@ -319,19 +327,21 @@ function handleGesture() {
     }
 }
 
-// Attach listeners to all possible gallery/sprite containers
-const swipeTargets = ['.lightbox', '.sprite-window', '#lightbox-modal', '.sprite-viewer'];
+// Global listeners ensure swiping works even on newly created pop-ups (lightboxes)
+document.addEventListener('touchstart', e => {
+    touchstartX = e.changedTouches[0].screenX;
+}, {passive: true});
 
-swipeTargets.forEach(selector => {
-    const el = document.querySelector(selector);
-    if (el) {
-        el.addEventListener('touchstart', e => {
-            touchstartX = e.changedTouches[0].screenX;
-        }, {passive: true});
+document.addEventListener('touchend', e => {
+    touchendX = e.changedTouches[0].screenX;
+    
+    // Check if the user is swiping on the lightbox, character details, or sprite viewer
+    const isSwipeArea = e.target.closest('.lightbox') || 
+                        e.target.closest('.sprite-window') || 
+                        e.target.closest('#lightbox-modal') ||
+                        e.target.closest('.char-image-box');
 
-        el.addEventListener('touchend', e => {
-            touchendX = e.changedTouches[0].screenX;
-            handleGesture();
-        }, {passive: true});
+    if (isSwipeArea) {
+        handleGesture();
     }
-});
+}, {passive: true});
