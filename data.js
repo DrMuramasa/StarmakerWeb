@@ -138,7 +138,6 @@ const characterData = {
 
 // --- GLOBAL SOUND ENGINE ---
 if (typeof bgMusic === 'undefined') {
-    // Default to background_theme, but check storage later in init
     var bgMusic = new Audio('audio/background_theme.mp3');
     bgMusic.loop = true;
 }
@@ -161,13 +160,11 @@ let previousVolume = 0.5;
 // --- UPDATED MUSIC ENGINE WITH TRACK SWITCHING ---
 
 function initMusic(defaultTrack = 'audio/background_theme.mp3') {
-    // 1. Check for saved preferences
     const savedTrack = localStorage.getItem('sm_preferred_track') || defaultTrack;
     const savedVol = parseFloat(localStorage.getItem('sm_volume')) || 0.5;
     const savedTime = parseFloat(localStorage.getItem('sm_music_time')) || 0;
 
     if (typeof bgMusic !== 'undefined') {
-        // Update track source if it's different from what's currently loaded
         if (!bgMusic.src.includes(savedTrack)) {
             bgMusic.src = savedTrack;
         }
@@ -198,21 +195,25 @@ function initMusic(defaultTrack = 'audio/background_theme.mp3') {
         }
     }
     
-    // Sync UI
     const slider = document.getElementById('volume-slider');
     if (slider) slider.value = savedVol;
     updateMuteIcon();
 
-    // Update the "Playing" text in settings if it exists
     const trackNameDisplay = document.getElementById('current-track-name');
     const trackLabel = localStorage.getItem('sm_track_label') || "Default Theme";
     if (trackNameDisplay) trackNameDisplay.innerText = "PLAYING: " + trackLabel;
+
+    // --- Added: Restore visual highlight on page load ---
+    document.querySelectorAll('.track-item').forEach(btn => {
+        if (btn.innerText.includes(trackLabel)) {
+            btn.classList.add('playing');
+        }
+    });
 }
 
 function changeTrack(path, label) {
     if (typeof playSnd === 'function') playSnd();
     
-    // Save preferences
     localStorage.setItem('sm_preferred_track', path);
     localStorage.setItem('sm_track_label', label);
     
@@ -220,25 +221,41 @@ function changeTrack(path, label) {
         const currentVol = bgMusic.volume;
         bgMusic.pause();
         bgMusic.src = path;
-        bgMusic.currentTime = 0; // New tracks start from beginning
+        bgMusic.currentTime = 0; 
         bgMusic.volume = currentVol;
         bgMusic.play();
     }
 
-    // Update UI
+    // Update UI text
     const display = document.getElementById('current-track-name');
     if (display) display.innerText = "PLAYING: " + label;
+
+    // --- Added: Visual highlight toggle ---
+    document.querySelectorAll('.track-item').forEach(btn => {
+        btn.classList.remove('playing');
+        if (btn.innerText.includes(label)) {
+            btn.classList.add('playing');
+        }
+    });
 }
 
 function toggleSettings() {
     if (typeof playSnd === 'function') playSnd();
     const modal = document.getElementById('settings-modal');
     if (modal) {
-        modal.style.display = modal.style.display === 'none' ? 'block' : 'none';
+        modal.style.display = modal.style.display === 'none' ? 'flex' : 'none';
     }
 }
 
-// Keep the interval for timestamp tracking
+// --- Added: Mobile Menu Toggle ---
+function toggleMenu() {
+    if (typeof playSnd === 'function') playSnd();
+    const nav = document.getElementById('main-nav');
+    if (nav) {
+        nav.classList.toggle('active');
+    }
+}
+
 setInterval(() => {
     if (typeof bgMusic !== 'undefined' && !bgMusic.paused) {
         localStorage.setItem('sm_music_time', bgMusic.currentTime);
