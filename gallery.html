@@ -61,14 +61,22 @@
         .star-btn.active { color: var(--gold); text-shadow: 0 0 10px var(--gold); }
 
         /* FAVORITE CHARACTER STYLE */
+        .char-link {
+            position: relative; /* This is the anchor for the absolute heart */
+        }
+        
         .char-link.is-favorite {
             color: #ff69b4 !important; /* Pink */
             border-color: #ff69b4 !important;
         }
+        
         .char-link.is-favorite::after {
-            content: " ❤️";
-            font-size: 0.7rem;
-            vertical-align: middle;
+            content: "❤️";
+            position: absolute;
+            right: 15px; /* Pins the heart to the right edge */
+            top: 50%; /* Pushes it exactly halfway down */
+            transform: translateY(-50%); /* Pulls it up perfectly into the middle */
+            font-size: 0.8rem;
         }
 
         .sprite-viewer {
