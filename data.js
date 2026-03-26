@@ -141,36 +141,50 @@ const characterData = {
 function updateMuteIcon() {
     const btn = document.getElementById('mute-btn');
     if (btn) {
-        const vol = (typeof bgMusic !== 'undefined') ? bgMusic.volume : 0;
-        btn.innerText = (vol === 0) ? "🔈" : "🔊";
+        // Now checks the global isMuted state instead of volume level
+        btn.innerText = isMuted ? "🔈" : "🔊"; 
     }
 }
 
 function updateVolume(val) {
     if (typeof bgMusic !== 'undefined') {
         bgMusic.volume = val;
-        updateMuteIcon();
         localStorage.setItem('sm_volume', val);
+        
+        // If the user manually slides the volume above 0, un-mute them
+        if (val > 0 && isMuted) {
+            isMuted = false;
+            localStorage.setItem('sm_muted', 'false');
+        }
+        
+        updateMuteIcon();
     }
 }
 
-let isMuted = false;
-let previousVolume = 0.5;
+// Initialize mute state from localStorage or default to false
+let isMuted = localStorage.getItem('sm_muted') === 'true'; 
+let previousVolume = parseFloat(localStorage.getItem('sm_volume')) || 0.5;
 
 function toggleMute() {
     const slider = document.getElementById('volume-slider');
     if (typeof bgMusic === 'undefined') return;
 
     if (!isMuted) {
+        // Muting
         previousVolume = bgMusic.volume > 0 ? bgMusic.volume : 0.5;
-        updateVolume(0);
+        bgMusic.volume = 0; // Update the audio object directly
         if (slider) slider.value = 0;
         isMuted = true;
     } else {
-        updateVolume(previousVolume);
+        // Unmuting
+        bgMusic.volume = previousVolume; // Update the audio object directly
         if (slider) slider.value = previousVolume;
         isMuted = false;
     }
+    
+    // Save state
+    localStorage.setItem('sm_muted', isMuted);
+    updateMuteIcon();
 }
 
 // --- 2. GLOBAL SOUND ENGINE ---
@@ -204,7 +218,10 @@ function playSnd() {
 
 function initMusic(defaultTrack = 'audio/background_theme.mp3') {
     const savedTrack = localStorage.getItem('sm_preferred_track') || defaultTrack;
-    const savedVol = parseFloat(localStorage.getItem('sm_volume')) || 0.5;
+    
+    // Determine the target volume based on mute state
+    let targetVol = isMuted ? 0 : previousVolume; 
+
     const savedTime = parseFloat(localStorage.getItem('sm_music_time')) || 0;
 
     if (typeof bgMusic !== 'undefined') {
@@ -213,26 +230,32 @@ function initMusic(defaultTrack = 'audio/background_theme.mp3') {
         bgMusic.currentTime = savedTime;
         
         bgMusic.play().then(() => {
-            let currentFadeVol = 0;
-            const fadeInterval = setInterval(() => {
-                if (currentFadeVol < savedVol) {
-                    currentFadeVol += 0.05;
-                    bgMusic.volume = Math.min(currentFadeVol, savedVol);
-                } else {
-                    clearInterval(fadeInterval);
-                    updateMuteIcon();
-                }
-            }, 50);
+            // Only fade in if we are NOT muted
+            if (!isMuted) {
+                let currentFadeVol = 0;
+                const fadeInterval = setInterval(() => {
+                    if (currentFadeVol < targetVol) {
+                        currentFadeVol += 0.05;
+                        bgMusic.volume = Math.min(currentFadeVol, targetVol);
+                    } else {
+                        clearInterval(fadeInterval);
+                        updateMuteIcon();
+                    }
+                }, 50);
+            } else {
+                updateMuteIcon();
+            }
         }).catch(() => {
             document.addEventListener('click', () => {
                 bgMusic.play();
-                updateVolume(savedVol);
+                bgMusic.volume = targetVol;
+                updateMuteIcon();
             }, { once: true });
         });
     }
     
     const slider = document.getElementById('volume-slider');
-    if (slider) slider.value = savedVol;
+    if (slider) slider.value = targetVol;
 
     const trackNameDisplay = document.getElementById('current-track-name');
     const trackLabel = localStorage.getItem('sm_track_label') || "Default Theme";
@@ -327,3 +350,21 @@ setInterval(() => {
         localStorage.setItem('sm_music_time', bgMusic.currentTime);
     }
 }, 1000);
+
+// --- 6. PAGE LOAD INITIALIZATION ---
+// This ensures the volume and mute state are applied immediately when any page loads
+window.addEventListener('DOMContentLoaded', () => {
+    // Determine the correct volume to set
+    let targetVol = isMuted ? 0 : previousVolume;
+    
+    // Apply it to the slider visually
+    const slider = document.getElementById('volume-slider');
+    if (slider) slider.value = targetVol;
+    
+    // Apply it to the audio object
+    if (typeof bgMusic !== 'undefined') {
+        bgMusic.volume = targetVol;
+    }
+    
+    updateMuteIcon();
+});
