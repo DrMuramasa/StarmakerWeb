@@ -256,4 +256,13 @@ header {
     }
     .sprite-window { height: 400px !important; width: 100% !important; }
     .quest-nav-item { padding: 10px; font-size: 0.9rem; }
+
+    /* Track button centered stuck */
+    /* FIX: Locks the Tracks button strictly in the center */
+    .settings-container {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        width: 100% !important;
+    }
 }
