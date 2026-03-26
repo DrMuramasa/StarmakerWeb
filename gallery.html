@@ -217,7 +217,6 @@
 
             characterKeys.forEach(key => {
                 const isFav = favorites.chars && favorites.chars.includes(key);
-                
                 if (charFilterActive && !isFav) return;
 
                 const btn = document.createElement('button');
@@ -226,12 +225,32 @@
                 btn.style.marginBottom = "10px";
                 btn.innerText = key;
 
-                btn.onclick = () => { playSnd(); loadGallery(key); };
+                // --- Mobile Long Press Logic ---
+                let pressTimer;
+                let isLongPress = false;
 
-                // Right Click to Favorite
+                btn.addEventListener('touchstart', () => {
+                    isLongPress = false;
+                    pressTimer = setTimeout(() => {
+                        isLongPress = true; // Marks that a long press happened
+                        toggleCharFav(key);
+                    }, 500); // 500 milliseconds = long press
+                }, { passive: true });
+
+                btn.addEventListener('touchend', () => clearTimeout(pressTimer));
+                btn.addEventListener('touchmove', () => clearTimeout(pressTimer));
+
+                // Desktop Right-Click
                 btn.oncontextmenu = (e) => {
                     e.preventDefault();
                     toggleCharFav(key);
+                };
+
+                // Normal Tap / Click
+                btn.onclick = () => { 
+                    if (isLongPress) return; // Ignores the click if they just long-pressed
+                    if(typeof playSnd === 'function') playSnd(); 
+                    loadGallery(key); 
                 };
 
                 listContainer.appendChild(btn);
@@ -296,16 +315,48 @@
             const card = document.createElement('div');
             card.className = 'img-card';
             card.dataset.url = url;
+            
+            // Notice we removed the inline onclicks here so JS can handle them better!
             card.innerHTML = `
-                <img src="${url}" onclick="playSnd(); openLightboxByUrl('${url}')">
-                <button class="star-btn ${isFav ? 'active' : ''}" onclick="playSnd(); toggleFavImg('${url}', this); event.stopPropagation();">★</button>
+                <img src="${url}">
+                <button class="star-btn ${isFav ? 'active' : ''}">★</button>
             `;
             
-            // Right Click to Favorite Image
+            const btn = card.querySelector('.star-btn');
+
+            // --- Mobile Long Press Logic ---
+            let pressTimer;
+            let isLongPress = false;
+
+            card.addEventListener('touchstart', () => {
+                isLongPress = false;
+                pressTimer = setTimeout(() => {
+                    isLongPress = true;
+                    toggleFavImg(url, btn);
+                }, 500);
+            }, { passive: true });
+
+            card.addEventListener('touchend', () => clearTimeout(pressTimer));
+            card.addEventListener('touchmove', () => clearTimeout(pressTimer));
+
+            // Desktop Right Click
             card.oncontextmenu = (e) => {
                 e.preventDefault();
-                const btn = card.querySelector('.star-btn');
                 toggleFavImg(url, btn);
+            };
+
+            // Normal Tap / Click
+            card.onclick = (e) => {
+                if (isLongPress) return; // Prevent opening lightbox if they just long-pressed
+                
+                if(typeof playSnd === 'function') playSnd();
+                
+                // If they clicked the star button normally, just favorite it. Otherwise, open lightbox.
+                if (e.target.classList.contains('star-btn')) {
+                    toggleFavImg(url, btn);
+                } else {
+                    openLightboxByUrl(url);
+                }
             };
 
             container.appendChild(card);
