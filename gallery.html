@@ -60,25 +60,6 @@
         }
         .star-btn.active { color: var(--gold); text-shadow: 0 0 10px var(--gold); }
 
-        /* FAVORITE CHARACTER STYLE */
-        .char-link {
-            position: relative; /* This is the anchor for the absolute heart */
-        }
-        
-        .char-link.is-favorite {
-            color: #ff69b4 !important; /* Pink */
-            border-color: #ff69b4 !important;
-        }
-        
-        .char-link.is-favorite::after {
-            content: "❤️";
-            position: absolute;
-            right: 15px; /* Pins the heart to the right edge */
-            top: 50%; /* Pushes it exactly halfway down */
-            transform: translateY(-50%); /* Pulls it up perfectly into the middle */
-            font-size: 0.8rem;
-        }
-
         .sprite-viewer {
             background: rgba(0,0,0,0.4);
             border-radius: 15px;
@@ -225,7 +206,14 @@
                 btn.className = `nav-btn char-link ${isFav ? 'is-favorite' : ''}`;
                 btn.style.width = "100%";
                 btn.style.marginBottom = "10px";
-                btn.innerText = key;
+                
+                // Inject the name AND the clickable heart span
+                // If it's not a favorite, we make it grayscale and semi-transparent
+                const heartStyle = isFav ? "opacity: 1; filter: grayscale(0);" : "opacity: 0.3; filter: grayscale(1);";
+                btn.innerHTML = `
+                    <span>${key}</span> 
+                    <span class="fav-heart" style="${heartStyle}">❤️</span>
+                `;
 
                 // --- Mobile Long Press Logic ---
                 let pressTimer;
@@ -249,9 +237,18 @@
                 };
 
                 // Normal Tap / Click
-                btn.onclick = () => { 
+                btn.onclick = (e) => { 
                     if (isLongPress) return; // Ignores the click if they just long-pressed
+                    
                     if(typeof playSnd === 'function') playSnd(); 
+                    
+                    // Smart Click: Did they click the heart span?
+                    if (e.target.classList.contains('fav-heart')) {
+                        toggleCharFav(key); // Toggle favorite
+                        return; // Stop here so it doesn't also try to load the gallery images!
+                    }
+
+                    // Otherwise, they clicked the button normally, so load the gallery
                     loadGallery(key); 
                 };
 
