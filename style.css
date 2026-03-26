@@ -266,3 +266,10 @@ header {
         width: 100% !important;
     }
 }
+
+/* FIX: Prevents iOS from highlighting text or opening native menus on long press */
+.char-link, .img-card {
+    -webkit-user-select: none; /* Safari */
+    user-select: none; /* Standard */
+    -webkit-touch-callout: none; /* Disables the iOS popup menu */
+}
