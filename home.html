@@ -188,17 +188,28 @@
         function animateImage(el) {
             let posX = parseFloat(el.style.left);
             let posY = parseFloat(el.style.top);
-            // Drifting speeds
             let velX = (Math.random() - 0.5) * 0.05;
             let velY = (Math.random() - 0.5) * 0.05;
 
             function move() {
+                // Dynamically calculate the maximum boundary based on the image's actual size
+                let maxPosX = 100 - ((el.offsetWidth / container.offsetWidth) * 100);
+                let maxPosY = 100 - ((el.offsetHeight / container.offsetHeight) * 100);
+
                 posX += velX;
                 posY += velY;
 
-                // Bounce boundaries
-                if (posX < 2 || posX > 75) velX *= -1;
-                if (posY < 2 || posY > 70) velY *= -1;
+                // Bounce Left/Right
+                if (posX <= 0 || posX >= maxPosX) {
+                    velX *= -1; // Reverse direction
+                    posX = posX <= 0 ? 0 : maxPosX; // Prevent it from getting stuck outside bounds
+                }
+                
+                // Bounce Top/Bottom
+                if (posY <= 0 || posY >= maxPosY) {
+                    velY *= -1;
+                    posY = posY <= 0 ? 0 : maxPosY;
+                }
 
                 el.style.left = posX + "%";
                 el.style.top = posY + "%";
