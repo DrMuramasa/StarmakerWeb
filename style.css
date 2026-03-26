@@ -193,6 +193,17 @@ header {
     .char-detail-layout, .character-details-container { display: flex !important; flex-direction: column !important; width: 100% !important; }
     .char-image-box { width: 100% !important; max-height: 350px !important; overflow: hidden; }
 
+    /* FIX: Scrollable Gallery Window for Mobile */
+    .gallery-scroll-area {
+        max-height: 500px !important; /* This roughly equals 3.5 to 4 rows depending on screen size */
+        overflow-y: auto !important; /* Triggers the vertical scrollbar */
+        border: 1px solid var(--box-border) !important; /* Wraps it in a neat box */
+        border-radius: 12px !important;
+        padding: 15px !important;
+        background: rgba(0, 0, 0, 0.4) !important; /* Darkens the background slightly to frame it */
+        margin-bottom: 20px !important;
+    }
+
     /* FIX: Sprite Viewer bounds and "Cutout" logic */
     .sprite-viewer { 
         width: 100% !important; 
