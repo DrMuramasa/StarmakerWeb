@@ -222,9 +222,10 @@
                 btn.addEventListener('touchstart', () => {
                     isLongPress = false;
                     pressTimer = setTimeout(() => {
-                        isLongPress = true; // Marks that a long press happened
+                        isLongPress = true; 
+                        if (navigator.vibrate) navigator.vibrate(50); // Tiny haptic bump!
                         toggleCharFav(key);
-                    }, 500); // 500 milliseconds = long press
+                    }, 700); // Increased to 700ms for stability
                 }, { passive: true });
 
                 btn.addEventListener('touchend', () => clearTimeout(pressTimer));
@@ -233,6 +234,7 @@
                 // Desktop Right-Click
                 btn.oncontextmenu = (e) => {
                     e.preventDefault();
+                    if (isLongPress) return; // FIX: Stops the native mobile double-fire
                     toggleCharFav(key);
                 };
 
@@ -331,8 +333,9 @@
                 isLongPress = false;
                 pressTimer = setTimeout(() => {
                     isLongPress = true;
+                    if (navigator.vibrate) navigator.vibrate(50); // Tiny haptic bump!
                     toggleFavImg(url, btn);
-                }, 500);
+                }, 700); // Increased to 700ms for stability
             }, { passive: true });
 
             card.addEventListener('touchend', () => clearTimeout(pressTimer));
@@ -341,6 +344,7 @@
             // Desktop Right Click
             card.oncontextmenu = (e) => {
                 e.preventDefault();
+                if (isLongPress) return; // FIX: Stops the native mobile double-fire
                 toggleFavImg(url, btn);
             };
 
