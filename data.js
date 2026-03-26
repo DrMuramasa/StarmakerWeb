@@ -245,13 +245,18 @@ function changeTrack(path, label) {
     });
 }
 
-// Toggle logic fixed for mobile "always open" issue
+// --- NAVIGATION & SETTINGS TOGGLES ---
+
 function toggleSettings() {
     if (typeof playSnd === 'function') playSnd();
     const modal = document.getElementById('settings-modal');
-    if (modal) {
-        const isHidden = window.getComputedStyle(modal).display === 'none';
-        modal.style.display = isHidden ? 'flex' : 'none';
+    if (!modal) return;
+    
+    // Toggle using a specific class or direct display
+    if (modal.style.display === 'flex') {
+        modal.style.display = 'none';
+    } else {
+        modal.style.display = 'flex';
     }
 }
 
@@ -259,9 +264,10 @@ function toggleMenu() {
     if (typeof playSnd === 'function') playSnd();
     const nav = document.getElementById('main-nav');
     const modal = document.getElementById('settings-modal');
+    
     if (nav) {
         nav.classList.toggle('active');
-        // If we close the menu, hide the settings track list too
+        // Close settings if menu is closed to prevent "ghost" overlays
         if (!nav.classList.contains('active') && modal) {
             modal.style.display = 'none';
         }
@@ -273,12 +279,6 @@ setInterval(() => {
         localStorage.setItem('sm_music_time', bgMusic.currentTime);
     }
 }, 1000);
-
-window.onbeforeunload = function() {
-    if (typeof bgMusic !== 'undefined') {
-        localStorage.setItem('sm_music_time', bgMusic.currentTime);
-    }
-};
 
 function updateVolume(val) {
     if (typeof bgMusic !== 'undefined') {
@@ -312,13 +312,12 @@ function updateMuteIcon() {
     if (btn) btn.innerText = (isMuted || (typeof bgMusic !== 'undefined' && bgMusic.volume == 0)) ? "🔈" : "🔊";
 }
 
-// --- GLOBAL DELEGATE SWIPE ENGINE ---
+// --- SWIPE ENGINE (TOUCH DELEGATION) ---
 let touchstartX = 0;
 let touchendX = 0;
 
 function handleGesture() {
     const swipeThreshold = 50;
-    // Check which direction the user swiped
     if (touchendX < touchstartX - swipeThreshold) {
         if (typeof changeImage === 'function') changeImage(1); 
     }
@@ -327,21 +326,30 @@ function handleGesture() {
     }
 }
 
-// Global listeners ensure swiping works even on newly created pop-ups (lightboxes)
-document.addEventListener('touchstart', e => {
-    touchstartX = e.changedTouches[0].screenX;
-}, {passive: true});
+// Run this on window load to ensure all DOM elements are present
+window.addEventListener('DOMContentLoaded', () => {
+    const attachSwipes = () => {
+        const targets = ['.sprite-window', '#lightbox-modal', '.sprite-viewer', '.char-image-box'];
+        targets.forEach(selector => {
+            const el = document.querySelector(selector);
+            if (el) {
+                el.addEventListener('touchstart', e => {
+                    touchstartX = e.changedTouches[0].screenX;
+                }, {passive: true});
 
-document.addEventListener('touchend', e => {
-    touchendX = e.changedTouches[0].screenX;
-    
-    // Check if the user is swiping on the lightbox, character details, or sprite viewer
-    const isSwipeArea = e.target.closest('.lightbox') || 
-                        e.target.closest('.sprite-window') || 
-                        e.target.closest('#lightbox-modal') ||
-                        e.target.closest('.char-image-box');
+                el.addEventListener('touchend', e => {
+                    touchendX = e.changedTouches[0].screenX;
+                    handleGesture();
+                }, {passive: true});
+            }
+        });
+    };
 
-    if (isSwipeArea) {
-        handleGesture();
-    }
-}, {passive: true});
+    attachSwipes();
+    // Re-attach swipes if you are dynamically loading characters
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('char-btn')) {
+            setTimeout(attachSwipes, 100); 
+        }
+    });
+});
