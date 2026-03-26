@@ -377,9 +377,37 @@ window.addEventListener('DOMContentLoaded', () => {
         crtDiv.className = 'crt-overlay';
         document.body.appendChild(crtDiv);
 
-        // Check user's saved preference
         if (localStorage.getItem('sm_crt_enabled') === 'true') {
             crtDiv.classList.add('active');
         }
     }
+
+    // 3. Inject Glitch Screen Globally
+    if (!document.getElementById('glitch-screen')) {
+        const glitchDiv = document.createElement('div');
+        glitchDiv.id = 'glitch-screen';
+        document.body.appendChild(glitchDiv);
+    }
+
+    // 4. Intercept Page Links for Glitch Transition
+    document.querySelectorAll('a.nav-btn').forEach(link => {
+        link.addEventListener('click', (e) => {
+            const targetURL = link.getAttribute('href');
+            
+            // Only trigger if it's an internal HTML link
+            if (targetURL && targetURL.includes('.html')) {
+                e.preventDefault(); // Stop normal loading
+                
+                if (typeof playSnd === 'function') playSnd(); 
+                
+                const glitch = document.getElementById('glitch-screen');
+                if (glitch) glitch.classList.add('active');
+                
+                // Wait 350ms for the CSS animation to finish, then load the page
+                setTimeout(() => {
+                    window.location.href = targetURL;
+                }, 350); 
+            }
+        });
+    });
 });
