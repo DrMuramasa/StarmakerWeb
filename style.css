@@ -4,6 +4,42 @@ h2 { font-size: clamp(1.2rem, 5vw, 2rem); }
 p, div, span { font-size: clamp(0.9rem, 2.5vw, 1.1rem); }
 .nav-btn { font-size: clamp(0.7rem, 2vw, 0.9rem); }
 
+/* --- GLOBAL HACKER CURSOR --- */
+body {
+    /* Sets the native crosshair cursor */
+    cursor: crosshair; 
+    
+    /* THE MAGIC OUTLINE: Uses text-shadow to outline the cursor lines */
+    text-shadow: 
+        1px 1px 0 #000,   /* Bottom-right shadow */
+       -1px -1px 0 #000,  /* Top-left shadow */
+        1px -1px 0 #000,  /* Top-right shadow */
+       -1px 1px 0 #000;   /* Bottom-left shadow */
+       
+    /* Color of the cursor lines */
+    color: #00ff00; /* Vibrant Green */
+}
+
+/* Ensure interactive elements still show the hand pointer */
+a, button, .nav-btn, .char-card, .img-card img, .floating-img, input[type="range"], .char-link {
+    cursor: pointer;
+}
+
+/* --- GLOBAL CRT OVERLAY --- */
+.crt-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    /* The scanline effect */
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+    background-size: 100% 3px, 3px 100%;
+    z-index: 9998; /* Sits right beneath your lightboxes and menus */
+    pointer-events: none; /* CRITICAL: Lets clicks pass right through the overlay */
+    display: none; /* Hidden by default */
+    opacity: 0.8;
+}
+
+.crt-overlay.active { display: block; }
 :root {
     --gold: #d4af37;
     --glass: rgba(0, 0, 0, 0.85);
