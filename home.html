@@ -25,7 +25,7 @@
         /* Surveillance Style for Floating Images */
         .floating-img {
             position: absolute;
-            width: 250px;
+            width: clamp(100px, 30vw, 250px); /* <--- THIS IS THE MAGIC RESIZE FIX */
             border: 1px solid rgba(212, 175, 55, 0.4);
             border-radius: 4px;
             cursor: pointer;
