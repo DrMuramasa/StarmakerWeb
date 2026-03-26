@@ -136,16 +136,53 @@ const characterData = {
     }
 };
 
-// --- GLOBAL SOUND ENGINE ---
+// --- 1. CORE UTILITIES (Defined First) ---
+
+function updateMuteIcon() {
+    const btn = document.getElementById('mute-btn');
+    if (btn) {
+        const vol = (typeof bgMusic !== 'undefined') ? bgMusic.volume : 0;
+        btn.innerText = (vol === 0) ? "🔈" : "🔊";
+    }
+}
+
+function updateVolume(val) {
+    if (typeof bgMusic !== 'undefined') {
+        bgMusic.volume = val;
+        updateMuteIcon();
+        localStorage.setItem('sm_volume', val);
+    }
+}
+
+let isMuted = false;
+let previousVolume = 0.5;
+
+function toggleMute() {
+    const slider = document.getElementById('volume-slider');
+    if (typeof bgMusic === 'undefined') return;
+
+    if (!isMuted) {
+        previousVolume = bgMusic.volume > 0 ? bgMusic.volume : 0.5;
+        updateVolume(0);
+        if (slider) slider.value = 0;
+        isMuted = true;
+    } else {
+        updateVolume(previousVolume);
+        if (slider) slider.value = previousVolume;
+        isMuted = false;
+    }
+}
+
+// --- 2. GLOBAL SOUND ENGINE ---
+
 if (typeof bgMusic === 'undefined') {
     var bgMusic = new Audio('audio/background_theme.mp3');
     bgMusic.loop = true;
     
-    // Seamless Loop Nudge
     bgMusic.addEventListener('timeupdate', function() {
         var buffer = 0.40;
         if(this.currentTime > this.duration - buffer) {
-            this.currentTime = 0; // Reinforced loop
+            this.currentTime = 0;
             this.play();
         }
     });
@@ -163,10 +200,7 @@ function playSnd() {
     }
 }
 
-let isMuted = false;
-let previousVolume = 0.5;
-
-// --- UPDATED MUSIC ENGINE WITH TRACK SWITCHING ---
+// --- 3. UPDATED MUSIC ENGINE ---
 
 function initMusic(defaultTrack = 'audio/background_theme.mp3') {
     const savedTrack = localStorage.getItem('sm_preferred_track') || defaultTrack;
@@ -174,54 +208,43 @@ function initMusic(defaultTrack = 'audio/background_theme.mp3') {
     const savedTime = parseFloat(localStorage.getItem('sm_music_time')) || 0;
 
     if (typeof bgMusic !== 'undefined') {
-        if (!bgMusic.src.includes(savedTrack)) {
-            bgMusic.src = savedTrack;
-        }
-
+        if (!bgMusic.src.includes(savedTrack)) bgMusic.src = savedTrack;
         bgMusic.volume = 0; 
         bgMusic.currentTime = savedTime;
         
-        const playPromise = bgMusic.play();
-
-        if (playPromise !== undefined) {
-            playPromise.then(() => {
-                let currentFadeVol = 0;
-                const fadeStep = 0.05; 
-                const fadeInterval = setInterval(() => {
-                    if (currentFadeVol < savedVol) {
-                        currentFadeVol += fadeStep;
-                        bgMusic.volume = Math.min(currentFadeVol, savedVol);
-                    } else {
-                        clearInterval(fadeInterval);
-                    }
-                }, 50); 
-            }).catch(() => {
-                document.addEventListener('click', () => {
-                    bgMusic.play();
-                    bgMusic.volume = savedVol;
-                }, { once: true });
-            });
-        }
+        bgMusic.play().then(() => {
+            let currentFadeVol = 0;
+            const fadeInterval = setInterval(() => {
+                if (currentFadeVol < savedVol) {
+                    currentFadeVol += 0.05;
+                    bgMusic.volume = Math.min(currentFadeVol, savedVol);
+                } else {
+                    clearInterval(fadeInterval);
+                    updateMuteIcon();
+                }
+            }, 50);
+        }).catch(() => {
+            document.addEventListener('click', () => {
+                bgMusic.play();
+                updateVolume(savedVol);
+            }, { once: true });
+        });
     }
     
     const slider = document.getElementById('volume-slider');
     if (slider) slider.value = savedVol;
-    updateMuteIcon();
 
     const trackNameDisplay = document.getElementById('current-track-name');
     const trackLabel = localStorage.getItem('sm_track_label') || "Default Theme";
     if (trackNameDisplay) trackNameDisplay.innerText = "PLAYING: " + trackLabel;
 
     document.querySelectorAll('.track-item').forEach(btn => {
-        if (btn.innerText.includes(trackLabel)) {
-            btn.classList.add('playing');
-        }
+        if (btn.innerText.includes(trackLabel)) btn.classList.add('playing');
     });
 }
 
 function changeTrack(path, label) {
     if (typeof playSnd === 'function') playSnd();
-    
     localStorage.setItem('sm_preferred_track', path);
     localStorage.setItem('sm_track_label', label);
     
@@ -239,19 +262,17 @@ function changeTrack(path, label) {
 
     document.querySelectorAll('.track-item').forEach(btn => {
         btn.classList.remove('playing');
-        if (btn.innerText.includes(label)) {
-            btn.classList.add('playing');
-        }
+        if (btn.innerText.includes(label)) btn.classList.add('playing');
     });
 }
 
-// --- NAVIGATION & SETTINGS TOGGLES ---
+// --- 4. NAVIGATION & SETTINGS TOGGLES ---
+
 function toggleSettings() {
     if (typeof playSnd === 'function') playSnd();
     const modal = document.getElementById('settings-modal');
     if (!modal) return;
     
-    // Toggle using explicit style property to override CSS !important
     if (modal.style.getPropertyValue('display') === 'flex') {
         modal.style.setProperty('display', 'none', 'important');
     } else {
@@ -266,14 +287,14 @@ function toggleMenu() {
     
     if (nav) {
         nav.classList.toggle('active');
-        // Auto-close settings if menu closes
         if (!nav.classList.contains('active') && modal) {
             modal.style.setProperty('display', 'none', 'important');
         }
     }
 }
 
-// --- ULTIMATE GLOBAL SWIPE ENGINE ---
+// --- 5. ULTIMATE GLOBAL SWIPE ENGINE ---
+
 let touchstartX = 0;
 let touchendX = 0;
 
@@ -287,32 +308,20 @@ function handleGesture() {
     }
 }
 
-// Listen to the ENTIRE document (Delegation)
 document.addEventListener('touchstart', e => {
-    // Check if we are touching a mosaic lightbox, a character sprite, or the viewer
-    const isSwipeable = e.target.closest('.lightbox') || 
-                        e.target.closest('.sprite-window') || 
-                        e.target.closest('.char-image-box') ||
-                        e.target.closest('#lightbox-modal');
-    
-    if (isSwipeable) {
-        touchstartX = e.changedTouches[0].screenX;
-    }
+    touchstartX = e.changedTouches[0].screenX;
 }, {passive: true});
 
 document.addEventListener('touchend', e => {
+    touchendX = e.changedTouches[0].screenX;
     const isSwipeable = e.target.closest('.lightbox') || 
                         e.target.closest('.sprite-window') || 
                         e.target.closest('.char-image-box') ||
                         e.target.closest('#lightbox-modal');
 
-    if (isSwipeable) {
-        touchendX = e.changedTouches[0].screenX;
-        handleGesture();
-    }
+    if (isSwipeable) handleGesture();
 }, {passive: true});
 
-// Cleanup Logic for tracks
 setInterval(() => {
     if (typeof bgMusic !== 'undefined' && !bgMusic.paused) {
         localStorage.setItem('sm_music_time', bgMusic.currentTime);
