@@ -128,18 +128,32 @@
         document.getElementById('master-bg').style.backgroundImage = `url('${char.bg}')`;
 
         const menu = document.getElementById('quest-menu-list');
+        
+        // Notice we added 'this' to the onclick function call so it knows exactly which button was clicked!
         menu.innerHTML = char.quests.map((q, index) => `
-            <div class="quest-nav-item" onclick="showSteps('${key}', ${index})">${q.title}</div>
+            <div class="quest-nav-item" onclick="showSteps('${key}', ${index}, this)">${q.title}</div>
         `).join('');
 
         document.getElementById('step-display').innerHTML = '<p style="color:gray;">Select a quest to see details.</p>';
         history.pushState({ guideOpen: true }, "");
     }
 
-    function showSteps(charKey, questIndex) {
+    function showSteps(charKey, questIndex, clickedElement) {
         if(typeof playSnd === 'function') playSnd();
-        const quest = charData[charKey].quests[questIndex];
         const display = document.getElementById('step-display');
+        
+        // --- THE NEW TOGGLE LOGIC ---
+        // If the button we just clicked is already active...
+        if (clickedElement.classList.contains('active-quest')) {
+            // Remove the active class to turn it off
+            clickedElement.classList.remove('active-quest');
+            // Reset the step display back to the default message
+            display.innerHTML = '<p style="color:gray;">Select a quest to see details.</p>';
+            return; // Stop the function here so it doesn't try to open the quest!
+        }
+
+        // If it wasn't active, proceed normally...
+        const quest = charData[charKey].quests[questIndex];
         
         display.innerHTML = `
             <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid var(--box-border); padding-bottom:10px;">${quest.title}</h3>
@@ -148,9 +162,9 @@
             </ul>
         `;
 
-        document.querySelectorAll('.quest-nav-item').forEach((el, i) => {
-            el.classList.toggle('active-quest', i === questIndex);
-        });
+        // Clear the active class from all other quests, and only add it to the one we just clicked
+        document.querySelectorAll('.quest-nav-item').forEach(el => el.classList.remove('active-quest'));
+        clickedElement.classList.add('active-quest');
     }
 
     function closeGuide() {
