@@ -145,22 +145,28 @@ header {
 
 @media screen and (max-width: 768px) {
     header { padding: 10px 15px; flex-direction: row !important; }
-    .hamburger { display: block; }
+    .hamburger { display: block; z-index: 1001; }
     
     #main-nav {
-        display: none; position: fixed; top: 60px; left: 0; width: 100vw; height: calc(100vh - 60px);
-        background: rgba(5, 5, 10, 0.98); flex-direction: column; padding: 40px 20px;
+        display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        background: rgba(5, 5, 10, 0.98); flex-direction: column; padding: 80px 20px;
         gap: 25px; z-index: 1000; justify-content: flex-start; overflow-y: auto;
     }
     #main-nav.active { display: flex; }
     .nav-links, .nav-controls { flex-direction: column; width: 100%; gap: 20px; }
 
-    /* Fix: Keep Tracks Settings closed by default in menu */
+    /* FIX: Tracks Settings Modal layering and display */
     #settings-modal { 
         display: none !important; 
         position: fixed !important; 
-        top: 50%; left: 50%; transform: translate(-50%, -50%);
-        width: 85% !important; margin-top: 0; max-height: 400px !important; 
+        top: 50% !important; left: 50% !important; 
+        transform: translate(-50%, -50%) !important;
+        width: 85% !important; 
+        max-height: 400px !important; 
+        z-index: 2001 !important; 
+        background: #0a0a0f !important;
+        border: 2px solid var(--gold) !important;
+        margin-top: 0;
     }
 
     .hero-title, .index-main-text h1, .glitch-title {
@@ -179,13 +185,19 @@ header {
     .char-detail-layout, .character-details-container { display: flex !important; flex-direction: column !important; width: 100% !important; }
     .char-image-box { width: 100% !important; max-height: 350px !important; overflow: hidden; }
 
-    /* Fix: Sprite Viewer "Cutout" logic */
+    /* FIX: Sprite Viewer bounds and "Cutout" logic */
     .sprite-viewer { 
-        width: 100% !important; min-height: 450px !important;
-        background: rgba(0,0,0,0.6) !important; border-radius: 12px;
-        margin-top: 20px; overflow: visible !important;
-        position: relative; /* Unsticks from top to avoid overlaps */
+        width: 100% !important; 
+        min-height: 500px !important;
+        height: auto !important;
+        background: rgba(0,0,0,0.8) !important; 
+        border: 1px solid var(--box-border);
+        border-radius: 15px;
+        margin: 20px 0 !important;
+        overflow: visible !important;
+        position: relative !important;
+        top: 0 !important;
     }
-    .sprite-window { height: 350px !important; width: 100% !important; }
+    .sprite-window { height: 400px !important; width: 100% !important; }
     .quest-nav-item { padding: 10px; font-size: 0.9rem; }
 }
