@@ -174,3 +174,23 @@ header {
     .quest-content { display: none; padding: 15px; border-top: 1px solid var(--box-border); line-height: 1.4; }
     .quest-segment.active .quest-content { display: block; }
 }
+
+    /* Gallery Fix*/
+#settings-modal {
+    max-height: 250px !important; 
+    overflow: hidden;
+}
+
+#track-list {
+    max-height: 160px !important;
+    overflow-y: auto;
+}
+
+@media screen and (max-width: 768px) {
+    .gallery-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center;
+        gap: 20px !important;
+    }
+}
