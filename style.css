@@ -301,25 +301,41 @@ header {
 }
 
 
-/* --- PAGE TRANSITION GLITCH --- */
-#glitch-screen {
-    position: fixed; 
-    top: 0; left: 0; 
-    width: 100vw; height: 100vh;
-    z-index: 10000; /* Stays on top of everything */
-    display: none; 
-    pointer-events: none;
+/* --- CRT INDICATOR BADGE --- */
+.crt-indicator {
+    display: none;
+    color: #ff4466;
+    border: 1px solid #ff4466;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    margin-left: 10px;
+    vertical-align: middle;
+    box-shadow: 0 0 5px rgba(255, 68, 102, 0.5);
+    animation: pulse-crt 2s infinite;
+}
+.crt-indicator.active { display: inline-block; }
+
+@keyframes pulse-crt { 
+    0% { opacity: 0.5; text-shadow: none; } 
+    50% { opacity: 1; text-shadow: 0 0 8px #ff4466; } 
+    100% { opacity: 0.5; text-shadow: none; } 
 }
 
+/* --- SOFTER PAGE TRANSITION GLITCH --- */
+#glitch-screen {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: 10000; display: none; pointer-events: none;
+}
 #glitch-screen.active {
     display: block;
-    animation: glitch-anim 0.35s ease-in-out forwards;
+    animation: soft-glitch 0.25s ease-in-out forwards;
 }
 
-@keyframes glitch-anim {
-    0%   { background: repeating-linear-gradient(0deg, #000 0px, #000 10px, #333 10px, #333 20px); opacity: 1; }
-    25%  { background: repeating-linear-gradient(0deg, #000 0px, #000 15px, #00ff00 15px, #00ff00 20px); opacity: 0.8; }
-    50%  { background: #000; opacity: 1; transform: translateX(10px); }
-    75%  { background: repeating-linear-gradient(0deg, #000 0px, #000 5px, #ff4466 5px, #ff4466 10px); opacity: 0.9; transform: translateX(-10px); }
-    100% { background: #000; opacity: 1; transform: translateX(0); }
+@keyframes soft-glitch {
+    0%   { background: rgba(0, 255, 0, 0.05); opacity: 1; transform: translateX(2px); }
+    30%  { background: repeating-linear-gradient(0deg, transparent 0px, transparent 10px, rgba(255, 0, 0, 0.05) 10px, rgba(255, 0, 0, 0.05) 15px); transform: translateX(-2px); }
+    60%  { background: rgba(0, 255, 0, 0.05); transform: translateX(1px); }
+    100% { background: transparent; transform: translateX(0); }
 }
