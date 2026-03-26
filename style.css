@@ -188,6 +188,7 @@ header {
     /* FIX: Sprite Viewer bounds and "Cutout" logic */
     .sprite-viewer { 
         width: 100% !important; 
+        box-sizing: border-box !important; /* <--- THIS IS THE MAGIC FIX */
         min-height: 500px !important;
         height: auto !important;
         background: rgba(0,0,0,0.8) !important; 
