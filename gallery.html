@@ -191,7 +191,8 @@
         </div>
     </div>
 
-    <div id="lightbox" class="lightbox" onclick="this.style.display='none'">
+    <div id="lightbox" class="lightbox" onclick="if(event.target.id === 'lightbox') this.style.display='none'">
+        <button id="lb-fav-btn" class="star-btn" style="position:absolute; top:20px; right:20px; font-size:2rem; width:50px; height:50px; z-index:10001; background:rgba(0,0,0,0.8);" onclick="toggleFavFromLightbox(event)">★</button>
         <img id="lb-img" src="" onclick="event.stopPropagation()">
     </div>
 
@@ -415,6 +416,13 @@
             galleryIdx = galleryImgs.indexOf(url);
             document.getElementById('lb-img').src = url;
             document.getElementById('lightbox').style.display = 'flex';
+            
+            // Show the star and check if it should be lit up
+            const lbFavBtn = document.getElementById('lb-fav-btn');
+            lbFavBtn.style.display = 'block';
+            if (favorites.images.includes(url)) lbFavBtn.classList.add('active');
+            else lbFavBtn.classList.remove('active');
+
             history.pushState({ lightbox: true }, "");
         }
 
@@ -423,6 +431,10 @@
             activeView = "sprite"; 
             document.getElementById('lb-img').src = sprites[spriteIdx];
             document.getElementById('lightbox').style.display = 'flex';
+            
+            // Hide the favorite star when looking at sprites
+            document.getElementById('lb-fav-btn').style.display = 'none';
+
             history.pushState({ lightbox: true }, "");
         }
 
@@ -445,6 +457,36 @@
             else if (e.key === "Escape") { lb.style.display = 'none'; }
         });
 
+        // --- Lightbox Favorite Logic ---
+        function toggleFavFromLightbox(e) {
+            e.stopPropagation();
+            if(typeof playSnd === 'function') playSnd();
+            
+            const url = document.getElementById('lb-img').src;
+            if(!url) return;
+            
+            const lbBtn = document.getElementById('lb-fav-btn');
+            
+            // Toggle the favorite
+            if (favorites.images.includes(url)) {
+                favorites.images = favorites.images.filter(i => i !== url);
+                lbBtn.classList.remove('active');
+            } else {
+                favorites.images.push(url);
+                lbBtn.classList.add('active');
+            }
+            localStorage.setItem('sm_favorites', JSON.stringify(favorites));
+            
+            // Also update the tiny star on the grid card in the background!
+            const gridCardStar = document.querySelector(`.img-card[data-url="${url}"] .star-btn`);
+            if (gridCardStar) {
+                if (favorites.images.includes(url)) gridCardStar.classList.add('active');
+                else gridCardStar.classList.remove('active');
+            }
+            
+            applyFilters();
+        }
+        
         // Touch Swipe
         let touchStartX = 0;
         window.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, false);
