@@ -151,14 +151,47 @@ function updateVolume(val) {
         bgMusic.volume = val;
         localStorage.setItem('sm_volume', val);
         
-        // If the user manually slides the volume above 0, un-mute them
-        if (val > 0 && isMuted) {
+        // Smart Sync: If the user manually slides to 0, engage the formal mute state
+        if (val == 0 && !isMuted) {
+            isMuted = true;
+            localStorage.setItem('sm_muted', 'true');
+        } 
+        // If they slide it back up, remove the mute state
+        else if (val > 0 && isMuted) {
             isMuted = false;
             localStorage.setItem('sm_muted', 'false');
         }
         
         updateMuteIcon();
     }
+}
+
+// FIX: Properly check for 0 without JavaScript treating it as "false"
+let storedVol = localStorage.getItem('sm_volume');
+let previousVolume = storedVol !== null ? parseFloat(storedVol) : 0.5;
+let isMuted = localStorage.getItem('sm_muted') === 'true'; 
+
+function toggleMute() {
+    const slider = document.getElementById('volume-slider');
+    if (typeof bgMusic === 'undefined') return;
+
+    if (!isMuted) {
+        // Muting
+        previousVolume = bgMusic.volume > 0 ? bgMusic.volume : 0.5;
+        bgMusic.volume = 0; 
+        if (slider) slider.value = 0;
+        isMuted = true;
+    } else {
+        // Unmuting (Ensures it never unmutes to 0)
+        let restoreVol = previousVolume > 0 ? previousVolume : 0.5;
+        bgMusic.volume = restoreVol; 
+        if (slider) slider.value = restoreVol;
+        isMuted = false;
+    }
+    
+    // Save state
+    localStorage.setItem('sm_muted', isMuted);
+    updateMuteIcon();
 }
 
 // Initialize mute state from localStorage or default to false
