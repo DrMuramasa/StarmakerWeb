@@ -1,6 +1,7 @@
 {
     "josef": { 
         "name": "Josef", 
+        "gallery": false,
         "sprite": "images/characters/Josef/josef_sprite.png", 
         "bg": "images/characters/Josef/Josef_BG.jpg", 
         "quests": [
@@ -10,6 +11,7 @@
     },
     "amelia": { 
         "name": "Amelia", 
+        "gallery": true,
         "sprite": "images/characters/Amelia/ameliaBase_sprite.png", 
         "bg": "images/characters/Amelia/Amelia_BG.png", 
         "quests": [
@@ -18,6 +20,7 @@
     },
     "emma": { 
         "name": "Emma", 
+        "gallery": true,
         "sprite": "images/characters/Emma/emmabase_sprite.png", 
         "bg": "images/characters/Emma/Emma_BG.png", 
         "quests": [
@@ -26,7 +29,8 @@
         ]
     },
     "evelyn": { 
-        "name": "Evelyn", 
+        "name": "Evelyn",
+        "gallery": true,
         "sprite": "images/characters/Evelyn/Everlyn_sprite.png", 
         "bg": "images/characters/Evelyn/Evelyn_BG.png", 
         "quests": [
@@ -35,6 +39,7 @@
     },
     "toni": { 
         "name": "Toni", 
+        "gallery": true,
         "sprite": "images/characters/Toni/ToniBar_sprite.png", 
         "bg": "images/characters/Toni/Toni_BG.png", 
         "quests": [
@@ -42,7 +47,8 @@
         ]
     },
     "sofia": { 
-        "name": "Sofia", 
+        "name": "Sofia",
+        "gallery": true,
         "sprite": "images/characters/Sofia/SofiaCasual_sprite.png", 
         "bg": "images/characters/Sofia/Sofia_BG.png", 
         "quests": [
@@ -50,7 +56,8 @@
         ]
     },
     "Astrid": { 
-        "name": "Astrid", 
+        "name": "Astrid",
+        "gallery": true,
         "sprite": "images/characters/Astrid/AstridCasual_sprite.png", 
         "bg": "images/characters/Astrid/Astrid_BG.png", 
         "quests": [
