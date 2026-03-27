@@ -180,7 +180,7 @@ body.crt-active .char-card:hover img {
     touch-action: none; 
 }
 
-/* --- PIXEL-PERFECT LIGHTBOX GALLERY WITH CUSTOM BORDER --- */
+/* --- PIXEL-PERFECT LIGHTBOX GALLERY WITH  BORDER --- */
 .lightbox img { 
     /* Force the image to grow to fill up to 90% of the screen */
     width: 90vw; 
@@ -190,7 +190,7 @@ body.crt-active .char-card:hover img {
     /* THE CUSTOM IMAGE BORDER */
     border-style: solid;
     border-width: 25px; /* Change this to make the frame thicker or thinner on screen */
-    border-image-source: url('images/my-custom-frame.png'); /* Put your exact file path here */
+    border-image-source: url('images/SexyFrame.png'); /* Put your exact file path here */
     border-image-slice: 30; /* This tells CSS where to "cut" the corners. Adjust if stretched! */
     border-image-repeat: round; /* Keeps the edges repeating nicely */
     
