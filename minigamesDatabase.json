@@ -1,4 +1,15 @@
 {
+    "Window Cleaning": {
+        "name": "Window Cleaning",
+        "thumbnail": "images/minigames/windowCleaning_thumb.png",
+        "bg": "images/minigames/windowCleaning_bg.jpg",
+        "description": "Help Anna clean the livingroom window to get Love points",
+        "unlock": "Unlocked automatically after entering the livingroom.",
+        "tips": [
+            "Start at the top of the first window and shake your mouse through the dirty segments"
+        ],
+        "videoUrl": "videos/window_cleaning.mp4"
+    }
     "squirt_racing": {
         "name": "Squirt Racing",
         "thumbnail": "images/minigames/racing_thumb.png",
