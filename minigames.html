@@ -137,9 +137,30 @@
             video.load();
             video.play();
 
-            document.getElementById('guide-tips').innerHTML = game.tips.map(tip => 
-                `<li style="margin-bottom:12px; color:white;"><span style="color:var(--gold);">▶</span> ${tip}</li>`
-            ).join('');
+            // --- SMART TIPS RENDERER ---
+            document.getElementById('guide-tips').innerHTML = game.tips.map(tip => {
+                // Check if it's a standard text tip
+                if (typeof tip === 'string') {
+                    return `<li style="margin-bottom:12px; color:white;"><span style="color:var(--gold);">▶</span> ${tip}</li>`;
+                } 
+                // Check if it's our new dropdown object
+                else if (typeof tip === 'object' && tip.type === 'dropdown') {
+                    // Turn the answers array into list items
+                    const answersList = tip.content.map(item => `<li style="color:#00ff00; margin-bottom:4px;">${item}</li>`).join('');
+                    
+                    return `
+                        <li style="margin-bottom:12px; color:white;">
+                            <details class="spoiler-dropdown">
+                                <summary><span style="color:var(--gold);">▼</span> ${tip.title}</summary>
+                                <ul style="list-style:square; padding-left: 20px; margin-top: 10px;">
+                                    ${answersList}
+                                </ul>
+                            </details>
+                        </li>
+                    `;
+                }
+                return '';
+            }).join('');
 
             history.pushState({ guideOpen: true }, "");
         };
