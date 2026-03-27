@@ -9,6 +9,20 @@ html, body {
     -webkit-tap-highlight-color: transparent; 
 }
 
+/* --- EXCEPTIONS FOR UI TITLES --- */
+/* Prevents highlighting on structural UI headings */
+.glitch-title, 
+.hero-title, 
+.index-main-text h1,
+.sprite-viewer h1,
+.sprite-viewer h2,
+.sprite-viewer h3,
+.sprite-viewer span {
+    -webkit-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
 /* Re-enable text selection ONLY for actual reading material */
 p, h1, h2, h3, span, .bio, input, textarea {
     -webkit-user-select: text;
