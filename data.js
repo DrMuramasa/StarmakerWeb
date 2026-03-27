@@ -1,140 +1,29 @@
-const characterData = {
-    "josef": {
-        name: "Josef", 
-        bio: "Household head and primary guardian. Can be convinced to stay or leave depending on your influence.",
-        sprite: "images/characters/Josef/josef_sprite.png", 
-        bg: "images/characters/Josef/Josef_BG.jpg",
-        quests: [
-            { 
-                name: "The Entrance Method", 
-                title: "Friday Beer Strategy", 
-                desc: "Meet Josef on Fridays to decide his fate.", 
-                steps: [
-                    {t: "Reach 3 Hearts with Anna", r: "Unlocks Josef at entrance"},
-                    {t: "Give Beer on Friday (x2)", r: "Builds rapport"},
-                    {t: "Reach 4 Hearts with Anna", r: "Triggers final stage"},
-                    {t: "Give 3rd Beer & Explain Starmaker", r: "Stay/Leave choice unlocked"}
-                ] 
-            },
-            { 
-                name: "The Isabella Method", 
-                title: "Sharing Isabella", 
-                desc: "Alternative route after the sharing session.", 
-                steps: [
-                    {t: "Dialog: 'Yeah, it was pretty hot...'", r: "Leads to further questions"},
-                    {t: "Dialog: 'Sandwich some more asses?'", r: "Josef Stays + Starts Anna Sharing"}
-                ] 
-            }
-        ]
-    },
-    "amelia": {
-        name: "Amelia", 
-        bio: "Cafe owner and fitness enthusiast.",
-        sprite: "images/characters/Amelia/ameliaBase_sprite.png", 
-        bg: "images/characters/Amelia/Amelia_BG.png",
-        quests: [
-            { 
-                name: "Coffee Shop", 
-                title: "Shift Work", 
-                desc: "Visit Amelia during work.", 
-                steps: [{t: "Work 3 shifts", r: "Requires 1000 Subs"}] 
-            }
-        ]
-    },
-    "emma": {
-        name: "Emma",
-        bio: "The high-energy fitness buff with a hidden supernatural curiosity.",
-        sprite: "images/characters/Emma/emmabase_sprite.png",
-        bg: "images/characters/Emma/Emma_BG.png",
-        quests: [
-            { 
-                name: "Sauna Sessions", 
-                title: "Heat of the Moment", 
-                desc: "Meet Emma in the sauna once per week.", 
-                steps: [
-                    {t: "Visit 1 & 2", r: "Builds tension"},
-                    {t: "Visit 3 Choice", r: "Fight urges (Solo) or Reveal Mario (Sharing)"}
-                ] 
-            },
-            {
-                name: "Cryptid Hunter",
-                title: "The Farm Experiments",
-                desc: "Help Emma research local legends.",
-                steps: [
-                    {t: "Invite to Farm", r: "Unlocks research lab"},
-                    {t: "Tuesday Hunt", r: "Find Bigfoot, Lizardman, and Vampire"}
-                ]
-            }
-        ]
-    },
-    "evelyn": {
-        name: "Evelyn",
-        bio: "The brilliant and clinical scientist working out of a hidden lab.",
-        sprite: "images/characters/Evelyn/Everlyn_sprite.png",
-        bg: "images/characters/Evelyn/Evelyn_BG.png",
-        quests: [
-            { 
-                name: "The Hidden Lab", 
-                title: "Warehouse Secrets", 
-                desc: "Find Evelyn's lab through the Foundry and Harbor.", 
-                steps: [
-                    {t: "Unlock Studio Raw Sex", r: "Triggers hospital meeting"},
-                    {t: "Path: Foundry > Harbor > Warehouse", r: "Accesses the Lab"}
-                ] 
-            },
-            {
-                name: "Alchemy",
-                title: "Genetic Modification",
-                desc: "Trade monster parts for powerful enhancements.",
-                steps: [
-                    {t: "Collect Materials", r: "Need Spit, Hair, and Tears"},
-                    {t: "Create Pills", r: "Unlocks Booba, Futa, and Cum mods"}
-                ]
-            }
-        ]
-    },
-    "toni": {
-        name: "Toni",
-        bio: "The street-racing mechanic with a heavy debt and a fast car.",
-        sprite: "images/characters/Toni/ToniBar_sprite.png",
-        bg: "images/characters/Toni/Toni_BG.png",
-        quests: [
-            { 
-                name: "Squirt Racing", 
-                title: "The Badlands Debt", 
-                desc: "Win races to clear Toni's $60k debt.", 
-                steps: [
-                    {t: "Pay Entry Fees", r: "Requires 3x $20,000"},
-                    {t: "Win 3 Races vs Jack", r: "Clears debt and triggers alley hug"}
-                ] 
-            },
-            {
-                name: "Tech Support",
-                title: "Studio Fix",
-                desc: "Toni helps fix the internet at the studio.",
-                steps: [
-                    {t: "Complete Alley Scene", r: "Toni visits the studio"},
-                    {t: "Garage Invite", r: "Unlocks Toni as an employee"}
-                ]
-            }
-        ]
-    },
-    "sofia": {
-        name: "Sofia",
-        bio: "The determined investigator...",
-        sprite: "images/characters/Sofia/sofia_sprite.png",
-        bg: "images/characters/Sofia/Sofia_BG.png",
-        quests: [
-            { 
-                name: "The Sting", 
-                steps: [
-                    {t: "Sneak her in", r: "Leads to 3-some"},
-                    {t: "Use the Wire", r: "Arrests Mario"}
-                ] 
-            }
-        ]
+// --- DATABASE FETCH ENGINE ---
+// Set up an empty object to hold the data once it arrives
+let characterData = {};
+
+async function initDatabase() {
+    try {
+        // Ping the JSON file and wait for it to download
+        const response = await fetch('database.json');
+        
+        // Parse the JSON into a real JavaScript object
+        characterData = await response.json();
+        
+        // --- CRITICAL STEP ---
+        // Because downloading takes a split second, we have to tell the Characters page 
+        // to draw the screen ONLY AFTER the data has successfully arrived.
+        if (typeof renderCharacterGrid === 'function') {
+            renderCharacterGrid(); // NOTE: If your function in characters.html is named something else, change it here!
+        }
+        
+    } catch (error) {
+        console.error("CRITICAL ERROR: Failed to load database.json!", error);
     }
-};
+}
+
+// Fire the engine the second data.js loads
+initDatabase();
 
 // --- 1. CORE UTILITIES (Defined First) ---
 
