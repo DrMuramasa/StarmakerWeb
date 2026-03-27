@@ -180,16 +180,19 @@ body.crt-active .char-card:hover img {
     touch-action: none; 
 }
 
-/* --- PIXEL-PERFECT LIGHTBOX GALLERY --- */
+/* --- PIXEL-PERFECT LIGHTBOX GALLERY WITH CUSTOM BORDER --- */
 .lightbox img { 
     /* Force the image to grow to fill up to 90% of the screen */
     width: 90vw; 
     height: 90vh; 
     object-fit: contain; /* Keeps the proportions perfect so it doesn't warp */
     
-    /* THE BORDER FIX: Solid Gold primary border + soft Gold "Neon" glow shadow */
-    border: 2px solid var(--gold); 
-    box-shadow: 0 0 30px rgba(0,0,0,0.5), 0 0 15px var(--gold); 
+    /* THE CUSTOM IMAGE BORDER */
+    border-style: solid;
+    border-width: 25px; /* Change this to make the frame thicker or thinner on screen */
+    border-image-source: url('images/my-custom-frame.png'); /* Put your exact file path here */
+    border-image-slice: 30; /* This tells CSS where to "cut" the corners. Adjust if stretched! */
+    border-image-repeat: round; /* Keeps the edges repeating nicely */
     
     cursor: default; 
     background: #000; 
@@ -223,16 +226,20 @@ body.crt-active .char-card:hover img {
     overflow: hidden; position: relative; touch-action: none; 
 }
 
-/* --- PIXEL-PERFECT SPRITE VIEWER --- */
+/* --- PIXEL-PERFECT SPRITE VIEWER WITH CUSTOM BORDER --- */
 .sprite-window img { 
     /* Force the sprite to grow to fill the 500px window */
     width: 100%; 
     height: 100%; 
     object-fit: contain; 
     
-    /* THE BORDER FIX: Applied to the Sprite image when it's loading into the window */
-    border: 2px solid var(--gold);
-    box-shadow: 0 0 15px var(--gold); /* Soft neon glow shadow */
+    /* THE CUSTOM IMAGE BORDER (Matches the Lightbox) */
+    border-style: solid;
+    border-width: 25px; 
+    border-image-source: url('images/my-custom-frame.png'); 
+    border-image-slice: 30; 
+    border-image-repeat: round; 
+    
     background: #000; /* Ensures the empty space inside the border is black */
 
     /* Fallbacks first, standard pixelated LAST so it wins! */
