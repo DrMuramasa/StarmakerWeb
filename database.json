@@ -55,6 +55,15 @@
             { "title": "The Sting Operation", "steps": ["Meet at Gas Station (Fridays)", "Sneak Sofia into the Studio", "Arrest Mario OR Snitch to Mario"] }
         ]
     },
+    "Claudia": { 
+        "name": "Claudia",
+        "gallery": true,
+        "sprite": "images/characters/Claudia/ClaudiaBase_sprite.png", 
+        "bg": "images/characters/Claudia/Claudia_BG.png", 
+        "quests": [
+            { "title": "Bar Meeting", "steps": ["Watch the news during Thursday's Movie Night", "Go to the Downtown Bar", "Act like you don't know her, be flirtry, and on the spot"] }
+        ]
+    },
     "Astrid": { 
         "name": "Astrid",
         "gallery": true,
