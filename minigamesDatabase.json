@@ -6,6 +6,7 @@
         "description": "Help Anna clean the livingroom window to get Love points",
         "unlock": "Unlocked automatically after entering the livingroom.",
         "tips": [
+            "Left click and drag to clean",
             "Start at the top of the first window and shake your mouse through the dirty segments"
         ],
         "videoUrl": "videos/window_cleaning.mp4"
