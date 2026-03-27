@@ -11,6 +11,26 @@
         ],
         "videoUrl": "videos/window_cleaning.mp4"
     },
+    "Hacking with Sam": {
+        "name": "Hacking with Sam",
+        "thumbnail": "images/minigames/hacking_thumb.png",
+        "bg": "images/minigames/hacking_bg.jpg",
+        "description": "Learn Hacking with Samantha",
+        "unlock": "Unlocked after meeting Ken at his house. Go talk to her and tell her you want to learn.",
+        "tips": [
+            "Complete the words. All are game names",
+            "The names are only missing vowels",
+            "Complete the minigame 5 times to attain the “Hacker” trait. This will be used for another quest",
+            { 
+                "type": "dropdown",
+                "title": "View all Minigame Answers:",
+                "content": [ "MSS FFCT = Mass Effect", "TH SMS = The Sims","FLLT NW VGS = Fallout New Vegas","BRDRLNDS = Borderlands","PRTL = Portal","GRND THFT AT = Grand Theft Auto","GD F WR = God Of War","TH LST F S = The Last Of Us","DM = Doom","MTL GR SLD = Metal Gear Solid","SPDR MN = Spider Man",
+                             "CNTR STRK = Counter Strike","DBL = Diablo","SPR MR SNSHN = Super Mario Sunshine","MNCRFT = Minecraft","SKYRM = Skyrim","DNKY KNG = Donkey Kong","BLDRS GT = Baldurs Gate","STRT FGHTR = Street Fighter","TH LGND F ZLD = The Legend of Zelda","TTRS = Tetris","HL = Halo",
+                             "HLF LF = Half Life","FF = Fifa","G F MPRS = Age Of Empires","LDN RNG = Elden Ring","DRGN G = Dragon Age","NDRTL = Undertale","CLL F DTY = Call Of Duty","FNL FNTS = Final Fantasy" ]
+            }
+        ],
+        "videoUrl": "videos/sam's_hacking.mp4"
+    },
     "squirt_racing": {
         "name": "Squirt Racing",
         "thumbnail": "images/minigames/racing_thumb.png",
