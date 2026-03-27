@@ -191,15 +191,37 @@
         // Shared Favorites Object
         let favorites = JSON.parse(localStorage.getItem('sm_favorites')) || { images: [], chars: [] };
 
+        // --- NEW: THE GALLERY DATABASE ENGINE ---
+        let charDatabase = {};
+
+        async function initGalleryDB() {
+            try {
+                const response = await fetch('database.json');
+                if (!response.ok) throw new Error("Could not find database.json");
+                charDatabase = await response.json();
+                renderCharacterList(); // Build the sidebar only AFTER data arrives
+            } catch (err) {
+                console.error("Failed to load database.json for gallery sidebar", err);
+                document.getElementById('char-list').innerHTML = "<p style='color:red; font-size:0.8rem;'>Database Offline.</p>";
+            }
+        }
+
         // --- CHARACTER SIDEBAR LOGIC ---
         function renderCharacterList() {
             const listContainer = document.getElementById('char-list');
-            const characterKeys = ["Amelia", "Emma", "Evelyn", "Toni", "Sofia"]; 
-            
             listContainer.innerHTML = "";
 
-            characterKeys.forEach(key => {
-                const isFav = favorites.chars && favorites.chars.includes(key);
+            // Loop through every character in the database...
+            Object.keys(charDatabase).forEach(dbKey => {
+                const charData = charDatabase[dbKey];
+                
+                // CRITICAL: Only proceed if they have the "gallery": true tag!
+                if (!charData.gallery) return; 
+
+                // We use their properly capitalized Name for the folder search and UI
+                const charName = charData.name; 
+
+                const isFav = favorites.chars && favorites.chars.includes(charName);
                 if (charFilterActive && !isFav) return;
 
                 const btn = document.createElement('button');
@@ -208,10 +230,9 @@
                 btn.style.marginBottom = "10px";
                 
                 // Inject the name AND the clickable heart span
-                // If it's not a favorite, we make it grayscale and semi-transparent
                 const heartStyle = isFav ? "opacity: 1; filter: grayscale(0);" : "opacity: 0.3; filter: grayscale(1);";
                 btn.innerHTML = `
-                    <span>${key}</span> 
+                    <span>${charName}</span> 
                     <span class="fav-heart" style="${heartStyle}">❤️</span>
                 `;
 
@@ -222,9 +243,9 @@
                 btn.addEventListener('touchstart', () => {
                     isLongPress = false;
                     pressTimer = setTimeout(() => {
-                        isLongPress = true; 
+                        isLongPress = true; // Marks that a long press happened
                         if (navigator.vibrate) navigator.vibrate(50); // Tiny haptic bump!
-                        toggleCharFav(key);
+                        toggleCharFav(charName);
                     }, 700); // Increased to 700ms for stability
                 }, { passive: true });
 
@@ -235,7 +256,7 @@
                 btn.oncontextmenu = (e) => {
                     e.preventDefault();
                     if (isLongPress) return; // FIX: Stops the native mobile double-fire
-                    toggleCharFav(key);
+                    toggleCharFav(charName);
                 };
 
                 // Normal Tap / Click
@@ -246,12 +267,12 @@
                     
                     // Smart Click: Did they click the heart span?
                     if (e.target.classList.contains('fav-heart')) {
-                        toggleCharFav(key); // Toggle favorite
+                        toggleCharFav(charName); // Toggle favorite
                         return; // Stop here so it doesn't also try to load the gallery images!
                     }
 
                     // Otherwise, they clicked the button normally, so load the gallery
-                    loadGallery(key); 
+                    loadGallery(charName); 
                 };
 
                 listContainer.appendChild(btn);
@@ -317,7 +338,6 @@
             card.className = 'img-card';
             card.dataset.url = url;
             
-            // Notice we removed the inline onclicks here so JS can handle them better!
             card.innerHTML = `
                 <img src="${url}">
                 <button class="star-btn ${isFav ? 'active' : ''}">★</button>
@@ -519,7 +539,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             if(typeof initMusic === 'function') initMusic();
-            renderCharacterList();
+            initGalleryDB(); // Now fetches the database on load instead of using the hardcoded array
         });
     </script>
 </body>
