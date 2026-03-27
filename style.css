@@ -130,21 +130,32 @@ header {
     text-align: center; 
 }
 
+/* --- DEFAULT: Soft Gray Archive Look --- */
 .char-card img { 
     width: 100%; 
     height: 300px; 
     object-fit: cover; 
-    /* The transition makes the zoom and color change smooth */
     transition: transform 0.4s ease, filter 0.4s ease !important;
     
-    /* The Green Terminal Filter */
-    filter: sepia(1) hue-rotate(70deg) saturate(2.5) brightness(0.8); 
+    /* Soft, sleek, desaturated gray */
+    filter: grayscale(85%) brightness(0.8) contrast(1.1); 
 }
 
-/* When hovering over the card: Zoom in and remove the filter */
+/* Hover: Zooms in and restores full original color */
 .char-card:hover img {
-    transform: scale(1.1); /* Zooms in by 10% */
-    filter: sepia(0) hue-rotate(0) saturate(1) brightness(1); /* Restores original colors */
+    transform: scale(1.1); 
+    filter: grayscale(0) brightness(1) contrast(1); 
+}
+
+/* --- CRT MODE ON: Softer Green Phosphor Look --- */
+body.crt-active .char-card img {
+    /* Lowered saturation (from 2.5 to 1.2) for a much softer green */
+    filter: sepia(1) hue-rotate(75deg) saturate(1.2) brightness(0.85); 
+}
+
+body.crt-active .char-card:hover img {
+    transform: scale(1.1);
+    filter: sepia(0) hue-rotate(0) saturate(1) brightness(1); 
 }
 
 /* Lightbox / View Mode (Swiping Fix) */
