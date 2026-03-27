@@ -321,6 +321,11 @@ function toggleCRT() {
         const isActive = overlay.classList.contains('active');
         localStorage.setItem('sm_crt_enabled', isActive);
         
+        // ADD THIS LINE: Tells the body tag that CRT is active
+        document.body.classList.toggle('crt-active', isActive);
+        
+        // ... (rest of your toggle logic)
+        
         // Update Indicator Badge
         if (badge) {
             if (isActive) badge.classList.add('active');
