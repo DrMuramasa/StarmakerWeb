@@ -193,12 +193,18 @@
 
         window.openVideoMax = function() {
             if(typeof playSnd === 'function') playSnd();
-            const currentVideoSrc = document.getElementById('guide-video').src;
+            const smallVideo = document.getElementById('guide-video');
             const lbVideo = document.getElementById('lb-video');
             
-            lbVideo.src = currentVideoSrc;
-            lbVideo.loop = true; // Reinforcing the loop in view mode
-            lbVideo.load();
+            // Only update the source if it changed (prevents black screen flashes)
+            if (lbVideo.src !== smallVideo.src) {
+                lbVideo.src = smallVideo.src;
+            }
+            
+            // THE MAGIC TRICK: Sync the big video's time to the small video's exact current frame
+            lbVideo.currentTime = smallVideo.currentTime;
+            
+            lbVideo.loop = true;
             lbVideo.play();
             
             document.getElementById('lightbox').style.display = 'flex';
@@ -206,8 +212,14 @@
 
         window.closeVideoMax = function() {
             if(typeof playSnd === 'function') playSnd();
+            const smallVideo = document.getElementById('guide-video');
+            const lbVideo = document.getElementById('lb-video');
+            
             document.getElementById('lightbox').style.display = 'none';
-            document.getElementById('lb-video').pause();
+            lbVideo.pause();
+            
+            // BONUS UX: Sync the small video to pick up exactly where the big video left off!
+            smallVideo.currentTime = lbVideo.currentTime;
         };
 
         window.closeGuide = function() {
