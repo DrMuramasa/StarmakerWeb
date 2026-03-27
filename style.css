@@ -185,6 +185,10 @@ body.crt-active .char-card:hover img {
     /* Force the image to grow to fill up to 90% of the screen */
     width: 90vw; 
     height: 90vh; 
+    
+    /* THE FIX: Forces the border to be drawn INSIDE the 90vw/90vh bounds */
+    box-sizing: border-box; 
+    
     object-fit: contain; /* Keeps the proportions perfect so it doesn't warp */
     
     /* THE CUSTOM IMAGE BORDER */
@@ -231,6 +235,10 @@ body.crt-active .char-card:hover img {
     /* Force the sprite to grow to fill the 500px window */
     width: 100%; 
     height: 100%; 
+    
+    /* THE FIX: Stops the border from being pushed out of the window */
+    box-sizing: border-box; 
+    
     object-fit: contain; 
     
     /* THE CUSTOM IMAGE BORDER (Matches the Lightbox) */
