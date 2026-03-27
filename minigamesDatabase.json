@@ -1,0 +1,28 @@
+{
+    "squirt_racing": {
+        "name": "Squirt Racing",
+        "thumbnail": "images/minigames/racing_thumb.png",
+        "bg": "images/minigames/racing_bg.jpg",
+        "description": "High-stakes street racing where speed isn't the only thing that matters.",
+        "unlock": "Pay off your first $5,000 of debt and talk to Toni at the Garage.",
+        "tips": [
+            "Shift at the green line for a perfect start.",
+            "Save your nitro for the final straightaway.",
+            "Upgrade your tires before challenging Jack."
+        ],
+        "videoUrl": "videos/how_to_race.mp4"
+    },
+    "poker_night": {
+        "name": "Poker Night",
+        "thumbnail": "images/minigames/poker_thumb.png",
+        "bg": "images/minigames/poker_bg.jpg",
+        "description": "Test your luck and your bluffing skills against the regulars at the Bar.",
+        "unlock": "Unlocked automatically after meeting Mario on Tuesday night.",
+        "tips": [
+            "Watch Mario's eyes; he bluffs when he looks left.",
+            "Don't go all-in unless you have at least a Pair of Kings.",
+            "Losing to Sofia triggers a unique dialogue path."
+        ],
+        "videoUrl": "videos/poker_tutorial.mp4"
+    }
+}
