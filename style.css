@@ -187,8 +187,10 @@ body.crt-active .char-card:hover img {
     height: 90vh; 
     object-fit: contain; /* Keeps the proportions perfect so it doesn't warp */
     
+    /* THE BORDER FIX: Solid Gold primary border + soft Gold "Neon" glow shadow */
     border: 2px solid var(--gold); 
-    box-shadow: 0 0 30px rgba(0,0,0,0.5); 
+    box-shadow: 0 0 30px rgba(0,0,0,0.5), 0 0 15px var(--gold); 
+    
     cursor: default; 
     background: #000; 
     
@@ -228,6 +230,11 @@ body.crt-active .char-card:hover img {
     height: 100%; 
     object-fit: contain; 
     
+    /* THE BORDER FIX: Applied to the Sprite image when it's loading into the window */
+    border: 2px solid var(--gold);
+    box-shadow: 0 0 15px var(--gold); /* Soft neon glow shadow */
+    background: #000; /* Ensures the empty space inside the border is black */
+
     /* Fallbacks first, standard pixelated LAST so it wins! */
     image-rendering: -webkit-optimize-contrast;
     image-rendering: -moz-crisp-edges;
