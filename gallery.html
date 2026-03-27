@@ -92,7 +92,7 @@
             align-items: center;
         }
 
-        #lb-img { max-width: 90%; max-height: 90%; border: 1px solid var(--gold); }
+        #lb-img { max-width: 90%; max-height: 90%; border: 1px solid var(--gold); cursor: zoom-out !important; }
     </style>
 </head>
 <body>
@@ -174,7 +174,7 @@
 
     <div id="lightbox" class="lightbox" onclick="if(event.target.id === 'lightbox') this.style.display='none'">
         <button id="lb-fav-btn" class="star-btn" style="position:absolute; top:20px; right:20px; font-size:2rem; width:50px; height:50px; z-index:10001; background:rgba(0,0,0,0.8);" onclick="toggleFavFromLightbox(event)">★</button>
-        <img id="lb-img" src="" onclick="event.stopPropagation()">
+        <img id="lb-img" src="" onclick="closeLightboxSafe(event)">
     </div>
 
     <script>
@@ -524,9 +524,22 @@
             applyFilters();
         }
         
-        // Touch Swipe
+        // --- SMART TOUCH SWIPE ENGINE ---
         let touchStartX = 0;
-        window.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, false);
+        let isSwipingLightbox = false; // The new swipe detector flag
+        
+        window.addEventListener('touchstart', e => { 
+            touchStartX = e.changedTouches[0].screenX; 
+            isSwipingLightbox = false; // Reset the flag every time you touch the screen
+        }, false);
+        
+        window.addEventListener('touchmove', e => {
+            // If the finger moved more than 20 pixels, we are definitely swiping, not tapping
+            if (Math.abs(touchStartX - e.changedTouches[0].screenX) > 20) {
+                isSwipingLightbox = true;
+            }
+        }, { passive: true });
+
         window.addEventListener('touchend', e => {
             let touchEndX = e.changedTouches[0].screenX;
             
@@ -548,7 +561,23 @@
                     cycleSprite(dir);
                 }
             }
+            
+            // Reset the swipe detector 100ms AFTER the touch ends, so the click event gets blocked perfectly
+            setTimeout(() => { isSwipingLightbox = false; }, 100);
+            
         }, false);
+
+        // --- NEW: SMART IMAGE CLOSER ---
+        function closeLightboxSafe(e) {
+            e.stopPropagation(); // Stops the click from firing twice (once on image, once on background)
+            
+            // If the user just swiped the image, abort the click!
+            if (isSwipingLightbox) return; 
+            
+            // Otherwise, it was a clean tap/click, so close it.
+            if(typeof playSnd === 'function') playSnd();
+            document.getElementById('lightbox').style.display = 'none';
+        }
 
         window.onpopstate = () => { if (document.getElementById('lightbox').style.display === 'flex') document.getElementById('lightbox').style.display = 'none'; };
 
