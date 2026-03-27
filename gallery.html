@@ -191,7 +191,7 @@
         // Shared Favorites Object
         let favorites = JSON.parse(localStorage.getItem('sm_favorites')) || { images: [], chars: [] };
 
-        // --- NEW: THE GALLERY DATABASE ENGINE ---
+        // --- THE GALLERY DATABASE ENGINE ---
         let charDatabase = {};
 
         async function initGalleryDB() {
@@ -422,10 +422,19 @@
             disp.innerHTML = sprites.length ? `<img src="${sprites[spriteIdx]}">` : "<p>Offline</p>";
         }
 
+        // --- HARD STOP FIX: SPRITES ---
         function cycleSprite(dir) {
             if (!sprites.length) return;
-            spriteIdx = (spriteIdx + dir + sprites.length) % sprites.length;
+            
+            // Calculate new index without looping
+            const newIdx = spriteIdx + dir;
+            
+            // If it tries to go past the first or last image, do nothing
+            if (newIdx < 0 || newIdx >= sprites.length) return;
+            
+            spriteIdx = newIdx;
             renderSprite();
+            
             const lb = document.getElementById('lightbox');
             if(lb.style.display === 'flex' && activeView === "sprite") {
                 document.getElementById('lb-img').src = sprites[spriteIdx];
@@ -459,10 +468,15 @@
             history.pushState({ lightbox: true }, "");
         }
 
-        // --- NEW: LIGHTBOX NAVIGATION HELPER ---
+        // --- HARD STOP FIX: LIGHTBOX ---
         function navigateLightbox(dir) {
-            // Calculate the next image index
-            galleryIdx = (galleryIdx + dir + galleryImgs.length) % galleryImgs.length;
+            // Calculate new index without looping
+            const newIdx = galleryIdx + dir;
+            
+            // If it tries to go past the first or last image, do nothing
+            if (newIdx < 0 || newIdx >= galleryImgs.length) return;
+            
+            galleryIdx = newIdx;
             const newUrl = galleryImgs[galleryIdx];
             
             // Update the image
@@ -483,12 +497,12 @@
             const isMax = lb.style.display === 'flex';
             if (e.key === "ArrowRight") {
                 if (isMax && activeView === "gallery") {
-                    navigateLightbox(1); // Using the new smart function
+                    navigateLightbox(1); 
                 } else { cycleSprite(1); }
             } 
             else if (e.key === "ArrowLeft") {
                 if (isMax && activeView === "gallery") {
-                    navigateLightbox(-1); // Using the new smart function
+                    navigateLightbox(-1); 
                 } else { cycleSprite(-1); }
             } 
             else if (e.key === "Escape") { lb.style.display = 'none'; }
@@ -527,15 +541,14 @@
         
         // --- SMART TOUCH SWIPE ENGINE ---
         let touchStartX = 0;
-        let isSwipingLightbox = false; // The new swipe detector flag
+        let isSwipingLightbox = false; 
         
         window.addEventListener('touchstart', e => { 
             touchStartX = e.changedTouches[0].screenX; 
-            isSwipingLightbox = false; // Reset the flag every time you touch the screen
+            isSwipingLightbox = false; 
         }, { passive: true });
         
         window.addEventListener('touchmove', e => {
-            // If the finger moved more than 20 pixels, we are definitely swiping, not tapping
             if (Math.abs(touchStartX - e.changedTouches[0].screenX) > 20) {
                 isSwipingLightbox = true;
             }
@@ -544,36 +557,28 @@
         window.addEventListener('touchend', e => {
             let touchEndX = e.changedTouches[0].screenX;
             
-            // Check if the swipe was long enough
             if (Math.abs(touchStartX - touchEndX) > 70) {
                 if (typeof playSnd === 'function') playSnd();
                 
-                // Determine direction: 1 for swipe left (next), -1 for swipe right (prev)
                 let dir = touchStartX > touchEndX ? 1 : -1; 
                 
                 const lb = document.getElementById('lightbox');
                 const isMax = lb.style.display === 'flex';
 
-                // If lightbox is open AND we are viewing the gallery array
                 if (isMax && activeView === "gallery") {
                     navigateLightbox(dir); 
                 } else {
-                    // Otherwise, cycle the sprites
                     cycleSprite(dir);
                 }
             }
             
-            // FIX: Extended timeout to 500ms so mobile "ghost clicks" don't accidentally close the image after a swipe
             setTimeout(() => { isSwipingLightbox = false; }, 500);
             
         }, { passive: true });
 
-        // --- NEW: THE FOOLPROOF IMAGE CLOSER ---
+        // --- THE FOOLPROOF IMAGE CLOSER ---
         function closeLightboxSafe() {
-            // If the user just swiped the image, abort the click entirely!
             if (isSwipingLightbox) return; 
-            
-            // Otherwise, it was a clean tap/click ANYWHERE (image or background), so close it.
             if(typeof playSnd === 'function') playSnd();
             document.getElementById('lightbox').style.display = 'none';
         }
@@ -582,7 +587,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             if(typeof initMusic === 'function') initMusic();
-            initGalleryDB(); // Now fetches the database on load instead of using the hardcoded array
+            initGalleryDB(); 
         });
     </script>
 </body>
