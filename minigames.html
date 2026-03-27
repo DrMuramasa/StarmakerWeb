@@ -7,7 +7,6 @@
     <script src="data.js"></script>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Custom spacing for the video guide layout */
         .game-detail-layout {
             display: grid;
             grid-template-columns: 1fr 400px;
@@ -19,11 +18,12 @@
             .game-detail-layout { grid-template-columns: 1fr; }
         }
 
-        /* Matches the pink double border from your style.css gallery fix */
+        /* Matches your soft pink double border */
         #lb-video {
             border: 8px double #ffb6c1;
             box-shadow: 0 0 20px rgba(255, 182, 193, 0.3);
             background: #000;
+            cursor: zoom-out; /* Shows the user they can click to close */
         }
     </style>
 </head>
@@ -42,7 +42,7 @@
                 <a href="gallery.html" class="nav-btn">Gallery</a>
                 <a href="minigames.html" class="nav-btn active">Minigames</a>
             </div>
-            </nav>
+        </nav>
     </header>
 
     <div class="container">
@@ -88,7 +88,7 @@
     </div>
 
     <div id="lightbox" class="lightbox" onclick="closeVideoMax()">
-        <video id="lb-video" style="max-width:90%; max-height:85%;" controls autoplay loop onclick="event.stopPropagation()">
+        <video id="lb-video" style="max-width:90%; max-height:85%;" autoplay loop playsinline onclick="closeVideoMax()">
             <source src="" type="video/mp4">
         </video>
     </div>
@@ -99,7 +99,6 @@
 
         async function loadData() {
             try {
-                // Fetching from the separate database
                 const response = await fetch('minigamesDatabase.json');
                 if (!response.ok) throw new Error("Database file not found");
                 minigameData = await response.json();
@@ -132,13 +131,12 @@
             document.getElementById('guide-unlock').innerText = game.unlock;
             document.getElementById('master-bg').style.backgroundImage = `url('${game.bg}')`;
 
-            // Load and Play small preview video
             const video = document.getElementById('guide-video');
             video.src = game.videoUrl;
+            video.loop = true; // Reinforcing the loop via JS
             video.load();
             video.play();
 
-            // Render Tips
             document.getElementById('guide-tips').innerHTML = game.tips.map(tip => 
                 `<li style="margin-bottom:12px; color:white;"><span style="color:var(--gold);">▶</span> ${tip}</li>`
             ).join('');
@@ -152,10 +150,15 @@
             const lbVideo = document.getElementById('lb-video');
             
             lbVideo.src = currentVideoSrc;
+            lbVideo.loop = true; // Reinforcing the loop in view mode
+            lbVideo.load();
+            lbVideo.play();
+            
             document.getElementById('lightbox').style.display = 'flex';
         };
 
         window.closeVideoMax = function() {
+            if(typeof playSnd === 'function') playSnd();
             document.getElementById('lightbox').style.display = 'none';
             document.getElementById('lb-video').pause();
         };
@@ -168,7 +171,6 @@
             document.getElementById('master-bg').style.backgroundImage = "url('backgroundImg.gif')";
         };
 
-        // Handle back button
         window.onpopstate = () => {
             if (document.getElementById('guide-view').style.display === 'block') closeGuide();
             if (document.getElementById('lightbox').style.display === 'flex') closeVideoMax();
