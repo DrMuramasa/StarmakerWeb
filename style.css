@@ -1,3 +1,21 @@
+/* --- GLOBAL ANTI-HIGHLIGHT & MOBILE TAP FIX --- */
+html, body {
+    /* Prevents the blue highlight box on double-clicks */
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none;     /* IE 10+ and Edge */
+    user-select: none;         /* Standard syntax */
+    
+    /* Bonus Mobile Fix: Removes the weird grey/blue flash when tapping buttons on phones */
+    -webkit-tap-highlight-color: transparent; 
+}
+
+/* Re-enable text selection ONLY for actual reading material */
+p, h1, h2, h3, span, .bio, input, textarea {
+    -webkit-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
 /* --- 1. BASE STYLES & TYPOGRAPHY --- */
 h1 { font-size: clamp(1.5rem, 6vw, 2.5rem); }
 h2 { font-size: clamp(1.2rem, 5vw, 2rem); }
