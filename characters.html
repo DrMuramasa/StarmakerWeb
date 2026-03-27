@@ -83,105 +83,102 @@
     </div>
 
     <script>
-    let charData = {};
+    // Wrap the entire script in a protective function bubble
+    (() => {
+        let charData = {};
 
-    async function loadData() {
-        try {
-            const response = await fetch('database.json');
-            if (!response.ok) throw new Error("Could not find database.json");
-            charData = await response.json();
-            renderGrid(charData);
-        } catch (err) { 
-            console.error("Database error:", err); 
-            document.getElementById('char-grid').innerHTML = `<p style="color:red;">Error: Ensure database.json is in the same folder.</p>`;
-        }
-    }
-
-    function renderGrid(dataToRender) {
-        const grid = document.getElementById('char-grid');
-        grid.innerHTML = Object.keys(dataToRender).map(key => `
-            <div class="char-card" onclick="openGuide('${key}')">
-                <img src="${dataToRender[key].sprite}">
-                <h3>${dataToRender[key].name}</h3>
-            </div>
-        `).join('');
-    }
-
-    function filterChars() {
-        const query = document.getElementById('char-search').value.toLowerCase();
-        const filtered = {};
-        Object.keys(charData).forEach(key => {
-            if (charData[key].name.toLowerCase().includes(query)) {
-                filtered[key] = charData[key];
+        async function loadData() {
+            try {
+                const response = await fetch('database.json');
+                if (!response.ok) throw new Error("Could not find database.json");
+                charData = await response.json();
+                renderGrid(charData);
+            } catch (err) { 
+                console.error("Database error:", err); 
+                document.getElementById('char-grid').innerHTML = `<p style="color:red;">Error: Ensure database.json is in the same folder.</p>`;
             }
-        });
-        renderGrid(filtered);
-    }
-
-    function openGuide(key) {
-        if(typeof playSnd === 'function') playSnd();
-        const char = charData[key];
-        document.getElementById('mosaic-view').style.display = 'none';
-        document.getElementById('guide-view').style.display = 'block';
-        document.getElementById('guide-sprite').src = char.sprite;
-        document.getElementById('guide-name').innerText = char.name;
-        document.getElementById('master-bg').style.backgroundImage = `url('${char.bg}')`;
-
-        const menu = document.getElementById('quest-menu-list');
-        
-        // Notice we added 'this' to the onclick function call so it knows exactly which button was clicked!
-        menu.innerHTML = char.quests.map((q, index) => `
-            <div class="quest-nav-item" onclick="showSteps('${key}', ${index}, this)">${q.title}</div>
-        `).join('');
-
-        document.getElementById('step-display').innerHTML = '<p style="color:gray;">Select a quest to see details.</p>';
-        history.pushState({ guideOpen: true }, "");
-    }
-
-    function showSteps(charKey, questIndex, clickedElement) {
-        if(typeof playSnd === 'function') playSnd();
-        const display = document.getElementById('step-display');
-        
-        // --- THE NEW TOGGLE LOGIC ---
-        // If the button we just clicked is already active...
-        if (clickedElement.classList.contains('active-quest')) {
-            // Remove the active class to turn it off
-            clickedElement.classList.remove('active-quest');
-            // Reset the step display back to the default message
-            display.innerHTML = '<p style="color:gray;">Select a quest to see details.</p>';
-            return; // Stop the function here so it doesn't try to open the quest!
         }
 
-        // If it wasn't active, proceed normally...
-        const quest = charData[charKey].quests[questIndex];
+        function renderGrid(dataToRender) {
+            const grid = document.getElementById('char-grid');
+            grid.innerHTML = Object.keys(dataToRender).map(key => `
+                <div class="char-card" onclick="window.openGuide('${key}')">
+                    <img src="${dataToRender[key].sprite}">
+                    <h3>${dataToRender[key].name}</h3>
+                </div>
+            `).join('');
+        }
+
+        // Attach global functions to 'window' so the HTML buttons can still click them
+        window.filterChars = function() {
+            const query = document.getElementById('char-search').value.toLowerCase();
+            const filtered = {};
+            Object.keys(charData).forEach(key => {
+                if (charData[key].name.toLowerCase().includes(query)) {
+                    filtered[key] = charData[key];
+                }
+            });
+            renderGrid(filtered);
+        };
+
+        window.openGuide = function(key) {
+            if(typeof playSnd === 'function') playSnd();
+            const char = charData[key];
+            document.getElementById('mosaic-view').style.display = 'none';
+            document.getElementById('guide-view').style.display = 'block';
+            document.getElementById('guide-sprite').src = char.sprite;
+            document.getElementById('guide-name').innerText = char.name;
+            document.getElementById('master-bg').style.backgroundImage = `url('${char.bg}')`;
+
+            const menu = document.getElementById('quest-menu-list');
+            
+            menu.innerHTML = char.quests.map((q, index) => `
+                <div class="quest-nav-item" onclick="window.showSteps('${key}', ${index}, this)">${q.title}</div>
+            `).join('');
+
+            document.getElementById('step-display').innerHTML = '<p style="color:gray;">Select a quest to see details.</p>';
+            history.pushState({ guideOpen: true }, "");
+        };
+
+        window.showSteps = function(charKey, questIndex, clickedElement) {
+            if(typeof playSnd === 'function') playSnd();
+            const display = document.getElementById('step-display');
+            
+            if (clickedElement.classList.contains('active-quest')) {
+                clickedElement.classList.remove('active-quest');
+                display.innerHTML = '<p style="color:gray;">Select a quest to see details.</p>';
+                return; 
+            }
+
+            const quest = charData[charKey].quests[questIndex];
+            
+            display.innerHTML = `
+                <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid var(--box-border); padding-bottom:10px;">${quest.title}</h3>
+                <ul style="list-style:none; padding:0; line-height:1.6;">
+                    ${quest.steps.map(s => `<li style="margin-bottom:12px; color:white;"><span style="color:var(--gold);">▶</span> ${s}</li>`).join('')}
+                </ul>
+            `;
+
+            document.querySelectorAll('.quest-nav-item').forEach(el => el.classList.remove('active-quest'));
+            clickedElement.classList.add('active-quest');
+        };
+
+        window.closeGuide = function() {
+            if(typeof playSnd === 'function') playSnd();
+            document.getElementById('mosaic-view').style.display = 'block';
+            document.getElementById('guide-view').style.display = 'none';
+            document.getElementById('master-bg').style.backgroundImage = "url('backgroundImg.gif')";
+            if (history.state?.guideOpen) history.back();
+        };
+
+        window.onpopstate = () => { if (document.getElementById('guide-view').style.display === 'block') window.closeGuide(); };
         
-        display.innerHTML = `
-            <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid var(--box-border); padding-bottom:10px;">${quest.title}</h3>
-            <ul style="list-style:none; padding:0; line-height:1.6;">
-                ${quest.steps.map(s => `<li style="margin-bottom:12px; color:white;"><span style="color:var(--gold);">▶</span> ${s}</li>`).join('')}
-            </ul>
-        `;
-
-        // Clear the active class from all other quests, and only add it to the one we just clicked
-        document.querySelectorAll('.quest-nav-item').forEach(el => el.classList.remove('active-quest'));
-        clickedElement.classList.add('active-quest');
-    }
-
-    function closeGuide() {
-        if(typeof playSnd === 'function') playSnd();
-        document.getElementById('mosaic-view').style.display = 'block';
-        document.getElementById('guide-view').style.display = 'none';
-        document.getElementById('master-bg').style.backgroundImage = "url('backgroundImg.gif')";
-        if (history.state?.guideOpen) history.back();
-    }
-
-    window.onpopstate = () => { if (document.getElementById('guide-view').style.display === 'block') closeGuide(); };
-    
-    // Combined the initialization here
-    window.addEventListener('DOMContentLoaded', () => {
-        if(typeof initMusic === 'function') initMusic(); 
-        loadData(); 
-    });
+        window.addEventListener('DOMContentLoaded', () => {
+            if(typeof initMusic === 'function') initMusic(); 
+            loadData(); 
+        });
+        
+    })(); // Execute the protective bubble immediately
     </script>
 </body>
 </html>
