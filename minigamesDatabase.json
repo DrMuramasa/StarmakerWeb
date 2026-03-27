@@ -20,6 +20,7 @@
         "tips": [
             "Complete the words. All are game names",
             "The names are only missing vowels",
+            "You can either click the checkmark or press enter to submit the answer",
             "Complete the minigame 5 times to attain the “Hacker” trait. This will be used for another quest",
             { 
                 "type": "dropdown",
