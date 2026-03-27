@@ -181,16 +181,16 @@ body.crt-active .char-card:hover img {
 }
 
 /* --- PIXEL-PERFECT LIGHTBOX GALLERY WITH BORDER --- */
-.lightbox img { 
+#lb-img, .lightbox img { 
     /* Force the image to grow to fill up to 90% of the screen */
-    width: 90vw; 
-    height: 90vh; 
-    object-fit: contain; /* Keeps the proportions perfect so it doesn't warp */
-    box-sizing: border-box; 
+    width: 90vw !important; 
+    height: 90vh !important; 
+    object-fit: contain !important; 
+    box-sizing: border-box !important; 
     
     /* SOFT PINK DOUBLE LINE BORDER */
-    border: 8px double #ffb6c1; 
-    box-shadow: 0 0 20px rgba(255, 182, 193, 0.3); /* Soft pink glow matching the border */
+    border: 8px double #ffb6c1 !important; 
+    box-shadow: 0 0 20px rgba(255, 182, 193, 0.3) !important; 
     
     cursor: default; 
     background: #000; 
@@ -224,19 +224,12 @@ body.crt-active .char-card:hover img {
     overflow: hidden; position: relative; touch-action: none; 
 }
 
-/* --- PIXEL-PERFECT SPRITE VIEWER WITH CUSTOM BORDER --- */
+/* --- PIXEL-PERFECT SPRITE VIEWER (NO BORDER) --- */
 .sprite-window img { 
     /* Force the sprite to grow to fill the 500px window */
     width: 100%; 
     height: 100%; 
     object-fit: contain; 
-    box-sizing: border-box; 
-    
-    /* SOFT PINK DOUBLE LINE BORDER */
-    border: 8px double #ffb6c1; 
-    box-shadow: 0 0 20px rgba(255, 182, 193, 0.3);
-    
-    background: #000; /* Ensures the empty space inside the border is black */
 
     /* Fallbacks first, standard pixelated LAST so it wins! */
     image-rendering: -webkit-optimize-contrast;
