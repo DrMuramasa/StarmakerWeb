@@ -430,6 +430,9 @@ window.addEventListener('DOMContentLoaded', () => {
     if (isCrtEnabled) {
         document.getElementById('global-crt').classList.add('active');
         if (badge) badge.classList.add('active');
+        
+        // Ensures the soft green loads immediately if saved
+        document.body.classList.add('crt-active');
     }
     
     const crtBtn = document.querySelector('button[onclick="toggleCRT()"]');
