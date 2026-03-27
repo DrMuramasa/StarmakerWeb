@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>STARMAKER | Minigames</title>
+    <script src="data.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bg-wrapper" id="master-bg"></div><div class="bg-overlay"></div>
+    
+    <header>
+        <div onclick="goHome()" style="color:var(--gold); font-weight:bold; letter-spacing:2px; flex-shrink:0; cursor:pointer;">
+            STARMAKER DATABASE
+        </div>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+        <nav id="main-nav">
+            <div class="nav-links">
+                <a href="home.html" class="nav-btn">Home</a>
+                <a href="characters.html" class="nav-btn">Characters</a>
+                <a href="gallery.html" class="nav-btn">Gallery</a>
+                <a href="minigames.html" class="nav-btn active">Minigames</a>
+            </div>
+            </nav>
+    </header>
+
+    <div class="container">
+        <div class="glass-panel">
+            <div id="mosaic-view">
+                <h2 style="color:var(--gold); border-bottom:1px solid var(--box-border); padding-bottom:10px; letter-spacing: 2px;">MINIGAME ARCHIVES</h2>
+                <div id="game-grid" class="grid-view" style="margin-top:20px;"></div>
+            </div>
+
+            <div id="guide-view" style="display:none;">
+                <button class="nav-btn" onclick="window.closeGuide()">← BACK TO ARCHIVES</button>
+                
+                <div class="char-detail-layout">
+                    <div class="game-info-container">
+                        <h2 id="guide-name" style="color:var(--gold); letter-spacing: 2px; margin-bottom:15px;"></h2>
+                        
+                        <h3 style="color:var(--gold); font-size:0.8rem;">DESCRIPTION</h3>
+                        <p id="guide-desc" style="margin-bottom:20px;"></p>
+
+                        <h3 style="color:var(--gold); font-size:0.8rem;">HOW TO UNLOCK</h3>
+                        <p id="guide-unlock" style="margin-bottom:20px;"></p>
+
+                        <h3 style="color:var(--gold); font-size:0.8rem;">PRO TIPS</h3>
+                        <ul id="guide-tips" style="list-style:none; padding:0;"></ul>
+                    </div>
+
+                    <div class="sprite-viewer">
+                        <h3 style="color:var(--gold); margin-top:0;">HOW TO PLAY</h3>
+                        <div class="sprite-window" style="height:400px; cursor:pointer;" onclick="window.openVideoMax()">
+                            <video id="guide-video" style="width:100%; height:100%; object-fit:contain;" muted loop>
+                                <source src="" type="video/mp4">
+                            </video>
+                            <div id="play-overlay" style="position:absolute; font-size:3rem; color:var(--gold); opacity:0.6;">▶</div>
+                        </div>
+                        <p style="font-size:0.8rem; color:gray;">Click video to zoom</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="lightbox" class="lightbox" onclick="window.closeVideoMax()">
+        <video id="lb-video" style="max-width:90%; max-height:90%; border:8px double #ffb6c1; box-sizing:border-box;" controls autoplay loop>
+            <source src="" type="video/mp4">
+        </video>
+    </div>
+
+    <script>
+    (() => {
+        let gameData = {};
+
+        async function loadData() {
+            try {
+                const response = await fetch('database.json');
+                const fullDb = await response.json();
+                gameData = fullDb.minigames; // Pull only minigames
+                renderGrid();
+            } catch (err) { console.error("Database error:", err); }
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('game-grid');
+            grid.innerHTML = Object.keys(gameData).map(key => `
+                <div class="char-card" onclick="window.openGuide('${key}')">
+                    <img src="${gameData[key].thumbnail}">
+                    <h3>${gameData[key].name}</h3>
+                </div>
+            `).join('');
+        }
+
+        window.openGuide = function(key) {
+            const game = gameData[key];
+            document.getElementById('mosaic-view').style.display = 'none';
+            document.getElementById('guide-view').style.display = 'block';
+            
+            document.getElementById('guide-name').innerText = game.name;
+            document.getElementById('guide-desc').innerText = game.description;
+            document.getElementById('guide-unlock').innerText = game.unlock;
+            document.getElementById('master-bg').style.backgroundImage = `url('${game.bg}')`;
+
+            // Video Setup
+            const video = document.getElementById('guide-video');
+            video.src = game.videoUrl;
+            video.play();
+
+            // Tips List
+            document.getElementById('guide-tips').innerHTML = game.tips.map(t => 
+                `<li style="margin-bottom:10px; color:white;"><span style="color:var(--gold);">▶</span> ${t}</li>`
+            ).join('');
+
+            history.pushState({ guideOpen: true }, "");
+        };
+
+        window.openVideoMax = function() {
+            const sourceUrl = document.getElementById('guide-video').src;
+            const lbVideo = document.getElementById('lb-video');
+            lbVideo.src = sourceUrl;
+            document.getElementById('lightbox').style.display = 'flex';
+        };
+
+        window.closeVideoMax = function() {
+            document.getElementById('lightbox').style.display = 'none';
+            document.getElementById('lb-video').pause();
+        };
+
+        window.closeGuide = function() {
+            document.getElementById('mosaic-view').style.display = 'block';
+            document.getElementById('guide-view').style.display = 'none';
+            document.getElementById('guide-video').pause();
+            document.getElementById('master-bg').style.backgroundImage = "url('backgroundImg.gif')";
+        };
+
+        window.addEventListener('DOMContentLoaded', loadData);
+    })();
+    </script>
+</body>
+</html>
