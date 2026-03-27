@@ -459,20 +459,36 @@
             history.pushState({ lightbox: true }, "");
         }
 
+        // --- NEW: LIGHTBOX NAVIGATION HELPER ---
+        function navigateLightbox(dir) {
+            // Calculate the next image index
+            galleryIdx = (galleryIdx + dir + galleryImgs.length) % galleryImgs.length;
+            const newUrl = galleryImgs[galleryIdx];
+            
+            // Update the image
+            document.getElementById('lb-img').src = newUrl;
+            
+            // CRITICAL FIX: Update the star based on the NEW image's favorite status
+            const lbFavBtn = document.getElementById('lb-fav-btn');
+            if (favorites.images.includes(newUrl)) {
+                lbFavBtn.classList.add('active');
+            } else {
+                lbFavBtn.classList.remove('active');
+            }
+        }
+
         // Navigation Keys
         window.addEventListener('keydown', (e) => {
             const lb = document.getElementById('lightbox');
             const isMax = lb.style.display === 'flex';
             if (e.key === "ArrowRight") {
                 if (isMax && activeView === "gallery") {
-                    galleryIdx = (galleryIdx + 1) % galleryImgs.length;
-                    document.getElementById('lb-img').src = galleryImgs[galleryIdx];
+                    navigateLightbox(1); // Using the new smart function
                 } else { cycleSprite(1); }
             } 
             else if (e.key === "ArrowLeft") {
                 if (isMax && activeView === "gallery") {
-                    galleryIdx = (galleryIdx - 1 + galleryImgs.length) % galleryImgs.length;
-                    document.getElementById('lb-img').src = galleryImgs[galleryIdx];
+                    navigateLightbox(-1); // Using the new smart function
                 } else { cycleSprite(-1); }
             } 
             else if (e.key === "Escape") { lb.style.display = 'none'; }
@@ -526,8 +542,7 @@
 
                 // If lightbox is open AND we are viewing the gallery array
                 if (isMax && activeView === "gallery") {
-                    galleryIdx = (galleryIdx + dir + galleryImgs.length) % galleryImgs.length;
-                    document.getElementById('lb-img').src = galleryImgs[galleryIdx];
+                    navigateLightbox(dir); // Using the new smart function
                 } else {
                     // Otherwise, cycle the sprites
                     cycleSprite(dir);
