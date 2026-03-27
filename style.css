@@ -437,3 +437,32 @@ body.crt-active .char-card:hover img {
     60%  { background: rgba(0, 255, 0, 0.05); transform: translateX(1px); }
     100% { background: transparent; transform: translateX(0); }
 }
+
+/* --- MINIGAME SPOILER DROPDOWNS --- */
+.spoiler-dropdown {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--box-border);
+    border-radius: 6px;
+    padding: 10px;
+    margin-top: 5px;
+    transition: all 0.3s ease;
+}
+
+.spoiler-dropdown[open] {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: var(--gold);
+}
+
+.spoiler-dropdown summary {
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--req-color); /* Uses your neon pink */
+    outline: none;
+    list-style: none; /* Hides default triangle */
+    user-select: none;
+}
+
+/* Hides default triangle on Safari/Chrome */
+.spoiler-dropdown summary::-webkit-details-marker {
+    display: none; 
+}
