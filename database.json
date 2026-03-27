@@ -48,5 +48,17 @@
         "quests": [
             { "title": "The Sting Operation", "steps": ["Meet at Gas Station (Fridays)", "Sneak Sofia into the Studio", "Arrest Mario OR Snitch to Mario"] }
         ]
+    },
+    "Astrid": { 
+        "name": "Astrid", 
+        "sprite": "images/characters/Astrid/AstridCasual_sprite.png", 
+        "bg": "images/characters/Astrid/Astrid_BG.png", 
+        "quests": [
+            { "title": "Charity Carwash", "steps": ["Go to the gas station on a Monday after meeting Astrid and reaching 2 hearts with Anna", 
+                "The girl that will do the event is random, so far confirmed are the following: Astrid, Anna - Anna has a 3rd cg showing her breasts but this is only available on slut route -, Katharina, Amelia"] }
+            { "title": "Old Memories", "steps": ["After reaching 4 hearts with Anna the Harbor location at the Harbor will open.", "Go to the Harbor and you will see an event where Astrid is speaking with Noire.", 
+                "Go visit Astrid at the Gas Station and she will be looking for something. She will tell you that Noire took it and ask you to join her to look for the item at Noire’s Haunted House at the Foundry on Mondays.", "Complete her minigame 3 times",
+                "Go with Astrid next week and win the minigame once more, after this you will get her scene and will  be repeatable every time after you win the minigame."
+        ]
     }
 }
