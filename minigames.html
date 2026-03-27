@@ -6,12 +6,32 @@
     <title>STARMAKER | Minigames</title>
     <script src="data.js"></script>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Custom spacing for the video guide layout */
+        .game-detail-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .game-detail-layout { grid-template-columns: 1fr; }
+        }
+
+        /* Matches the pink double border from your style.css gallery fix */
+        #lb-video {
+            border: 8px double #ffb6c1;
+            box-shadow: 0 0 20px rgba(255, 182, 193, 0.3);
+            background: #000;
+        }
+    </style>
 </head>
 <body>
     <div class="bg-wrapper" id="master-bg"></div><div class="bg-overlay"></div>
     
     <header>
-        <div onclick="goHome()" style="color:var(--gold); font-weight:bold; letter-spacing:2px; flex-shrink:0; cursor:pointer;">
+        <div onclick="goHome()" style="color:var(--gold); font-weight:bold; letter-spacing:2px; cursor:pointer;">
             STARMAKER DATABASE
         </div>
         <button class="hamburger" onclick="toggleMenu()">☰</button>
@@ -27,74 +47,83 @@
 
     <div class="container">
         <div class="glass-panel">
+            
             <div id="mosaic-view">
                 <h2 style="color:var(--gold); border-bottom:1px solid var(--box-border); padding-bottom:10px; letter-spacing: 2px;">MINIGAME ARCHIVES</h2>
                 <div id="game-grid" class="grid-view" style="margin-top:20px;"></div>
             </div>
 
             <div id="guide-view" style="display:none;">
-                <button class="nav-btn" onclick="window.closeGuide()">← BACK TO ARCHIVES</button>
+                <button class="nav-btn" onclick="closeGuide()">← BACK TO ARCHIVES</button>
                 
-                <div class="char-detail-layout">
-                    <div class="game-info-container">
-                        <h2 id="guide-name" style="color:var(--gold); letter-spacing: 2px; margin-bottom:15px;"></h2>
+                <div class="game-detail-layout">
+                    <div class="info-pane">
+                        <h2 id="guide-name" style="color:var(--gold); letter-spacing: 2px; margin-bottom:15px; font-size: 2rem;"></h2>
                         
-                        <h3 style="color:var(--gold); font-size:0.8rem;">DESCRIPTION</h3>
-                        <p id="guide-desc" style="margin-bottom:20px;"></p>
+                        <div class="bio-section">
+                            <h3 style="color:var(--gold); font-size: 0.8rem; text-transform: uppercase;">Description</h3>
+                            <p id="guide-desc" style="margin-bottom:20px; color: #ccc; line-height: 1.6;"></p>
 
-                        <h3 style="color:var(--gold); font-size:0.8rem;">HOW TO UNLOCK</h3>
-                        <p id="guide-unlock" style="margin-bottom:20px;"></p>
+                            <h3 style="color:var(--gold); font-size: 0.8rem; text-transform: uppercase;">How to Unlock</h3>
+                            <p id="guide-unlock" style="margin-bottom:20px; color: #ccc;"></p>
 
-                        <h3 style="color:var(--gold); font-size:0.8rem;">PRO TIPS</h3>
-                        <ul id="guide-tips" style="list-style:none; padding:0;"></ul>
+                            <h3 style="color:var(--gold); font-size: 0.8rem; text-transform: uppercase;">Pro Tips & Strategy</h3>
+                            <ul id="guide-tips" style="list-style:none; padding:0;"></ul>
+                        </div>
                     </div>
 
                     <div class="sprite-viewer">
-                        <h3 style="color:var(--gold); margin-top:0;">HOW TO PLAY</h3>
-                        <div class="sprite-window" style="height:400px; cursor:pointer;" onclick="window.openVideoMax()">
-                            <video id="guide-video" style="width:100%; height:100%; object-fit:contain;" muted loop>
+                        <h3 style="color:var(--gold); margin-top:0; font-size: 0.9rem;">TUTORIAL VIDEO</h3>
+                        <div class="sprite-window" style="height:350px; cursor:pointer; position:relative;" onclick="openVideoMax()">
+                            <video id="guide-video" style="width:100%; height:100%; object-fit:cover;" muted loop playsinline>
                                 <source src="" type="video/mp4">
                             </video>
-                            <div id="play-overlay" style="position:absolute; font-size:3rem; color:var(--gold); opacity:0.6;">▶</div>
+                            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); font-size: 3rem; color:var(--gold); pointer-events:none; opacity: 0.7;">▶</div>
                         </div>
-                        <p style="font-size:0.8rem; color:gray;">Click video to zoom</p>
+                        <p style="font-size:0.7rem; color:gray; margin-top:10px; font-style:italic;">Click preview to expand tutorial</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="lightbox" class="lightbox" onclick="window.closeVideoMax()">
-        <video id="lb-video" style="max-width:90%; max-height:90%; border:8px double #ffb6c1; box-sizing:border-box;" controls autoplay loop>
+    <div id="lightbox" class="lightbox" onclick="closeVideoMax()">
+        <video id="lb-video" style="max-width:90%; max-height:85%;" controls autoplay loop onclick="event.stopPropagation()">
             <source src="" type="video/mp4">
         </video>
     </div>
 
     <script>
     (() => {
-        let gameData = {};
+        let minigameData = {};
 
         async function loadData() {
             try {
-                const response = await fetch('database.json');
-                const fullDb = await response.json();
-                gameData = fullDb.minigames; // Pull only minigames
+                // Fetching from the separate database
+                const response = await fetch('minigamesDatabase.json');
+                if (!response.ok) throw new Error("Database file not found");
+                minigameData = await response.json();
                 renderGrid();
-            } catch (err) { console.error("Database error:", err); }
+            } catch (err) { 
+                console.error("Error loading minigames:", err);
+                document.getElementById('game-grid').innerHTML = "<p style='color:red;'>Failed to load Minigames Archive.</p>";
+            }
         }
 
         function renderGrid() {
             const grid = document.getElementById('game-grid');
-            grid.innerHTML = Object.keys(gameData).map(key => `
-                <div class="char-card" onclick="window.openGuide('${key}')">
-                    <img src="${gameData[key].thumbnail}">
-                    <h3>${gameData[key].name}</h3>
+            grid.innerHTML = Object.keys(minigameData).map(key => `
+                <div class="char-card" onclick="openGuide('${key}')">
+                    <img src="${minigameData[key].thumbnail}" style="height:180px;">
+                    <h3 style="padding: 10px 0;">${minigameData[key].name}</h3>
                 </div>
             `).join('');
         }
 
         window.openGuide = function(key) {
-            const game = gameData[key];
+            if(typeof playSnd === 'function') playSnd();
+            const game = minigameData[key];
+            
             document.getElementById('mosaic-view').style.display = 'none';
             document.getElementById('guide-view').style.display = 'block';
             
@@ -103,23 +132,26 @@
             document.getElementById('guide-unlock').innerText = game.unlock;
             document.getElementById('master-bg').style.backgroundImage = `url('${game.bg}')`;
 
-            // Video Setup
+            // Load and Play small preview video
             const video = document.getElementById('guide-video');
             video.src = game.videoUrl;
+            video.load();
             video.play();
 
-            // Tips List
-            document.getElementById('guide-tips').innerHTML = game.tips.map(t => 
-                `<li style="margin-bottom:10px; color:white;"><span style="color:var(--gold);">▶</span> ${t}</li>`
+            // Render Tips
+            document.getElementById('guide-tips').innerHTML = game.tips.map(tip => 
+                `<li style="margin-bottom:12px; color:white;"><span style="color:var(--gold);">▶</span> ${tip}</li>`
             ).join('');
 
             history.pushState({ guideOpen: true }, "");
         };
 
         window.openVideoMax = function() {
-            const sourceUrl = document.getElementById('guide-video').src;
+            if(typeof playSnd === 'function') playSnd();
+            const currentVideoSrc = document.getElementById('guide-video').src;
             const lbVideo = document.getElementById('lb-video');
-            lbVideo.src = sourceUrl;
+            
+            lbVideo.src = currentVideoSrc;
             document.getElementById('lightbox').style.display = 'flex';
         };
 
@@ -129,13 +161,23 @@
         };
 
         window.closeGuide = function() {
+            if(typeof playSnd === 'function') playSnd();
             document.getElementById('mosaic-view').style.display = 'block';
             document.getElementById('guide-view').style.display = 'none';
             document.getElementById('guide-video').pause();
             document.getElementById('master-bg').style.backgroundImage = "url('backgroundImg.gif')";
         };
 
-        window.addEventListener('DOMContentLoaded', loadData);
+        // Handle back button
+        window.onpopstate = () => {
+            if (document.getElementById('guide-view').style.display === 'block') closeGuide();
+            if (document.getElementById('lightbox').style.display === 'flex') closeVideoMax();
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if(typeof initMusic === 'function') initMusic();
+            loadData();
+        });
     })();
     </script>
 </body>
