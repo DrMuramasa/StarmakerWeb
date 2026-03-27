@@ -179,20 +179,24 @@ body.crt-active .char-card:hover img {
     justify-content: center; align-items: center; cursor: zoom-out;
     touch-action: none; 
 }
-/* .lightbox img { max-width: 90%; max-height: 90%; border: 2px solid var(--gold); box-shadow: 0 0 30px rgba(0,0,0,0.5); cursor: default; background: #000; } */
+
 /* --- PIXEL-PERFECT LIGHTBOX GALLERY --- */
 .lightbox img { 
-    max-width: 90%; 
-    max-height: 90%; 
+    /* Force the image to grow to fill up to 90% of the screen */
+    width: 90vw; 
+    height: 90vh; 
+    object-fit: contain; /* Keeps the proportions perfect so it doesn't warp */
+    
     border: 2px solid var(--gold); 
     box-shadow: 0 0 30px rgba(0,0,0,0.5); 
     cursor: default; 
     background: #000; 
     
-    /* Forces pixel-perfect scaling */
-    image-rendering: pixelated; 
+    /* Fallbacks first, standard pixelated LAST so it wins! */
+    image-rendering: -webkit-optimize-contrast;
     image-rendering: -moz-crisp-edges; 
     image-rendering: crisp-edges; 
+    image-rendering: pixelated; 
 }
 
 /* --- 4. GALLERY & SPRITE LOGIC --- */
@@ -216,17 +220,19 @@ body.crt-active .char-card:hover img {
     width: 100%; height: 500px; display: flex; align-items: center; justify-content: center; 
     overflow: hidden; position: relative; touch-action: none; 
 }
-/* .sprite-window img { max-width: 100%; max-height: 100%; object-fit: contain; } */
+
 /* --- PIXEL-PERFECT SPRITE VIEWER --- */
 .sprite-window img { 
-    max-width: 100%; 
-    max-height: 100%; 
+    /* Force the sprite to grow to fill the 500px window */
+    width: 100%; 
+    height: 100%; 
     object-fit: contain; 
     
-    /* Forces pixel-perfect scaling */
-    image-rendering: pixelated; 
-    image-rendering: -moz-crisp-edges; /* Firefox fallback */
+    /* Fallbacks first, standard pixelated LAST so it wins! */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges; 
+    image-rendering: pixelated; 
 }
 
 /* --- 5. MUSIC & TRACK SETTINGS --- */
