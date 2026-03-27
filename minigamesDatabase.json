@@ -32,6 +32,28 @@
         ],
         "videoUrl": "videos/sam's_hacking.mp4"
     },
+    "Spirit Hunt": {
+        "name": "Spirit Hunt",
+        "thumbnail": "images/minigames/spiritHunt_thumb.png",
+        "bg": "images/minigames/spiritHunt_bg.jpg",
+        "description": "Defend the World from Evil and Hot Spirits",
+        "unlock": "Unlocked after going to Evergreen, meeting Master Zhen, and agreeing to help him.",
+        "tips": [
+            "Buy New/Better weapons from Zhen at the Temple",
+            "Buy the Golden Katana early for easy money",
+            "Use left click to attack the spirit",
+            "You can defend by holding right click over the attacking circles when almost filled",
+            "Hover over the lightning icon to power the blade. This will allow you to attack again instantly, and while the blade is powered you will auto block incoming attacks",
+            "Stay away from the red zones",
+            "Hover over the red crossed swords to get a buff",
+            { 
+                "type": "dropdown",
+                "title": "Special Assistance if you have completed the character's quest",
+                "content": [ "Himari - Blocks one attack every 8 seconds", "Kate - Attacks the enemy every 8 seconds" ]
+            }
+        ],
+        "videoUrl": "videos/spirit_hunt.mp4"
+    },
     "squirt_racing": {
         "name": "Squirt Racing",
         "thumbnail": "images/minigames/racing_thumb.png",
