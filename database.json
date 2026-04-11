@@ -1,74 +1,266 @@
 {
-    "josef": { 
+    "Anna": { 
+        "name": "Anna", 
+        "gallery": true,
+        "sprite": "images/characters/Anna/AnnaB_sprite.png", 
+        "bg": "images/characters/Anna/AnnaBackground_BG.png", 
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Josef": { 
         "name": "Josef", 
         "gallery": false,
-        "sprite": "images/characters/Josef/josef_sprite.png", 
-        "bg": "images/characters/Josef/Josef_BG.jpg", 
+        "sprite": "images/characters/Josef/JosefB_sprite.png", 
+        "bg": "images/characters/Josef/JosefBackground_BG.jpg", 
         "quests": [
             { "title": "Friday Beer Strategy", "steps": ["Reach 3 Hearts with Anna", "Give Beer on Friday (x2)", "Reach 4 Hearts with Anna", "Give 3rd Beer & Explain Starmaker"] },
             { "title": "Man of The House", "steps": ["After completing Friday's Quest", "Go Camping", "Have a 3some with Anna", "Fuck Isabella"] }
         ]
     },
-    "amelia": { 
-        "name": "Amelia", 
+    "Adrian": { 
+        "name": "Adrian", 
+        "gallery": false,
+        "sprite": "images/characters/Adrian/AdrianB_sprite.png", 
+        "bg": "images/characters/Adrian/AdrianBackground_BG.jpg", 
+        "quests": [
+            { "title": "Friday Beer Strategy", "steps": ["Reach 3 Hearts with Anna", "Give Beer on Friday (x2)", "Reach 4 Hearts with Anna", "Give 3rd Beer & Explain Starmaker"] },
+            { "title": "Man of The House", "steps": ["After completing Friday's Quest", "Go Camping", "Have a 3some with Anna", "Fuck Isabella"] }
+        ]
+    },
+    "Charlotte": { 
+        "name": "Charlotte", 
         "gallery": true,
-        "sprite": "images/characters/Amelia/ameliaBase_sprite.png", 
-        "bg": "images/characters/Amelia/Amelia_BG.png", 
+        "sprite": "images/characters/Charlotte/CharlotteB_sprite.png", 
+        "bg": "images/characters/Charlotte/CharlotteBackground_BG.png", 
         "quests": [
             { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
         ]
     },
-    "emma": { 
-        "name": "Emma", 
+    "Amelia": { 
+        "name": "Amelia", 
         "gallery": true,
-        "sprite": "images/characters/Emma/emmabase_sprite.png", 
-        "bg": "images/characters/Emma/Emma_BG.png", 
+        "sprite": "images/characters/Amelia/AmeliaB_sprite.png", 
+        "bg": "images/characters/Amelia/AmeliaBackground_BG.png", 
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Mario": { 
+        "name": "Mario", 
+        "gallery": false,
+        "sprite": "images/characters/Mario/MarioB_sprite.png", 
+        "bg": "images/characters/Mario/MarioBackground_BG.png", 
         "quests": [
             { "title": "Secretary Seduction", "steps": ["Visit Sauna 3 times", "Have sex with her", "Either tell her to fight her urges or share her with Mario"] },
             { "title": "Cryptid Hunter", "steps": ["Complete Secretary Seduction Quest", "Invite to the Farm", "Collect 3 Monster parts (Tuesday)"] }
         ]
     },
-    "evelyn": { 
-        "name": "Evelyn",
+    "Katarina": { 
+        "name": "Katarina", 
         "gallery": true,
-        "sprite": "images/characters/Evelyn/Everlyn_sprite.png", 
-        "bg": "images/characters/Evelyn/Evelyn_BG.png", 
+        "sprite": "images/characters/Katarina/KatarinaB_sprite.png", 
+        "bg": "images/characters/Katarina/KatarinaBackground_BG.png", 
         "quests": [
-            { "title": "The Hidden Lab", "steps": ["Unlock Studio Raw Sex", "Path: Foundry > Harbor > Warehouse", "Trade materials for Genetic Mods"] }
+            { "title": "Secretary Seduction", "steps": ["Visit Sauna 3 times", "Have sex with her", "Either tell her to fight her urges or share her with Mario"] },
+            { "title": "Cryptid Hunter", "steps": ["Complete Secretary Seduction Quest", "Invite to the Farm", "Collect 3 Monster parts (Tuesday)"] }
         ]
     },
-    "toni": { 
-        "name": "Toni", 
+    "Emma": { 
+        "name": "Emma", 
         "gallery": true,
-        "sprite": "images/characters/Toni/ToniBar_sprite.png", 
-        "bg": "images/characters/Toni/Toni_BG.png", 
+        "sprite": "images/characters/Emma/EmmaB_sprite.png", 
+        "bg": "images/characters/Emma/EmmaBackground_BG.png", 
         "quests": [
-            { "title": "Squirt Racing", "steps": ["Pay $60k Total Debt", "Win 3 Races vs Jack", "Invite to Garage"] }
+            { "title": "Secretary Seduction", "steps": ["Visit Sauna 3 times", "Have sex with her", "Either tell her to fight her urges or share her with Mario"] },
+            { "title": "Cryptid Hunter", "steps": ["Complete Secretary Seduction Quest", "Invite to the Farm", "Collect 3 Monster parts (Tuesday)"] }
         ]
     },
-    "sofia": { 
+    "Sofia": { 
         "name": "Sofia",
         "gallery": true,
-        "sprite": "images/characters/Sofia/SofiaCasual_sprite.png", 
-        "bg": "images/characters/Sofia/Sofia_BG.png", 
+        "sprite": "images/characters/Sofia/SofiaB_sprite.png", 
+        "bg": "images/characters/Sofia/SofiaBackground_BG.png", 
         "quests": [
             { "title": "The Sting Operation", "steps": ["Meet at Gas Station (Fridays)", "Sneak Sofia into the Studio", "Arrest Mario OR Snitch to Mario"] }
         ]
     },
-    "Claudia": { 
-        "name": "Claudia",
+    "Cerise": { 
+        "name": "Cerise", 
         "gallery": true,
-        "sprite": "images/characters/Claudia/ClaudiaBase_sprite.png", 
-        "bg": "images/characters/Claudia/Claudia_BG.png", 
+        "sprite": "images/characters/Cerise/CeriseB_sprite.png", 
+        "bg": "images/characters/Cerise/CeriseBackground_BG.png", 
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Samantha": { 
+        "name": "Samantha", 
+        "gallery": true,
+        "sprite": "images/characters/Samantha/SamanthaB_sprite.png", 
+        "bg": "images/characters/Samantha/SamanthaBackground_BG.png",
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Ken": { 
+        "name": "Ken", 
+        "gallery": false,
+        "sprite": "images/characters/Ken/KenB_sprite.png", 
+        "bg": "images/characters/Ken/KenBackground_BG.png",
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Gabriel": { 
+        "name": "Gabriel", 
+        "gallery": false,
+        "sprite": "images/characters/Haniya/GabrielB_sprite.png", 
+        "bg": "images/characters/Haniya/PhotographBackground_BG.png", 
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Haniya": { 
+        "name": "Haniya", 
+        "gallery": true,
+        "sprite": "images/characters/Haniya/HaniyaB_sprite.png", 
+        "bg": "images/characters/Haniya/PhotographBackground_BG.png",  
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Phoenix": { 
+        "name": "Phoenix", 
+        "gallery": true,
+        "sprite": "images/characters/Phoenix/PhoenixB_sprite.png", 
+        "bg": "images/characters/Phoenix/PhoenixBackground_BG.png",
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "River": { 
+        "name": "River", 
+        "gallery": true,
+        "sprite": "images/characters/River/RiverB_sprite.png", 
+        "bg": "images/characters/River/RiverBackground_BG.png",
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Tasha": { 
+        "name": "Tasha", 
+        "gallery": true,
+        "sprite": "images/characters/Tasha/TashaB_sprite.png", 
+        "bg": "images/characters/Tasha/TashaBackground_BG.png",
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Alice": { 
+        "name": "Alice", 
+        "gallery": true,
+        "sprite": "images/characters/Alice/AliceB_sprite.png", 
+        "bg": "images/characters/Alice/AliceBackground_BG.png", 
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Norah": { 
+        "name": "Norah", 
+        "gallery": true,
+        "sprite": "images/characters/Norah/NorahB_sprite.png", 
+        "bg": "images/characters/Norah/NorahBackground_BG.png", 
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Himari": { 
+        "name": "Kate",
+        "gallery": true,
+        "sprite": "images/characters/Himari/HimariB_sprite.png", 
+        "bg": "images/characters/Himari/HimariBackground_BG.png", 
         "quests": [
             { "title": "Bar Meeting", "steps": ["Watch the news during Thursday's Movie Night", "Go to the Downtown Bar", "Act like you don't know her, be flirtry, and on the spot"] }
+        ]
+    },
+    "Kate": { 
+        "name": "Kate",
+        "gallery": true,
+        "sprite": "images/characters/Kate/KateB_sprite.png", 
+        "bg": "images/characters/Kate/KateBackground_BG.png", 
+        "quests": [
+            { "title": "Bar Meeting", "steps": ["Watch the news during Thursday's Movie Night", "Go to the Downtown Bar", "Act like you don't know her, be flirtry, and on the spot"] }
+        ]
+    },
+    "Zuri": { 
+        "name": "Zuri",
+        "gallery": true,
+        "sprite": "images/characters/Zuri/ZuriB_sprite.png", 
+        "bg": "images/characters/Zuri/ZuriBackground_BG.png", 
+        "quests": [
+            { "title": "Bar Meeting", "steps": ["Watch the news during Thursday's Movie Night", "Go to the Downtown Bar", "Act like you don't know her, be flirtry, and on the spot"] }
+        ]
+    },
+    "Isabella": { 
+        "name": "Isabella",
+        "gallery": true,
+        "sprite": "images/characters/Isabella/IsabellaB_sprite.png", 
+        "bg": "images/characters/Isabella/IsabellaBackground_BG.png", 
+        "quests": [
+            { "title": "The Hidden Lab", "steps": ["Unlock Studio Raw Sex", "Path: Foundry > Harbor > Warehouse", "Trade materials for Genetic Mods"] }
+        ]
+    },
+    "Liz": { 
+        "name": "Liz",
+        "gallery": true,
+        "sprite": "images/characters/Liz/LizB_sprite.png", 
+        "bg": "images/characters/Liz/LizBackground_BG.png", 
+        "quests": [
+            { "title": "The Hidden Lab", "steps": ["Unlock Studio Raw Sex", "Path: Foundry > Harbor > Warehouse", "Trade materials for Genetic Mods"] }
+        ]
+    },
+     "Claudia": { 
+        "name": "Claudia",
+        "gallery": true,
+        "sprite": "images/characters/Claudia/ClaudiaB_sprite.png", 
+        "bg": "images/characters/Claudia/ClaudiaBackground_BG.png", 
+        "quests": [
+            { "title": "Bar Meeting", "steps": ["Watch the news during Thursday's Movie Night", "Go to the Downtown Bar", "Act like you don't know her, be flirtry, and on the spot"] }
+        ]
+    },
+    "Chloe": { 
+        "name": "Claudia",
+        "gallery": true,
+        "sprite": "images/characters/Chloe/ChloeB_sprite.png", 
+        "bg": "images/characters/Chloe/ChloeBackground_BG.png", 
+        "quests": [
+            { "title": "Bar Meeting", "steps": ["Watch the news during Thursday's Movie Night", "Go to the Downtown Bar", "Act like you don't know her, be flirtry, and on the spot"] }
+        ]
+    },
+    "Zhen": { 
+        "name": "Zhen", 
+        "gallery": false,
+        "sprite": "images/characters/Zhen/ZhenB_sprite.png", 
+        "bg": "images/characters/Zhen/ZhenBackground_BG.png", 
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Nyx": { 
+        "name": "Nyx", 
+        "gallery": true,
+        "sprite": "images/characters/Nyx/NyxB_sprite.png", 
+        "bg": "images/characters/Nyx/NyxBackground_BG.png", 
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
         ]
     },
     "Astrid": { 
         "name": "Astrid",
         "gallery": true,
-        "sprite": "images/characters/Astrid/AstridCasual_sprite.png", 
-        "bg": "images/characters/Astrid/Astrid_BG.png", 
+        "sprite": "images/characters/Astrid/AstridB_sprite.png", 
+        "bg": "images/characters/Astrid/AstridBackground_BG.png", 
         "quests": [
             { "title": "Charity Carwash", "steps": ["Go to the gas station on a Monday after meeting Astrid and reaching 2 hearts with Anna", 
                 "The girl that will do the event is random, so far confirmed are the following: Astrid, Anna - Anna has a 3rd cg showing her breasts but this is only available on slut route -, Katharina, Amelia"] },
@@ -76,5 +268,149 @@
                 "Go visit Astrid at the Gas Station and she will be looking for something. She will tell you that Noire took it and ask you to join her to look for the item at Noire’s Haunted House at the Foundry on Mondays.", "Complete her minigame 3 times",
                 "Go with Astrid next week and win the minigame once more, after this you will get her scene and will  be repeatable every time after you win the minigame."] }
         ]
-   }
+   },
+    "Evelyn": { 
+        "name": "Evelyn",
+        "gallery": true,
+        "sprite": "images/characters/Evelyn/EverlyB_sprite.png", 
+        "bg": "images/characters/Evelyn/EvelynBackground_BG.png", 
+        "quests": [
+            { "title": "The Hidden Lab", "steps": ["Unlock Studio Raw Sex", "Path: Foundry > Harbor > Warehouse", "Trade materials for Genetic Mods"] }
+        ]
+    },
+    "Nina": { 
+        "name": "Nina",
+        "gallery": true,
+        "sprite": "images/characters/Nina/NinaB_sprite.png", 
+        "bg": "images/characters/Nina/NinaBackground_BG.png", 
+        "quests": [
+            { "title": "The Hidden Lab", "steps": ["Unlock Studio Raw Sex", "Path: Foundry > Harbor > Warehouse", "Trade materials for Genetic Mods"] }
+        ]
+    },
+    "Kirby": { 
+        "name": "Kirby",
+        "gallery": true,
+        "sprite": "images/characters/Kirby/KirbyB_sprite.png", 
+        "bg": "images/characters/Kirby/KirbyBackground_BG.png", 
+        "quests": [
+            { "title": "The Hidden Lab", "steps": ["Unlock Studio Raw Sex", "Path: Foundry > Harbor > Warehouse", "Trade materials for Genetic Mods"] }
+        ]
+    },
+    "Toni": { 
+        "name": "Toni", 
+        "gallery": true,
+        "sprite": "images/characters/Toni/ToniB_sprite.png", 
+        "bg": "images/characters/Toni/ToniBackground_BG.png", 
+        "quests": [
+            { "title": "Squirt Racing", "steps": ["Pay $60k Total Debt", "Win 3 Races vs Jack", "Invite to Garage"] }
+        ]
+    },  
+    "Celeste": { 
+        "name": "Celeste", 
+        "gallery": true,
+        "sprite": "images/characters/Celeste/CelesteB_sprite.png", 
+        "bg": "images/characters/Celeste/CelesteBackground_BG.png", 
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Roxy": { 
+        "name": "Celeste", 
+        "gallery": true,
+        "sprite": "images/characters/Roxy/RoxyB_sprite.png", 
+        "bg": "images/characters/Roxy/RoxyBackground_BG.png", 
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Vanessa": { 
+        "name": "Vanessa", 
+        "gallery": true,
+        "sprite": "images/characters/Vanessa/VanessaB_sprite.png", 
+        "bg": "images/characters/Vanessa/VanessaBackground_BG.png", 
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Nadia": { 
+        "name": "Nadia", 
+        "gallery": true,
+        "sprite": "images/characters/Nadia/NadiaB_sprite.png", 
+        "bg": "images/characters/Nadia/NadiaBackground_BG.png", 
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Leilani": { 
+        "name": "Leilani", 
+        "gallery": true,
+        "sprite": "images/characters/Leilani/LeilaniB_sprite.png", 
+        "bg": "images/characters/Leilani/LeilaniBackground_BG.png", 
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Freya": { 
+        "name": "Freya", 
+        "gallery": true,
+        "sprite": "images/characters/Freya/FreyaB_sprite.png", 
+        "bg": "images/characters/Freya/FreyaBackground_BG.png", 
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Werewolf": { 
+        "name": "Werewolf", 
+        "gallery": true,
+        "sprite": "images/characters/Werewolf/WerewolfMB_sprite.png", 
+        "bg": "images/characters/Werewolf/WerewolfBackground_BG.png", 
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Mei": { 
+        "name": "Mei", 
+        "gallery": true,
+        "sprite": "images/characters/Mei/MeiB_sprite.png", 
+        "bg": "images/characters/Mei/MeiBackground_BG.png", 
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+     "Sakura": { 
+        "name": "Sakura", 
+        "gallery": true,
+        "sprite": "images/characters/Sakura/SakuraB_sprite.png", 
+        "bg": "images/characters/Sakura/SakuraBackground_BG.png", 
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Riku": { 
+        "name": "Riku", 
+        "gallery": true,
+        "sprite": "images/characters/Riku/RikuB_sprite.png", 
+        "bg": "images/characters/Riku/RikuBackground_BG.png", 
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Chihiro": { 
+        "name": "Chihiro", 
+        "gallery": true,
+        "sprite": "images/characters/Chihiro/ChihiroB_sprite.png", 
+        "bg": "images/characters/Chihiro/ChihiroBackground_BG.png", 
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    },
+    "Halloween": { 
+        "name": "Vael & Zazia", 
+        "gallery": true,
+        "sprite": "images/characters/Halloween/VaelB_sprite.png", 
+        "bg": "images/characters/Halloween/VaelBackground_BG.png", 
+        "quests": [
+            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+        ]
+    }
 }
