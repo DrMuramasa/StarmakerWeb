@@ -162,6 +162,12 @@ function initMusic(defaultTrack = 'audio/background_theme.mp3') {
     const trackLabel = localStorage.getItem('sm_track_label') || "Default Theme";
     const trackNameDisplay = document.getElementById('current-track-name');
     if (trackNameDisplay) trackNameDisplay.innerText = "PLAYING: " + trackLabel;
+
+    document.querySelectorAll('.track-item').forEach(btn => {
+        if (btn.innerText.includes(trackLabel)) {
+            btn.classList.add('playing');
+        }
+    });
 }
 
 function changeTrack(path, label) {
