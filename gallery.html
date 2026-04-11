@@ -16,6 +16,22 @@
             align-items: start;
         }
 
+        /* --- ADDITION: Sidebar Flex Container (Step 2) --- */
+        .folder-list {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            max-height: 935px; /* Locks to the gallery layout height */
+            overflow: hidden; /* Prevents layout leakage */
+        }
+
+        /* --- ADDITION: Scrollable List Area (Step 3) --- */
+        #char-list {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 5px; /* Optional breathing room for the scrollbar */
+        }
+
         .gallery-scroll-area {
             height: 100%;
             overflow-y: auto;
