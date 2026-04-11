@@ -272,7 +272,7 @@
     "Evelyn": { 
         "name": "Evelyn",
         "gallery": true,
-        "sprite": "images/characters/Evelyn/EverlyB_sprite.png", 
+        "sprite": "images/characters/Evelyn/EverlynB_sprite.png", 
         "bg": "images/characters/Evelyn/EvelynBackground_BG.png", 
         "quests": [
             { "title": "The Hidden Lab", "steps": ["Unlock Studio Raw Sex", "Path: Foundry > Harbor > Warehouse", "Trade materials for Genetic Mods"] }
