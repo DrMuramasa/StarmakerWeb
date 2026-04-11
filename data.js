@@ -164,21 +164,7 @@ function initMusic(defaultTrack = 'audio/background_theme.mp3') {
     if (trackNameDisplay) trackNameDisplay.innerText = "PLAYING: " + trackLabel;
 }
 
-function changeTrack(path, label) {
-    if (typeof playSnd === 'function') playSnd();
-    
-    localStorage.setItem('sm_preferred_track', path);
-    localStorage.setItem('sm_track_label', label);
-    
-    if (typeof bgMusic !== 'undefined') {
-        const currentVol = bgMusic.volume;
-        bgMusic.pause();
-        bgMusic.src = path;
-        bgMusic.currentTime = 0; 
-        bgMusic.volume = currentVol;
-        bgMusic.play();
-    }
-}
+
 // --- 4. NAVIGATION & SETTINGS TOGGLES ---
 function toggleSettings() {
     if (typeof playSnd === 'function') playSnd();
