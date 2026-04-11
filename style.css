@@ -379,6 +379,16 @@ body.crt-active .char-card:hover img {
     .char-detail-layout, .character-details-container { display: flex !important; flex-direction: column !important; width: 100% !important; }
     .char-image-box { width: 100% !important; max-height: 350px !important; overflow: hidden; }
 
+    /* FIX: Character selection list on Gallery Mobile */
+    #char-list {
+    max-height: 200px !important; /* Limits the list height on small screens */
+    overflow-y: auto !important;  /* Enables scrolling */
+    border: 1px solid var(--box-border);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    }
     .gallery-scroll-area {
         max-height: 500px !important; 
         overflow-y: auto !important; 
