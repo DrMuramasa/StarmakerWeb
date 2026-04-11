@@ -224,7 +224,7 @@ body.crt-active .char-card:hover img {
     overflow: hidden; position: relative; touch-action: none; 
 }
 
-
+/* --- FIXED SCROLLING FOR CHARACTER SELECTION ON THE GALLERY PAGE--- */ 
 /* 1. Update the layout to allow children to stretch to the full 935px */
 .gallery-layout {
     display: grid;
@@ -259,6 +259,42 @@ body.crt-active .char-card:hover img {
     border-radius: 10px;
 }
 
+/* --- FIXED SCROLLING FOR CHARACTER SELECTION ON THE CHARACTERS PAGE--- */
+
+/* 1. Apply this to the glass-panel on character list page */
+.char-list-container {
+    display: flex;
+    flex-direction: column;
+    height: 85vh;      /* Matches your gallery height */
+    max-height: 935px; /* Hard cap for large monitors */
+    overflow: hidden;  /* Keeps the panel itself steady */
+}
+
+/* 2. The new scrollable wrapper for the grid */
+.grid-scroll-area {
+    flex: 1;
+    min-height: 0;    /* The 'Magic Fix' that allows scrolling */
+    overflow-y: auto;
+    padding-right: 15px;
+    margin-top: 20px;
+}
+
+/* 3. Re-using gold scrollbar aesthetic */
+.grid-scroll-area::-webkit-scrollbar {
+    width: 6px;
+}
+.grid-scroll-area::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 10px;
+}
+
+/* 4. Ensure the grid behaves inside the scroll area */
+.grid-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    padding-bottom: 30px; /* Space at the bottom so cards aren't cut off */
+}
 
 
 /* --- PIXEL-PERFECT SPRITE VIEWER (NO BORDER) --- */
