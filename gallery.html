@@ -509,6 +509,7 @@
         window.onpopstate = () => { if (document.getElementById('lightbox').style.display === 'flex') document.getElementById('lightbox').style.display = 'none'; };
 
         window.addEventListener('DOMContentLoaded', () => {
+            if(typeof initMusic === 'function') initMusic();
             initGalleryDB(); 
         });
     </script>
