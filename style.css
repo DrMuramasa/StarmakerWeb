@@ -1,16 +1,12 @@
 /* --- GLOBAL ANTI-HIGHLIGHT & MOBILE TAP FIX --- */
 html, body {
-    /* Prevents the blue highlight box on double-clicks */
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none;     /* IE 10+ and Edge */
-    user-select: none;         /* Standard syntax */
-    
-    /* Bonus Mobile Fix: Removes the weird grey/blue flash when tapping buttons on phones */
+    -webkit-user-select: none;
+    -ms-user-select: none;     
+    user-select: none;         
     -webkit-tap-highlight-color: transparent; 
 }
 
 /* --- EXCEPTIONS FOR UI TITLES --- */
-/* Prevents highlighting on structural UI headings */
 .glitch-title, 
 .hero-title, 
 .index-main-text h1,
@@ -23,7 +19,7 @@ html, body {
     user-select: none !important;
 }
 
-/* Re-enable text selection ONLY for actual reading material */
+re-enable text selection ONLY for actual reading material
 p, h1, h2, h3, span, .bio, input, textarea {
     -webkit-user-select: text;
     -ms-user-select: text;
@@ -38,11 +34,9 @@ p, div, span { font-size: clamp(0.9rem, 2.5vw, 1.1rem); }
 
 /* --- GLOBAL HACKER CURSOR --- */
 body {
-    /* Uses a safely URL-encoded SVG arrow so it works across all Windows and Apple browsers */
     cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M2,2 L2,20 L7,15 L10,22 L13,21 L10,14 L16,14 Z' fill='%2300ff00' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") 2 2, default;
 }
 
-/* Ensure interactive elements still show the hand pointer */
 a, button, .nav-btn, .char-card, .img-card img, .floating-img, input[type="range"], .char-link {
     cursor: pointer;
 }
@@ -51,17 +45,17 @@ a, button, .nav-btn, .char-card, .img-card img, .floating-img, input[type="range
 .crt-overlay {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
-    /* The scanline effect */
     background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), 
                 linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
     background-size: 100% 3px, 3px 100%;
-    z-index: 9998; /* Sits right beneath your lightboxes and menus */
-    pointer-events: none; /* CRITICAL: Lets clicks pass right through the overlay */
-    display: none; /* Hidden by default */
+    z-index: 9998;
+    pointer-events: none;
+    display: none;
     opacity: 0.8;
 }
 
 .crt-overlay.active { display: block; }
+
 :root {
     --gold: #d4af37;
     --glass: rgba(0, 0, 0, 0.85);
@@ -139,31 +133,25 @@ header {
     background: rgba(0,0,0,0.5); 
     border: 1px solid var(--box-border); 
     border-radius: 8px; 
-    overflow: hidden; /* Keeps the zoomed image contained */
+    overflow: hidden; 
     cursor: pointer; 
     text-align: center; 
 }
 
-/* --- DEFAULT: Soft Gray Archive Look --- */
 .char-card img { 
     width: 100%; 
     height: 300px; 
     object-fit: cover; 
     transition: transform 0.4s ease, filter 0.4s ease !important;
-    
-    /* Soft, sleek, desaturated gray */
     filter: grayscale(85%) brightness(0.8) contrast(1.1); 
 }
 
-/* Hover: Zooms in and restores full original color */
 .char-card:hover img {
     transform: scale(1.1); 
     filter: grayscale(0) brightness(1) contrast(1); 
 }
 
-/* --- CRT MODE ON: Softer Green Phosphor Look --- */
 body.crt-active .char-card img {
-    /* Lowered saturation (from 2.5 to 1.2) for a much softer green */
     filter: sepia(1) hue-rotate(75deg) saturate(1.2) brightness(0.85); 
 }
 
@@ -180,22 +168,15 @@ body.crt-active .char-card:hover img {
     touch-action: none; 
 }
 
-/* --- PIXEL-PERFECT LIGHTBOX GALLERY WITH BORDER --- */
 #lb-img, .lightbox img { 
-    /* Force the image to grow to fill up to 90% of the screen */
     width: 90vw !important; 
     height: 90vh !important; 
     object-fit: contain !important; 
     box-sizing: border-box !important; 
-    
-    /* SOFT PINK DOUBLE LINE BORDER */
     border: 8px double #ffb6c1 !important; 
     box-shadow: 0 0 20px rgba(255, 182, 193, 0.3) !important; 
-    
     cursor: default; 
     background: #000; 
-    
-    /* Fallbacks first, standard pixelated LAST so it wins! */
     image-rendering: -webkit-optimize-contrast;
     image-rendering: -moz-crisp-edges; 
     image-rendering: crisp-edges; 
@@ -203,7 +184,14 @@ body.crt-active .char-card:hover img {
 }
 
 /* --- 4. GALLERY & SPRITE LOGIC --- */
-.gallery-layout { display: grid; grid-template-columns: 160px 1fr 320px; gap: 20px; height: 85vh; align-items: start; }
+.gallery-layout { 
+    display: grid; 
+    grid-template-columns: 180px 1fr 380px; 
+    gap: 25px; 
+    height: 935px; 
+    align-items: stretch; 
+}
+
 .gallery-scroll-area { height: 100%; overflow-y: auto; padding-right: 10px; }
 
 .gallery-grid {
@@ -224,97 +212,90 @@ body.crt-active .char-card:hover img {
     overflow: hidden; position: relative; touch-action: none; 
 }
 
-/* --- FIXED SCROLLING FOR CHARACTER SELECTION ON THE GALLERY PAGE--- */ 
-/* 1. Update the layout to allow children to stretch to the full 935px */
-.gallery-layout {
-    display: grid;
-    grid-template-columns: 180px 1fr 380px; 
-    gap: 25px;
-    height: 935px; 
-    align-items: stretch; /* CHANGED from 'start' to 'stretch' */
-}
-
-/* 2. Fix the sidebar container */
 .folder-list {
     display: flex;
     flex-direction: column;
-    height: 100%; /* This now works because the parent 'stretches' */
-    overflow: hidden; /* Keeps the container from leaking */
+    height: 100%; 
+    overflow: hidden; 
 }
 
-/* 3. Make the list itself scrollable */
 #char-list {
-    flex: 1; /* Tells the list to take up all available space below the title/button */
+    flex: 1; 
     overflow-y: auto;
     overflow-x: hidden;
     padding-right: 10px;
 }
 
-/* Optional: Custom scrollbar for that Database aesthetic */
-#char-list::-webkit-scrollbar {
-    width: 5px;
-}
-#char-list::-webkit-scrollbar-thumb {
-    background: var(--gold);
-    border-radius: 10px;
-}
+#char-list::-webkit-scrollbar { width: 5px; }
+#char-list::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
 
-/* --- FIXED SCROLLING FOR CHARACTER SELECTION ON THE CHARACTERS PAGE--- */
+/* --- 5. THE UPDATED CHARACTER PAGE FIX (GRID SCROLLING) --- */
 
-/* 1. Apply this to the glass-panel on character list page */
 .char-list-container {
     display: flex;
     flex-direction: column;
-    height: 85vh;      /* Matches your gallery height */
-    max-height: 935px; /* Hard cap for large monitors */
-    overflow: hidden;  /* Keeps the panel itself steady */
+    height: 85vh;      
+    max-height: 935px; 
+    overflow: hidden;  /* Keeps the panel itself from scrolling */
 }
 
-/* 2. The new scrollable wrapper for the grid */
+/* This is the Flex Chain fix for the mosaic wrapper */
+#mosaic-view {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+#mosaic-view > div:first-child {
+    flex-shrink: 0; /* Prevents the search bar/header from squishing */
+}
+
 .grid-scroll-area {
     flex: 1;
-    min-height: 0;    /* The 'Magic Fix' that allows scrolling */
+    min-height: 0;
     overflow-y: auto;
     padding-right: 15px;
     margin-top: 20px;
 }
 
-/* 3. Re-using gold scrollbar aesthetic */
-.grid-scroll-area::-webkit-scrollbar {
-    width: 6px;
-}
-.grid-scroll-area::-webkit-scrollbar-thumb {
-    background: var(--gold);
-    border-radius: 10px;
-}
+.grid-scroll-area::-webkit-scrollbar { width: 6px; }
+.grid-scroll-area::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
 
-/* 4. Ensure the grid behaves inside the scroll area */
 .grid-view {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 20px;
-    padding-bottom: 30px; /* Space at the bottom so cards aren't cut off */
+    padding-bottom: 30px;
 }
 
+/* Detail View Scroller */
+.step-viewer {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--box-border);
+    border-radius: 10px;
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
 
-/* --- PIXEL-PERFECT SPRITE VIEWER (NO BORDER) --- */
+.step-viewer::-webkit-scrollbar { width: 5px; }
+.step-viewer::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+
+
+/* --- 6. PIXEL-PERFECT SPRITE VIEWER --- */
 .sprite-window img { 
-    /* Force the sprite to grow to fill the 500px window */
     width: 100%; 
     height: 100%; 
     object-fit: contain; 
-
-    /* Fallbacks first, standard pixelated LAST so it wins! */
     image-rendering: -webkit-optimize-contrast;
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges; 
     image-rendering: pixelated; 
 }
 
-/* --- 5. MUSIC & TRACK SETTINGS --- */
-.settings-container {
-    position: relative; /* This anchors the dropdown to the button */
-}
+/* --- 7. MUSIC & TRACK SETTINGS --- */
+.settings-container { position: relative; }
 
 .music-controls {
     display: flex; align-items: center; gap: 12px;
@@ -330,7 +311,7 @@ body.crt-active .char-card:hover img {
     padding: 15px; z-index: 10001; flex-direction: column; 
     height: auto !important; 
     max-height: 250px !important; 
-    min-height: 0 !important; /* <--- THIS FIXES THE GIANT HEIGHT ISSUE */
+    min-height: 0 !important; 
     overflow: hidden;
 }
 
@@ -341,8 +322,8 @@ body.crt-active .char-card:hover img {
 .track-item.playing { border-left: 3px solid var(--gold); background: rgba(212, 175, 55, 0.1); padding-left: 15px !important; color: var(--gold); }
 #current-track-name { margin-top: auto; padding-top: 10px; border-top: 1px solid rgba(212, 175, 55, 0.2); }
 
-/* --- 6. CHARACTER PAGE LOGIC --- */
-.char-detail-layout { display: grid; grid-template-columns: 280px 220px 1fr; gap: 25px; margin-top: 20px; align-items: start; }
+/* --- 8. CHARACTER PAGE LAYOUTS --- */
+.char-detail-layout { display: grid; grid-template-columns: 280px 220px 1fr; gap: 25px; margin-top: 20px; align-items: start; height: calc(100% - 60px); }
 .quest-nav-item { background: rgba(255, 255, 255, 0.05); padding: 15px; margin-bottom: 10px; border: 1px solid var(--box-border); cursor: pointer; transition: all 0.2s ease; }
 .active-quest { background: rgba(212, 175, 55, 0.15) !important; border-color: var(--gold) !important; }
 
@@ -358,8 +339,8 @@ body.crt-active .char-card:hover img {
         display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
         background: rgba(5, 5, 10, 0.98); flex-direction: column; padding: 80px 20px;
         gap: 25px; z-index: 1000; justify-content: flex-start; 
-        align-items: center; /* <--- Centers the inner containers */
-        box-sizing: border-box; /* <--- Stops the padding from pushing it off-screen */
+        align-items: center; 
+        box-sizing: border-box; 
         overflow-y: auto;
     }
     #main-nav.active { display: flex; }
@@ -368,22 +349,19 @@ body.crt-active .char-card:hover img {
         flex-direction: column; 
         width: 100%; 
         gap: 20px; 
-        align-items: center; /* <--- Centers the buttons themselves */
+        align-items: center; 
     }
 
-    /* FIX: Tracks Settings Modal - Accordion Style for Mobile */
     #settings-modal { 
-        position: relative !important; /* Anchors it underneath the button */
+        position: relative !important; 
         top: 0 !important; 
         left: 0 !important;
         right: auto !important;
-        transform: none !important; /* Clears any centering transforms */
+        transform: none !important; 
         width: 100% !important; 
-        margin-top: 15px !important; /* Adds a nice gap between the button and the box */
+        margin-top: 15px !important; 
         z-index: 1002 !important; 
         box-sizing: border-box !important;
-        
-        /* Ensure there is no 'display: none !important;' here so your JavaScript toggle actually works! */
     }
 
     .hero-title, .index-main-text h1, .glitch-title {
@@ -394,7 +372,6 @@ body.crt-active .char-card:hover img {
     .glass-panel:not(#settings-modal) { display: flex !important; flex-direction: column !important; padding: 15px !important; height: auto !important; }
     .gallery-layout { display: flex !important; flex-direction: column !important; height: auto !important; gap: 20px !important; }
 
-    /* THE 2-COLUMN GRID */
     .gallery-grid { 
         display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 12px !important; width: 100% !important;
     }
@@ -402,21 +379,19 @@ body.crt-active .char-card:hover img {
     .char-detail-layout, .character-details-container { display: flex !important; flex-direction: column !important; width: 100% !important; }
     .char-image-box { width: 100% !important; max-height: 350px !important; overflow: hidden; }
 
-    /* FIX: Scrollable Gallery Window for Mobile */
     .gallery-scroll-area {
-        max-height: 500px !important; /* This roughly equals 3.5 to 4 rows depending on screen size */
-        overflow-y: auto !important; /* Triggers the vertical scrollbar */
-        border: 1px solid var(--box-border) !important; /* Wraps it in a neat box */
+        max-height: 500px !important; 
+        overflow-y: auto !important; 
+        border: 1px solid var(--box-border) !important; 
         border-radius: 12px !important;
         padding: 15px !important;
-        background: rgba(0, 0, 0, 0.4) !important; /* Darkens the background slightly to frame it */
+        background: rgba(0, 0, 0, 0.4) !important; 
         margin-bottom: 20px !important;
     }
 
-    /* FIX: Sprite Viewer bounds and "Cutout" logic */
     .sprite-viewer { 
         width: 100% !important; 
-        box-sizing: border-box !important; /* <--- THIS IS THE MAGIC FIX */
+        box-sizing: border-box !important; 
         min-height: 500px !important;
         height: auto !important;
         background: rgba(0,0,0,0.8) !important; 
@@ -430,8 +405,6 @@ body.crt-active .char-card:hover img {
     .sprite-window { height: 400px !important; width: 100% !important; }
     .quest-nav-item { padding: 10px; font-size: 0.9rem; }
 
-    /* Track button centered stuck */
-    /* FIX: Locks the Tracks button strictly in the center */
     .settings-container {
         display: flex !important;
         flex-direction: column !important;
@@ -440,24 +413,16 @@ body.crt-active .char-card:hover img {
     }
 }
 
-/* FIX: Prevents iOS from highlighting text or opening native menus on long press */
+/* --- ADDITIONAL UI EXTRAS --- */
 .char-link, .img-card {
-    -webkit-user-select: none; /* Safari */
-    user-select: none; /* Standard */
-    -webkit-touch-callout: none; /* Disables the iOS popup menu */
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
 }
 
-/* --- FAVORITE CHARACTER STYLE --- */
-.char-link {
-    position: relative; /* Anchors the absolute heart */
-}
+.char-link { position: relative; }
+.char-link.is-favorite { color: #ff69b4 !important; border-color: #ff69b4 !important; }
 
-.char-link.is-favorite {
-    color: #ff69b4 !important; /* Pink text */
-    border-color: #ff69b4 !important; /* Pink border */
-}
-
-/* The new clickable heart span */
 .fav-heart {
     position: absolute;
     right: 15px;
@@ -467,12 +432,8 @@ body.crt-active .char-card:hover img {
     transition: transform 0.2s ease, opacity 0.2s ease, filter 0.2s ease;
 }
 
-/* Make it scale up slightly when hovered */
-.fav-heart:hover {
-    transform: translateY(-50%) scale(1.3);
-}
+.fav-heart:hover { transform: translateY(-50%) scale(1.3); }
 
-/* --- CRT INDICATOR BADGE --- */
 .crt-indicator {
     display: none;
     color: #ff4466;
@@ -494,7 +455,6 @@ body.crt-active .char-card:hover img {
     100% { opacity: 0.5; text-shadow: none; } 
 }
 
-/* --- SOFTER PAGE TRANSITION GLITCH --- */
 #glitch-screen {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     z-index: 10000; display: none; pointer-events: none;
@@ -511,7 +471,6 @@ body.crt-active .char-card:hover img {
     100% { background: transparent; transform: translateX(0); }
 }
 
-/* --- MINIGAME SPOILER DROPDOWNS --- */
 .spoiler-dropdown {
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid var(--box-border);
@@ -529,13 +488,10 @@ body.crt-active .char-card:hover img {
 .spoiler-dropdown summary {
     cursor: pointer;
     font-weight: bold;
-    color: var(--req-color); /* Uses your neon pink */
+    color: var(--req-color);
     outline: none;
-    list-style: none; /* Hides default triangle */
+    list-style: none;
     user-select: none;
 }
 
-/* Hides default triangle on Safari/Chrome */
-.spoiler-dropdown summary::-webkit-details-marker {
-    display: none; 
-}
+.spoiler-dropdown summary::-webkit-details-marker { display: none; }
