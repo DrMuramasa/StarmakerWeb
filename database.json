@@ -115,8 +115,8 @@
     "Gabriel": { 
         "name": "Gabriel", 
         "gallery": false,
-        "sprite": "images/characters/Haniya/GabrielB_sprite.png", 
-        "bg": "images/characters/Haniya/PhotographBackground_BG.png", 
+        "sprite": "images/characters/Gabriel/GabrielB_sprite.png", 
+        "bg": "images/characters/Gabriel/PhotographBackground_BG.png", 
         "quests": [
             { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
         ]
@@ -416,8 +416,8 @@
     "Vael & Zazia": { 
         "name": "Vael & Zazia", 
         "gallery": true,
-        "sprite": "images/characters/Halloween/VaelB_sprite.png", 
-        "bg": "images/characters/Halloween/VaelBackground_BG.png", 
+        "sprite": "images/characters/Vael & Zazia/VaelB_sprite.png", 
+        "bg": "images/characters/Vael & Zazia/VaelBackground_BG.png", 
         "quests": [
             { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
         ]
