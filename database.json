@@ -176,7 +176,7 @@
         ]
     },
     "Himari": { 
-        "name": "Kate",
+        "name": "Himari",
         "gallery": true,
         "sprite": "images/characters/Himari/HimariB_sprite.png", 
         "bg": "images/characters/Himari/HimariBackground_BG.png", 
@@ -230,7 +230,7 @@
         ]
     },
     "Chloe": { 
-        "name": "Claudia",
+        "name": "Chloe",
         "gallery": true,
         "sprite": "images/characters/Chloe/ChloeB_sprite.png", 
         "bg": "images/characters/Chloe/ChloeBackground_BG.png", 
