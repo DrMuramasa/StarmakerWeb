@@ -52,17 +52,21 @@
     </header>
 
     <div class="container">
-        <div class="glass-panel">
-            <div id="mosaic-view">
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--box-border); padding-bottom: 10px; flex-wrap: wrap; gap: 10px;">
-                    <h2 style="color:var(--gold); margin:0; letter-spacing: 2px;">CHARACTER ARCHIVES</h2>
-                    <input type="text" id="char-search" placeholder="Search name..." oninput="filterChars()" 
-                        style="background:rgba(0,0,0,0.5); border:1px solid var(--gold); color:white; padding:8px 15px; border-radius:20px; outline:none; width: 220px;">
-                </div>
-                <div id="char-grid" class="grid-view" style="margin-top:20px;"></div>
-            </div>
+        <div class="glass-panel char-list-container">
+    
+    <div id="mosaic-view">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--box-border); padding-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+            <h2 style="color:var(--gold); margin:0; letter-spacing: 2px;">CHARACTER ARCHIVES</h2>
+            <input type="text" id="char-search" placeholder="Search name..." oninput="filterChars()" 
+                style="background:rgba(0,0,0,0.5); border:1px solid var(--gold); color:white; padding:8px 15px; border-radius:20px; outline:none; width: 220px;">
+        </div>
 
-            <div id="guide-view" style="display:none;">
+        <div class="grid-scroll-area">
+            <div id="char-grid" class="grid-view"></div>
+        </div>
+    </div>
+
+    <div id="guide-view" style="display:none;">
                 <button class="nav-btn" onclick="closeGuide()">← BACK TO ARCHIVES</button>
                 <div class="char-detail-layout">
                     <div class="char-img-container">
