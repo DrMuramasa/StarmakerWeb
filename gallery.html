@@ -16,7 +16,7 @@
             align-items: start;
         }
 
-        /* --- STEP 2: Sidebar Flex Container --- */
+        /* Sidebar Flex Container */
         .folder-list {
             display: flex;
             flex-direction: column;
@@ -25,7 +25,7 @@
             overflow: hidden; 
         }
 
-        /* --- STEP 3: Scrollable List Area --- */
+        /* Scrollable List Area */
         #char-list {
             flex: 1;
             overflow-y: auto;
@@ -115,7 +115,6 @@
 
         #lb-img { max-width: 90%; max-height: 90%; border: 1px solid var(--gold); cursor: zoom-out !important; }
         
-        /* Sidebar specific styles */
         .char-search-input {
             width: 100%;
             margin-bottom: 10px;
@@ -183,6 +182,10 @@
                     
                     <input type="text" id="char-search" class="char-search-input" placeholder="Search..." oninput="handleSearch(this.value)">
 
+                    <button id="safe-search-btn" class="nav-btn" style="width:100%; margin-bottom:10px; font-size:0.7rem;" onclick="toggleSafeSearch()">
+                        🛡️ SAFE SEARCH: OFF
+                    </button>
+
                     <button id="share-filter-btn" class="nav-btn" style="width:100%; margin-bottom:10px; font-size:0.7rem;" onclick="toggleShareFilter()">
                         📂 SHARED: ON
                     </button>
@@ -232,12 +235,14 @@
         let charFilterActive = false;
         let galFilterActive = false;
         let shareFilterActive = localStorage.getItem('sm_share_enabled') !== 'false';
+        let safeSearchActive = localStorage.getItem('sm_safe_search') === 'true';
 
         // Shared Favorites Object
         let favorites = JSON.parse(localStorage.getItem('sm_favorites')) || { images: [], chars: [] };
 
-        // --- THE GALLERY DATABASE ENGINE ---
+        // --- THE DATABASE ENGINE ---
         let charDatabase = {};
+        const BANNED_LIST = ["phoenix", "claudia", "vanessa", "river"];
 
         async function initGalleryDB() {
             try {
@@ -246,24 +251,43 @@
                 charDatabase = await response.json();
                 renderCharacterList(); 
                 syncShareBtnUI();
+                syncSafeBtnUI();
             } catch (err) {
-                console.error("Failed to load database.json for gallery sidebar", err);
+                console.error("Failed to load database.json", err);
                 document.getElementById('char-list').innerHTML = "<p style='color:red; font-size:0.8rem;'>Database Offline.</p>";
             }
         }
 
-        // --- STEP 3: SEARCH & SHARE LOGIC ---
+        // --- SAFE SEARCH LOGIC ---
 
-        function handleSearch(val) {
-            renderCharacterList(); // Re-render sidebar based on search
+        function toggleSafeSearch() {
+            if(typeof playSnd === 'function') playSnd();
+            safeSearchActive = !safeSearchActive;
+            localStorage.setItem('sm_safe_search', safeSearchActive);
+            syncSafeBtnUI();
+            renderCharacterList(); // Refresh sidebar
+            applyFilters();        // Refresh grid
         }
+
+        function syncSafeBtnUI() {
+            const btn = document.getElementById('safe-search-btn');
+            if (btn) {
+                btn.innerText = safeSearchActive ? "🛡️ SAFE SEARCH: ON" : "🛡️ SAFE SEARCH: OFF";
+                btn.style.color = safeSearchActive ? "#00ffff" : "var(--gold)";
+                btn.style.borderColor = safeSearchActive ? "#00ffff" : "var(--box-border)";
+            }
+        }
+
+        // --- SIDEBAR & SEARCH ---
+
+        function handleSearch(val) { renderCharacterList(); }
 
         function toggleShareFilter() {
             if(typeof playSnd === 'function') playSnd();
             shareFilterActive = !shareFilterActive;
             localStorage.setItem('sm_share_enabled', shareFilterActive);
             syncShareBtnUI();
-            applyFilters(); // Re-filter current gallery grid
+            applyFilters(); 
         }
 
         function syncShareBtnUI() {
@@ -275,7 +299,6 @@
             }
         }
 
-        // --- CHARACTER SIDEBAR LOGIC ---
         function renderCharacterList() {
             const listContainer = document.getElementById('char-list');
             const searchTerm = document.getElementById('char-search').value.toLowerCase();
@@ -287,9 +310,11 @@
 
                 const charName = charData.name; 
 
-                // Sidebar Filtering (Search + Favorites)
+                // Safe Search Sidebar Filter
+                if (safeSearchActive && BANNED_LIST.some(name => charName.toLowerCase().includes(name))) return;
+
+                // Search + Fav Filters
                 if (searchTerm && !charName.toLowerCase().includes(searchTerm)) return;
-                
                 const isFav = favorites.chars && favorites.chars.includes(charName);
                 if (charFilterActive && !isFav) return;
 
@@ -304,24 +329,8 @@
                     <span class="fav-heart" style="${heartStyle}">❤️</span>
                 `;
 
-                // --- Input Handling ---
-                let pressTimer;
-                let isLongPress = false;
-
-                btn.addEventListener('touchstart', () => {
-                    isLongPress = false;
-                    pressTimer = setTimeout(() => {
-                        isLongPress = true;
-                        if (navigator.vibrate) navigator.vibrate(50);
-                        toggleCharFav(charName);
-                    }, 700);
-                }, { passive: true });
-
-                btn.addEventListener('touchend', () => clearTimeout(pressTimer));
                 btn.oncontextmenu = (e) => { e.preventDefault(); toggleCharFav(charName); };
-
                 btn.onclick = (e) => { 
-                    if (isLongPress) return;
                     if(typeof playSnd === 'function') playSnd(); 
                     if (e.target.classList.contains('fav-heart')) {
                         toggleCharFav(charName);
@@ -336,14 +345,9 @@
 
         function toggleCharFav(key) {
             if (!favorites.chars) favorites.chars = [];
-            if (favorites.chars.includes(key)) {
-                favorites.chars = favorites.chars.filter(c => c !== key);
-            } else {
-                favorites.chars.push(key);
-            }
+            favorites.chars = favorites.chars.includes(key) ? favorites.chars.filter(c => c !== key) : [...favorites.chars, key];
             localStorage.setItem('sm_favorites', JSON.stringify(favorites));
             renderCharacterList();
-            if(typeof playSnd === 'function') playSnd();
         }
 
         function toggleCharFavFilter() {
@@ -353,10 +357,10 @@
             btn.style.color = charFilterActive ? "#ff69b4" : "var(--gold)";
             btn.style.borderColor = charFilterActive ? "#ff69b4" : "var(--box-border)";
             renderCharacterList();
-            if(typeof playSnd === 'function') playSnd();
         }
 
         // --- GALLERY CONTENT LOGIC ---
+
         async function loadGallery(folder) {
             const grid = document.getElementById('gallery-items');
             grid.innerHTML = "Syncing...";
@@ -383,7 +387,6 @@
                 applyFilters();
             } catch (err) { 
                 grid.innerHTML = "Access Denied."; 
-                console.error(err); 
             }
         }
 
@@ -392,64 +395,15 @@
             const card = document.createElement('div');
             card.className = 'img-card';
             card.dataset.url = url;
+            card.innerHTML = `<img src="${url}"><button class="star-btn ${isFav ? 'active' : ''}">★</button>`;
             
-            card.innerHTML = `
-                <img src="${url}">
-                <button class="star-btn ${isFav ? 'active' : ''}">★</button>
-            `;
-            
-            const btn = card.querySelector('.star-btn');
-            let pressTimer;
-            let isLongPress = false;
-
-            card.addEventListener('touchstart', () => {
-                isLongPress = false;
-                pressTimer = setTimeout(() => {
-                    isLongPress = true;
-                    if (navigator.vibrate) navigator.vibrate(50);
-                    toggleFavImg(url, btn);
-                }, 700);
-            }, { passive: true });
-
-            card.addEventListener('touchend', () => clearTimeout(pressTimer));
-            card.oncontextmenu = (e) => { e.preventDefault(); toggleFavImg(url, btn); };
-
+            card.oncontextmenu = (e) => { e.preventDefault(); toggleFavImg(url, card.querySelector('.star-btn')); };
             card.onclick = (e) => {
-                if (isLongPress) return;
                 if(typeof playSnd === 'function') playSnd();
-                if (e.target.classList.contains('star-btn')) {
-                    toggleFavImg(url, btn);
-                } else {
-                    openLightboxByUrl(url);
-                }
+                if (e.target.classList.contains('star-btn')) toggleFavImg(url, e.target);
+                else openLightboxByUrl(url);
             };
-
             container.appendChild(card);
-        }
-
-        function toggleFavImg(url, btn) {
-            if (favorites.images.includes(url)) {
-                favorites.images = favorites.images.filter(i => i !== url);
-                btn.classList.remove('active');
-            } else {
-                favorites.images.push(url);
-                btn.classList.add('active');
-            }
-            localStorage.setItem('sm_favorites', JSON.stringify(favorites));
-            applyFilters();
-            if(typeof playSnd === 'function') playSnd();
-        }
-
-        function toggleFavFilter(type) {
-            if (type === 'gallery') {
-                galFilterActive = !galFilterActive;
-                const btn = document.getElementById('btn-gal-fav');
-                btn.innerText = galFilterActive ? "FILTER FAVORITES: ON" : "FILTER FAVORITES: OFF";
-                btn.style.color = galFilterActive ? "var(--gold)" : "white";
-                btn.style.borderColor = galFilterActive ? "var(--gold)" : "var(--box-border)";
-            }
-            applyFilters();
-            if(typeof playSnd === 'function') playSnd();
         }
 
         function applyFilters() {
@@ -457,14 +411,19 @@
                 const url = card.dataset.url.toLowerCase();
                 const isFav = favorites.images.includes(card.dataset.url);
                 const isShared = url.includes('share') || url.includes('shared');
+                
+                // NEW: Safe Search Image Logic
+                const isBanned = safeSearchActive && BANNED_LIST.some(name => url.includes(name));
 
-                // Logic: Hide if (FavFilter is on and not fav) OR (ShareFilter is off and is shared)
                 const shouldHideFav = galFilterActive && !isFav;
                 const shouldHideShared = !shareFilterActive && isShared;
+                const shouldHideSafe = isBanned;
 
-                card.style.display = (shouldHideFav || shouldHideShared) ? 'none' : 'block';
+                card.style.display = (shouldHideFav || shouldHideShared || shouldHideSafe) ? 'none' : 'block';
             });
         }
+
+        // --- SPRITE & LIGHTBOX ---
 
         function renderSprite() {
             const disp = document.getElementById('sprite-display');
@@ -477,10 +436,6 @@
             if (newIdx < 0 || newIdx >= sprites.length) return;
             spriteIdx = newIdx;
             renderSprite();
-            const lb = document.getElementById('lightbox');
-            if(lb.style.display === 'flex' && activeView === "sprite") {
-                document.getElementById('lb-img').src = sprites[spriteIdx];
-            }
         }
 
         function openLightboxByUrl(url) {
@@ -490,8 +445,7 @@
             document.getElementById('lightbox').style.display = 'flex';
             const lbFavBtn = document.getElementById('lb-fav-btn');
             lbFavBtn.style.display = 'block';
-            if (favorites.images.includes(url)) lbFavBtn.classList.add('active');
-            else lbFavBtn.classList.remove('active');
+            lbFavBtn.classList.toggle('active', favorites.images.includes(url));
             history.pushState({ lightbox: true }, "");
         }
 
@@ -510,77 +464,51 @@
             galleryIdx = newIdx;
             const newUrl = galleryImgs[galleryIdx];
             document.getElementById('lb-img').src = newUrl;
-            const lbFavBtn = document.getElementById('lb-fav-btn');
-            lbFavBtn.classList.toggle('active', favorites.images.includes(newUrl));
+            document.getElementById('lb-fav-btn').classList.toggle('active', favorites.images.includes(newUrl));
+        }
+
+        function toggleFavImg(url, btn) {
+            favorites.images = favorites.images.includes(url) ? favorites.images.filter(i => i !== url) : [...favorites.images, url];
+            btn.classList.toggle('active');
+            localStorage.setItem('sm_favorites', JSON.stringify(favorites));
+            applyFilters();
+        }
+
+        function toggleFavFilter(type) {
+            if (type === 'gallery') {
+                galFilterActive = !galFilterActive;
+                const btn = document.getElementById('btn-gal-fav');
+                btn.innerText = galFilterActive ? "FILTER FAVORITES: ON" : "FILTER FAVORITES: OFF";
+                btn.style.color = galFilterActive ? "var(--gold)" : "white";
+                btn.style.borderColor = galFilterActive ? "var(--gold)" : "var(--box-border)";
+            }
+            applyFilters();
         }
 
         window.addEventListener('keydown', (e) => {
             const lb = document.getElementById('lightbox');
-            const isMax = lb.style.display === 'flex';
-            if (e.key === "ArrowRight") {
-                if (isMax && activeView === "gallery") navigateLightbox(1); 
-                else cycleSprite(1);
-            } 
-            else if (e.key === "ArrowLeft") {
-                if (isMax && activeView === "gallery") navigateLightbox(-1); 
-                else cycleSprite(-1);
-            } 
-            else if (e.key === "Escape") { lb.style.display = 'none'; }
+            if (lb.style.display === 'flex') {
+                if (e.key === "ArrowRight") navigateLightbox(1);
+                else if (e.key === "ArrowLeft") navigateLightbox(-1);
+                else if (e.key === "Escape") lb.style.display = 'none';
+            }
         });
+
+        function closeLightboxSafe() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
 
         function toggleFavFromLightbox(e) {
             e.stopPropagation(); 
-            if(typeof playSnd === 'function') playSnd();
             const url = document.getElementById('lb-img').src;
-            if(!url) return;
-            const lbBtn = document.getElementById('lb-fav-btn');
-            if (favorites.images.includes(url)) {
-                favorites.images = favorites.images.filter(i => i !== url);
-                lbBtn.classList.remove('active');
-            } else {
-                favorites.images.push(url);
-                lbBtn.classList.add('active');
-            }
-            localStorage.setItem('sm_favorites', JSON.stringify(favorites));
+            toggleFavImg(url, document.getElementById('lb-fav-btn'));
             const gridCardStar = document.querySelector(`.img-card[data-url="${url}"] .star-btn`);
             if (gridCardStar) gridCardStar.classList.toggle('active', favorites.images.includes(url));
-            applyFilters();
-        }
-        
-        let touchStartX = 0;
-        let isSwipingLightbox = false; 
-        
-        window.addEventListener('touchstart', e => { 
-            touchStartX = e.changedTouches[0].screenX; 
-            isSwipingLightbox = false; 
-        }, { passive: true });
-        
-        window.addEventListener('touchmove', e => {
-            if (Math.abs(touchStartX - e.changedTouches[0].screenX) > 20) isSwipingLightbox = true;
-        }, { passive: true });
-
-        window.addEventListener('touchend', e => {
-            let touchEndX = e.changedTouches[0].screenX;
-            if (Math.abs(touchStartX - touchEndX) > 70) {
-                if (typeof playSnd === 'function') playSnd();
-                let dir = touchStartX > touchEndX ? 1 : -1; 
-                const lb = document.getElementById('lightbox');
-                if (lb.style.display === 'flex' && activeView === "gallery") navigateLightbox(dir); 
-                else cycleSprite(dir);
-            }
-            setTimeout(() => { isSwipingLightbox = false; }, 500);
-        }, { passive: true });
-
-        function closeLightboxSafe() {
-            if (isSwipingLightbox) return; 
-            if(typeof playSnd === 'function') playSnd();
-            document.getElementById('lightbox').style.display = 'none';
         }
 
         window.onpopstate = () => { if (document.getElementById('lightbox').style.display === 'flex') document.getElementById('lightbox').style.display = 'none'; };
 
         window.addEventListener('DOMContentLoaded', () => {
-            if(typeof initMusic === 'function') initMusic();
             initGalleryDB(); 
         });
     </script>
