@@ -224,6 +224,43 @@ body.crt-active .char-card:hover img {
     overflow: hidden; position: relative; touch-action: none; 
 }
 
+
+/* 1. Update the layout to allow children to stretch to the full 935px */
+.gallery-layout {
+    display: grid;
+    grid-template-columns: 180px 1fr 380px; 
+    gap: 25px;
+    height: 935px; 
+    align-items: stretch; /* CHANGED from 'start' to 'stretch' */
+}
+
+/* 2. Fix the sidebar container */
+.folder-list {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* This now works because the parent 'stretches' */
+    overflow: hidden; /* Keeps the container from leaking */
+}
+
+/* 3. Make the list itself scrollable */
+#char-list {
+    flex: 1; /* Tells the list to take up all available space below the title/button */
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 10px;
+}
+
+/* Optional: Custom scrollbar for that Database aesthetic */
+#char-list::-webkit-scrollbar {
+    width: 5px;
+}
+#char-list::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 10px;
+}
+
+
+
 /* --- PIXEL-PERFECT SPRITE VIEWER (NO BORDER) --- */
 .sprite-window img { 
     /* Force the sprite to grow to fill the 500px window */
