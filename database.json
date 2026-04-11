@@ -69,8 +69,8 @@
     "Emma": { 
         "name": "Emma", 
         "gallery": true,
-        "sprite": "images/characters/Emma/emmabase_sprite.png", 
-        "bg": "images/characters/Emma/Emma_BG.png", 
+        "sprite": "images/characters/Emma/EmmaB_sprite.png", 
+        "bg": "images/characters/Emma/EmmaBackground_BG.png", 
         "quests": [
             { "title": "Secretary Seduction", "steps": ["Visit Sauna 3 times", "Have sex with her", "Either tell her to fight her urges or share her with Mario"] },
             { "title": "Cryptid Hunter", "steps": ["Complete Secretary Seduction Quest", "Invite to the Farm", "Collect 3 Monster parts (Tuesday)"] }
