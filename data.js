@@ -178,7 +178,7 @@ function changeTrack(path, label) {
         bgMusic.volume = currentVol;
         bgMusic.play();
     }
-
+}
 // --- 4. NAVIGATION & SETTINGS TOGGLES ---
 function toggleSettings() {
     if (typeof playSnd === 'function') playSnd();
