@@ -238,6 +238,15 @@
             { "title": "Bar Meeting", "steps": ["Watch the news during Thursday's Movie Night", "Go to the Downtown Bar", "Act like you don't know her, be flirtry, and on the spot"] }
         ]
     },
+    "Tristan": { 
+        "name": "Tristan",
+        "gallery": true,
+        "sprite": "images/characters/Tristan/TristanB_sprite.png", 
+        "bg": "images/characters/Tristan/TristanBackground_BG.png", 
+        "quests": [
+            { "title": "Bar Meeting", "steps": ["Watch the news during Thursday's Movie Night", "Go to the Downtown Bar", "Act like you don't know her, be flirtry, and on the spot"] }
+        ]
+    },
     "Zhen": { 
         "name": "Zhen", 
         "gallery": false,
@@ -404,7 +413,7 @@
             { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
         ]
     },
-    "Halloween": { 
+    "Vael & Zazia": { 
         "name": "Vael & Zazia", 
         "gallery": true,
         "sprite": "images/characters/Halloween/VaelB_sprite.png", 
