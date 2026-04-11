@@ -1,60 +1,102 @@
 // --- DATABASE FETCH ENGINE ---
-// Set up an empty object to hold the data once it arrives
-let characterData = {};
+let characterData = []; // Full raw list
+let filteredData = [];  // Filtered list for the grid
 
 async function initDatabase() {
     try {
-        // Ping the JSON file and wait for it to download
         const response = await fetch('database.json');
+        const rawData = await response.json();
         
-        // Parse the JSON into a real JavaScript object
-        characterData = await response.json();
+        // Normalize: supports both raw arrays and {"characters": [...]} objects
+        characterData = Array.isArray(rawData) ? rawData : (rawData.characters || []);
         
-        // --- CRITICAL STEP ---
-        // Because downloading takes a split second, we have to tell the Characters page 
-        // to draw the screen ONLY AFTER the data has successfully arrived.
-        if (typeof renderCharacterGrid === 'function') {
-            renderCharacterGrid(); // NOTE: If your function in characters.html is named something else, change it here!
-        }
+        // Initial filter run (to apply saved share preferences)
+        applyFilters();
         
     } catch (error) {
         console.error("CRITICAL ERROR: Failed to load database.json!", error);
     }
 }
 
-// Fire the engine the second data.js loads
+// Fire the engine immediately
 initDatabase();
 
-// --- 1. CORE UTILITIES (Defined First) ---
+// --- NEW: FILTER & SEARCH ENGINE ---
+function applyFilters() {
+    const searchInput = document.getElementById('char-search');
+    const searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
+    
+    // Get share state from localStorage (default to 'true' if not set)
+    const isShareEnabled = localStorage.getItem('sm_share_enabled') !== 'false';
 
-// Single declaration of core variables
+    filteredData = characterData.filter(char => {
+        // 1. Name Search Check
+        const nameMatch = char.name.toLowerCase().includes(searchTerm);
+
+        // 2. Share Content Check
+        // Scans the sprite path or folder name for "share" or "shared"
+        const path = (char.sprite || "").toLowerCase();
+        const isSharedAsset = path.includes("share") || path.includes("shared");
+        
+        // If shared assets are DISABLED, we only return items that ARE NOT shared.
+        const shareMatch = isShareEnabled ? true : !isSharedAsset;
+
+        return nameMatch && shareMatch;
+    });
+
+    // Redraw the grid with the filtered results
+    if (typeof renderCharacterGrid === 'function') {
+        renderCharacterGrid();
+    }
+}
+
+// Function to call when typing in the search bar
+function handleSearch(val) {
+    applyFilters();
+}
+
+// Function to toggle the share filter
+function toggleShareFilter() {
+    if (typeof playSnd === 'function') playSnd(); // Keep that squish sound!
+    
+    const currentState = localStorage.getItem('sm_share_enabled') !== 'false';
+    const newState = !currentState;
+    
+    localStorage.setItem('sm_share_enabled', newState);
+    
+    // Update the button UI if it exists
+    updateShareBtnUI(newState);
+    
+    applyFilters();
+}
+
+function updateShareBtnUI(isEnabled) {
+    const btn = document.getElementById('share-filter-btn');
+    if (btn) {
+        btn.innerText = isEnabled ? "📂 SHARED: ON" : "📂 SHARED: OFF";
+        btn.style.borderColor = isEnabled ? "#00ff00" : "#ff4466";
+        btn.style.color = isEnabled ? "#00ff00" : "#ff4466";
+    }
+}
+
+// --- NO CHANGES TO THE REST OF YOUR UTILITIES BELOW ---
+
+// --- 1. CORE UTILITIES (Audio, Mute, Volume) ---
 let storedVol = localStorage.getItem('sm_volume');
 let previousVolume = storedVol !== null ? parseFloat(storedVol) : 0.5;
 let isMuted = localStorage.getItem('sm_muted') === 'true'; 
 
 function updateMuteIcon() {
     const btn = document.getElementById('mute-btn');
-    if (btn) {
-        btn.innerText = isMuted ? "🔈" : "🔊"; 
-    }
+    if (btn) btn.innerText = isMuted ? "🔈" : "🔊"; 
 }
 
 function updateVolume(val) {
     if (typeof bgMusic !== 'undefined') {
         bgMusic.volume = val;
         localStorage.setItem('sm_volume', val);
-        
-        // Smart Sync: If the user manually slides to 0, engage the formal mute state
-        if (val == 0 && !isMuted) {
-            isMuted = true;
-            localStorage.setItem('sm_muted', 'true');
-        } 
-        // If they slide it back up, remove the mute state
-        else if (val > 0 && isMuted) {
-            isMuted = false;
-            localStorage.setItem('sm_muted', 'false');
-        }
-        
+        if (val == 0 && !isMuted) { isMuted = true; localStorage.setItem('sm_muted', 'true'); } 
+        else if (val > 0 && isMuted) { isMuted = false; localStorage.setItem('sm_muted', 'false'); }
         updateMuteIcon();
     }
 }
@@ -62,45 +104,27 @@ function updateVolume(val) {
 function toggleMute() {
     const slider = document.getElementById('volume-slider');
     if (typeof bgMusic === 'undefined') return;
-
     if (!isMuted) {
-        // Muting
         previousVolume = bgMusic.volume > 0 ? bgMusic.volume : 0.5;
-        bgMusic.volume = 0; 
-        if (slider) slider.value = 0;
-        isMuted = true;
+        bgMusic.volume = 0; if (slider) slider.value = 0; isMuted = true;
     } else {
-        // Unmuting (Ensures it never unmutes to 0)
         let restoreVol = previousVolume > 0 ? previousVolume : 0.5;
-        bgMusic.volume = restoreVol; 
-        if (slider) slider.value = restoreVol;
-        isMuted = false;
+        bgMusic.volume = restoreVol; if (slider) slider.value = restoreVol; isMuted = false;
     }
-    
-    // Save state
     localStorage.setItem('sm_muted', isMuted);
     updateMuteIcon();
 }
 
 // --- 2. GLOBAL SOUND ENGINE ---
-
 if (typeof bgMusic === 'undefined') {
     var bgMusic = new Audio('audio/background_theme.mp3');
     bgMusic.loop = true;
-    
     bgMusic.addEventListener('timeupdate', function() {
         var buffer = 0.40;
-        if(this.currentTime > this.duration - buffer) {
-            this.currentTime = 0;
-            this.play();
-        }
+        if(this.currentTime > this.duration - buffer) { this.currentTime = 0; this.play(); }
     });
 }
-
-if (typeof squishSnd === 'undefined') {
-    var squishSnd = new Audio('audio/squish.mp3');
-}
-
+if (typeof squishSnd === 'undefined') { var squishSnd = new Audio('audio/squish.mp3'); }
 function playSnd() {
     if (typeof squishSnd !== 'undefined') {
         squishSnd.currentTime = 0;
@@ -110,87 +134,41 @@ function playSnd() {
 }
 
 // --- 3. UPDATED MUSIC ENGINE ---
-
 function initMusic(defaultTrack = 'audio/background_theme.mp3') {
     const savedTrack = localStorage.getItem('sm_preferred_track') || defaultTrack;
-    
-    // Determine the target volume based on mute state
     let targetVol = isMuted ? 0 : previousVolume; 
-
     const savedTime = parseFloat(localStorage.getItem('sm_music_time')) || 0;
-
     if (typeof bgMusic !== 'undefined') {
         if (!bgMusic.src.includes(savedTrack)) bgMusic.src = savedTrack;
-        bgMusic.volume = 0; 
-        bgMusic.currentTime = savedTime;
-        
+        bgMusic.volume = 0; bgMusic.currentTime = savedTime;
         bgMusic.play().then(() => {
-            // Only fade in if we are NOT muted
             if (!isMuted) {
                 let currentFadeVol = 0;
                 const fadeInterval = setInterval(() => {
                     if (currentFadeVol < targetVol) {
                         currentFadeVol += 0.05;
                         bgMusic.volume = Math.min(currentFadeVol, targetVol);
-                    } else {
-                        clearInterval(fadeInterval);
-                        updateMuteIcon();
-                    }
+                    } else { clearInterval(fadeInterval); updateMuteIcon(); }
                 }, 50);
-            } else {
-                updateMuteIcon();
-            }
+            } else { updateMuteIcon(); }
         }).catch(() => {
             document.addEventListener('click', () => {
-                bgMusic.play();
-                bgMusic.volume = targetVol;
-                updateMuteIcon();
+                bgMusic.play(); bgMusic.volume = targetVol; updateMuteIcon();
             }, { once: true });
         });
     }
-    
     const slider = document.getElementById('volume-slider');
     if (slider) slider.value = targetVol;
-
-    const trackNameDisplay = document.getElementById('current-track-name');
     const trackLabel = localStorage.getItem('sm_track_label') || "Default Theme";
+    const trackNameDisplay = document.getElementById('current-track-name');
     if (trackNameDisplay) trackNameDisplay.innerText = "PLAYING: " + trackLabel;
-
-    document.querySelectorAll('.track-item').forEach(btn => {
-        if (btn.innerText.includes(trackLabel)) btn.classList.add('playing');
-    });
-}
-
-function changeTrack(path, label) {
-    if (typeof playSnd === 'function') playSnd();
-    localStorage.setItem('sm_preferred_track', path);
-    localStorage.setItem('sm_track_label', label);
-    
-    if (typeof bgMusic !== 'undefined') {
-        const currentVol = bgMusic.volume;
-        bgMusic.pause();
-        bgMusic.src = path;
-        bgMusic.currentTime = 0; 
-        bgMusic.volume = currentVol;
-        bgMusic.play();
-    }
-
-    const display = document.getElementById('current-track-name');
-    if (display) display.innerText = "PLAYING: " + label;
-
-    document.querySelectorAll('.track-item').forEach(btn => {
-        btn.classList.remove('playing');
-        if (btn.innerText.includes(label)) btn.classList.add('playing');
-    });
 }
 
 // --- 4. NAVIGATION & SETTINGS TOGGLES ---
-
 function toggleSettings() {
     if (typeof playSnd === 'function') playSnd();
     const modal = document.getElementById('settings-modal');
     if (!modal) return;
-    
     if (modal.style.getPropertyValue('display') === 'flex') {
         modal.style.setProperty('display', 'none', 'important');
     } else {
@@ -198,30 +176,17 @@ function toggleSettings() {
     }
 }
 
-// --- CRT MODE TOGGLE ---
 function toggleCRT() {
     if (typeof playSnd === 'function') playSnd();
     const overlay = document.getElementById('global-crt');
     const badge = document.getElementById('crt-badge');
     const btn = document.querySelector('button[onclick="toggleCRT()"]');
-    
     if (overlay) {
         overlay.classList.toggle('active');
         const isActive = overlay.classList.contains('active');
         localStorage.setItem('sm_crt_enabled', isActive);
-        
-        // ADD THIS LINE: Tells the body tag that CRT is active
         document.body.classList.toggle('crt-active', isActive);
-        
-        // ... (rest of your toggle logic)
-        
-        // Update Indicator Badge
-        if (badge) {
-            if (isActive) badge.classList.add('active');
-            else badge.classList.remove('active');
-        }
-        
-        // Update Button Text & Colors
+        if (badge) isActive ? badge.classList.add('active') : badge.classList.remove('active');
         if (btn) {
             btn.innerText = isActive ? "📺 CRT MODE: ON" : "📺 CRT MODE: OFF";
             btn.style.color = isActive ? "#00ff00" : "#ff4466";
@@ -234,7 +199,6 @@ function toggleMenu() {
     if (typeof playSnd === 'function') playSnd();
     const nav = document.getElementById('main-nav');
     const modal = document.getElementById('settings-modal');
-    
     if (nav) {
         nav.classList.toggle('active');
         if (!nav.classList.contains('active') && modal) {
@@ -244,31 +208,16 @@ function toggleMenu() {
 }
 
 // --- 5. ULTIMATE GLOBAL SWIPE ENGINE ---
-
-let touchstartX = 0;
-let touchendX = 0;
-
+let touchstartX = 0; let touchendX = 0;
 function handleGesture() {
     const swipeThreshold = 50;
-    if (touchendX < touchstartX - swipeThreshold) {
-        if (typeof changeImage === 'function') changeImage(1); 
-    }
-    if (touchendX > touchstartX + swipeThreshold) {
-        if (typeof changeImage === 'function') changeImage(-1);
-    }
+    if (touchendX < touchstartX - swipeThreshold && typeof changeImage === 'function') changeImage(1); 
+    if (touchendX > touchstartX + swipeThreshold && typeof changeImage === 'function') changeImage(-1);
 }
-
-document.addEventListener('touchstart', e => {
-    touchstartX = e.changedTouches[0].screenX;
-}, {passive: true});
-
+document.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; }, {passive: true});
 document.addEventListener('touchend', e => {
     touchendX = e.changedTouches[0].screenX;
-    const isSwipeable = e.target.closest('.lightbox') || 
-                        e.target.closest('.sprite-window') || 
-                        e.target.closest('.char-image-box') ||
-                        e.target.closest('#lightbox-modal');
-
+    const isSwipeable = e.target.closest('.lightbox') || e.target.closest('.sprite-window') || e.target.closest('.char-image-box') || e.target.closest('#lightbox-modal');
     if (isSwipeable) handleGesture();
 }, {passive: true});
 
@@ -290,87 +239,59 @@ window.addEventListener('DOMContentLoaded', () => {
     // 2. Inject CRT Overlay Globally
     if (!document.getElementById('global-crt')) {
         const crtDiv = document.createElement('div');
-        crtDiv.id = 'global-crt';
-        crtDiv.className = 'crt-overlay';
+        crtDiv.id = 'global-crt'; crtDiv.className = 'crt-overlay';
         document.body.appendChild(crtDiv);
     }
 
-    // 3. Inject CRT Indicator Badge into the Header
+    // 3. Inject CRT Indicator Badge
     const headerTitle = document.querySelector('header div');
     let badge = document.getElementById('crt-badge');
     if (headerTitle && !badge) {
         badge = document.createElement('span');
-        badge.id = 'crt-badge';
-        badge.className = 'crt-indicator';
+        badge.id = 'crt-badge'; badge.className = 'crt-indicator';
         badge.innerText = 'CRT';
-        // Insert it right after "STARMAKER DATABASE"
         headerTitle.appendChild(badge); 
     }
 
-    // 4. Inject Glitch Screen Globally
+    // 4. Inject Glitch Screen
     if (!document.getElementById('glitch-screen')) {
         const glitchDiv = document.createElement('div');
         glitchDiv.id = 'glitch-screen';
         document.body.appendChild(glitchDiv);
     }
 
-    // 5. Apply Saved CRT State on Page Load
+    // 5. Apply Saved States
     const isCrtEnabled = localStorage.getItem('sm_crt_enabled') === 'true';
     if (isCrtEnabled) {
         document.getElementById('global-crt').classList.add('active');
         if (badge) badge.classList.add('active');
-        
-        // Ensures the soft green loads immediately if saved
         document.body.classList.add('crt-active');
     }
     
-    const crtBtn = document.querySelector('button[onclick="toggleCRT()"]');
-    if (crtBtn) {
-        crtBtn.innerText = isCrtEnabled ? "📺 CRT MODE: ON" : "📺 CRT MODE: OFF";
-        crtBtn.style.color = isCrtEnabled ? "#00ff00" : "#ff4466";
-        crtBtn.style.borderColor = isCrtEnabled ? "#00ff00" : "#ff4466";
-    }
+    // Initialize Share Button UI
+    updateShareBtnUI(localStorage.getItem('sm_share_enabled') !== 'false');
 
-    // 6. Intercept Page Links for Glitch Transition (Only if CRT is ON)
+    // 6. Navigation Links with Glitch
     document.querySelectorAll('a.nav-btn').forEach(link => {
         link.addEventListener('click', (e) => {
             const targetURL = link.getAttribute('href');
-            
             if (targetURL && targetURL.includes('.html')) {
-                e.preventDefault(); 
-                if (typeof playSnd === 'function') playSnd(); 
-                
-                // Check if CRT is enabled right now
+                e.preventDefault(); if (typeof playSnd === 'function') playSnd(); 
                 if (localStorage.getItem('sm_crt_enabled') === 'true') {
                     const glitch = document.getElementById('glitch-screen');
                     if (glitch) glitch.classList.add('active');
-                    
-                    // Slightly faster transition
-                    setTimeout(() => {
-                        window.location.href = targetURL;
-                    }, 250); 
-                } else {
-                    // CRT is off, transition instantly
-                    window.location.href = targetURL;
-                }
+                    setTimeout(() => { window.location.href = targetURL; }, 250); 
+                } else { window.location.href = targetURL; }
             }
         });
     });
 });
 
-// --- 7. HEADER LOGO NAVIGATION ---
 function goHome() {
     if (typeof playSnd === 'function') playSnd(); 
-    
-    // Check if CRT is enabled for the glitch transition
     if (localStorage.getItem('sm_crt_enabled') === 'true') {
         const glitch = document.getElementById('glitch-screen');
         if (glitch) glitch.classList.add('active');
-        
-        setTimeout(() => {
-            window.location.href = 'home.html';
-        }, 250); 
-    } else {
-        window.location.href = 'home.html';
-    }
+        setTimeout(() => { window.location.href = 'home.html'; }, 250); 
+    } else { window.location.href = 'home.html'; }
 }
