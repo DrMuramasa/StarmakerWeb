@@ -224,6 +224,34 @@ body.crt-active .char-card:hover img {
     overflow: hidden; position: relative; touch-action: none; 
 }
 
+/* --- SCROLLABLE CHARACTER LIST --- */
+.folder-list {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Locks the container to the 935px grid height */
+    max-height: 100%;
+}
+
+#char-list {
+    flex-grow: 1; /* Tells the list to fill all remaining space below the button */
+    overflow-y: auto; /* Turns on vertical scrolling when the list gets too long */
+    overflow-x: hidden;
+    padding-right: 8px; /* Adds a tiny gap so the scrollbar doesn't overlap your buttons */
+}
+
+/* Custom scrollbar to match your Starmaker Database theme */
+#char-list::-webkit-scrollbar {
+    width: 6px;
+}
+#char-list::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+#char-list::-webkit-scrollbar-thumb {
+    background: var(--gold); /* Uses your existing gold variable */
+    border-radius: 4px;
+}
+
 /* --- PIXEL-PERFECT SPRITE VIEWER (NO BORDER) --- */
 .sprite-window img { 
     /* Force the sprite to grow to fill the 500px window */
