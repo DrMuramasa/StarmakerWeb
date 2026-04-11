@@ -176,7 +176,7 @@
         ]
     },
     "Himari": { 
-        "name": "Kate",
+        "name": "Himari",
         "gallery": true,
         "sprite": "images/characters/Himari/HimariB_sprite.png", 
         "bg": "images/characters/Himari/HimariBackground_BG.png", 
@@ -230,7 +230,7 @@
         ]
     },
     "Chloe": { 
-        "name": "Claudia",
+        "name": "Chloe",
         "gallery": true,
         "sprite": "images/characters/Chloe/ChloeB_sprite.png", 
         "bg": "images/characters/Chloe/ChloeBackground_BG.png", 
@@ -272,7 +272,7 @@
     "Evelyn": { 
         "name": "Evelyn",
         "gallery": true,
-        "sprite": "images/characters/Evelyn/EverlynB_sprite.png", 
+        "sprite": "images/characters/Evelyn/EvelynB_sprite.png", 
         "bg": "images/characters/Evelyn/EvelynBackground_BG.png", 
         "quests": [
             { "title": "The Hidden Lab", "steps": ["Unlock Studio Raw Sex", "Path: Foundry > Harbor > Warehouse", "Trade materials for Genetic Mods"] }
