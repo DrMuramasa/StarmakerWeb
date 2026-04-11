@@ -164,6 +164,31 @@ function initMusic(defaultTrack = 'audio/background_theme.mp3') {
     if (trackNameDisplay) trackNameDisplay.innerText = "PLAYING: " + trackLabel;
 }
 
+function changeTrack(path, label) {
+    if (typeof playSnd === 'function') playSnd();
+    
+    localStorage.setItem('sm_preferred_track', path);
+    localStorage.setItem('sm_track_label', label);
+    
+    if (typeof bgMusic !== 'undefined') {
+        const currentVol = bgMusic.volume;
+        bgMusic.pause();
+        bgMusic.src = path;
+        bgMusic.currentTime = 0; 
+        bgMusic.volume = currentVol;
+        bgMusic.play();
+    }
+
+    const display = document.getElementById('current-track-name');
+    if (display) display.innerText = "PLAYING: " + label;
+
+    document.querySelectorAll('.track-item').forEach(btn => {
+        btn.classList.remove('playing');
+        if (btn.innerText.includes(label)) {
+            btn.classList.add('playing');
+        }
+    });
+}
 
 // --- 4. NAVIGATION & SETTINGS TOGGLES ---
 function toggleSettings() {
