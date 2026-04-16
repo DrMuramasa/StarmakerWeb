@@ -7,6 +7,20 @@
     <script src="data.js"></script>
     <link rel="stylesheet" href="style.css">
     <style>
+        /* --- CUSTOM OVERLAY (Fixes the Pink Gallery Border Bug) --- */
+        .studio-lightbox {
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); 
+            backdrop-filter: blur(10px); 
+            z-index: 9999;
+            justify-content: center; 
+            align-items: center; 
+            cursor: zoom-out;
+        }
+
         /* --- STEAM-STYLE MODAL CSS --- */
         .store-modal {
             background: rgba(22, 32, 45, 0.98); /* Steam's dark blue-gray background */
@@ -22,6 +36,7 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
+            cursor: default; /* Overrides the zoom-out cursor for the actual window */
         }
 
         .store-header {
@@ -82,12 +97,12 @@
             border: 2px solid transparent;
             opacity: 0.5;
             transition: all 0.2s ease;
-            flex: 0 0 auto; /* CRITICAL FIX: Stops the thumbnails from squishing */
+            flex: 0 0 auto; 
         }
 
         .thumb-img:hover { opacity: 1; }
         .thumb-img.active {
-            border-color: #fff; /* Steam's white border highlight */
+            border-color: #fff; 
             opacity: 1;
         }
 
@@ -105,7 +120,7 @@
         }
 
         .store-details p {
-            color: #c6d4df; /* Steam's text color */
+            color: #c6d4df; 
             line-height: 1.5;
             font-size: 0.95rem;
             margin-top: 0;
@@ -151,7 +166,7 @@
             text-align: center;
             transition: all 0.2s ease;
             display: block;
-            margin-top: auto; /* Pushes button to the bottom of the column */
+            margin-top: auto; 
         }
 
         .store-cta-btn:hover {
@@ -235,7 +250,7 @@
         </div>
     </div>
 
-    <div id="store-lightbox" class="lightbox" onclick="closeStoreModal()">
+    <div id="store-lightbox" class="studio-lightbox" onclick="closeStoreModal()">
         <div class="store-modal" onclick="event.stopPropagation()">
             
             <button class="close-modal-btn" onclick="closeStoreModal()">×</button>
@@ -315,7 +330,6 @@
             ).join('');
 
             // Setup Left Column Gallery
-            // Fallback to array containing thumbnail if screenshots array is missing
             currentScreenshots = game.screenshots && game.screenshots.length > 0 ? game.screenshots : [game.thumbnail];
             
             // Render the bottom thumbnail strip
