@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>STARMAKER | Studio Games</title>
+    <script src="data.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Slightly tweaks the card for games so the text fits nicely */
+        .game-link-card {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s;
+        }
+        .game-link-card:hover {
+            transform: translateY(-5px);
+        }
+        .char-card h3 {
+            margin: 10px 0 5px 0;
+            color: var(--gold);
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+        .char-card p {
+            margin: 0 0 15px 0;
+            padding: 0 15px;
+            font-size: 0.85rem;
+            color: #ccc;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-wrapper" id="master-bg"></div><div class="bg-overlay"></div>
+    
+    <header>
+        <div onclick="goHome()" style="color:var(--gold); font-weight:bold; letter-spacing:2px; flex-shrink:0; cursor:pointer; user-select:none; -webkit-user-select:none; -webkit-touch-callout:none;">
+            STARMAKER DATABASE
+        </div>
+
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+
+        <nav id="main-nav">
+            <div class="nav-links">
+                <a href="home.html" class="nav-btn">Home</a>
+                <a href="characters.html" class="nav-btn">Characters</a>
+                <a href="gallery.html" class="nav-btn">Gallery</a>
+                <a href="minigames.html" class="nav-btn">Minigames</a>
+                <a href="studio.html" class="nav-btn active">More Games</a>
+            </div>
+
+            <div class="mobile-divider"></div>
+
+            <div class="nav-controls">
+                <div class="settings-container">
+                    <button class="nav-btn" onclick="toggleSettings()" style="font-size: 1rem; padding: 8px 15px;">TRACKS 🎵</button>
+                    <button class="nav-btn" onclick="toggleCRT()" style="width:100%; margin-top:15px; border-color: #ff4466; color: #ff4466;">📺 TOGGLE CRT MODE</button>
+                    <div id="settings-modal" class="glass-panel">
+                        <h4 style="color:var(--gold); margin:0 0 10px 0; border-bottom:1px solid var(--box-border); padding-bottom:5px; font-size: 0.8rem;">SYSTEM SETTINGS</h4>
+                        <div id="track-list">
+                            <button class="track-item nav-btn" onclick="changeTrack('audio/background_theme.mp3', 'Starmaker')">01. Starmaker Main</button>
+                            <button class="track-item nav-btn" onclick="changeTrack('audio/FallApart.mp3', 'Fall Apart')">02. Fall Apart</button>
+                            <button class="track-item nav-btn" onclick="changeTrack('audio/GoBack.mp3', 'Go Back')">03. Go Back</button>
+                            <button class="track-item nav-btn" onclick="changeTrack('audio/Neo.mp3', 'Neo')">04. Neo</button>
+                        </div>
+                        <p id="current-track-name">STATUS: ONLINE // <span id="track-display">Starmaker</span></p>
+                    </div>
+                </div>
+
+                <div class="music-controls">
+                    <button id="mute-btn" onclick="toggleMute()" style="background:none; border:none; color:var(--gold); cursor:pointer; font-size:1.1rem; padding:0; display:flex; align-items:center;">🔊</button>
+                    <input type="range" id="volume-slider" min="0" max="1" step="0.01" oninput="updateVolume(this.value)">
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="glass-panel">
+            <h2 style="color:var(--gold); border-bottom:1px solid var(--box-border); padding-bottom:10px; letter-spacing: 2px;">MORE FROM THE STUDIO</h2>
+            <p style="color: #ccc; margin-bottom: 30px;">Click on any title to visit the official website or store page.</p>
+            
+            <div id="games-grid" class="grid-view"></div>
+            
+        </div>
+    </div>
+
+    <script>
+    (() => {
+        let gamesData = {};
+
+        async function loadData() {
+            try {
+                const response = await fetch('studioGames.json');
+                if (!response.ok) throw new Error("Database file not found");
+                gamesData = await response.json();
+                renderGrid();
+            } catch (err) { 
+                console.error("Error loading studio games:", err);
+                document.getElementById('games-grid').innerHTML = "<p style='color:red;'>Failed to load Studio Games Database.</p>";
+            }
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('games-grid');
+            
+            // Map through the JSON and build the clickable cards
+            grid.innerHTML = Object.keys(gamesData).map(key => {
+                const game = gamesData[key];
+                return `
+                    <a href="${game.url}" target="_blank" class="game-link-card" onclick="if(typeof playSnd === 'function') playSnd();">
+                        <div class="char-card" style="cursor:pointer;">
+                            <img src="${game.thumbnail}" style="height:220px;">
+                            <h3>${game.name}</h3>
+                            <p>${game.description}</p>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if(typeof initMusic === 'function') initMusic();
+            loadData();
+        });
+    })();
+    </script>
+</body>
+</html>
