@@ -1,32 +1,38 @@
 {
     "Roundscape_Adorevia": {
         "name": "Roundscape Adorevia",
-        "thumbnail": "images/studio/cyber_neon.jpg",
-        "url": "https://www.example.com/cyberneon",
+        "thumbnail": "images/studio/Roundscape_Adorevia.jpg",
+        "url": "https://www.steampowered.com/app/2986400/Roundscape_Adorevia",
         "description": "A high-octane cyberpunk rhythm shooter."
     },
     "Roundscape_Eclipse": {
         "name": "Rounscape Eclipse",
-        "thumbnail": "images/studio/fantasy_quest.jpg",
-        "url": "https://www.example.com/fantasyquest",
+        "thumbnail": "images/studio/Roundscape_Eclipse.jpg",
+        "url": "NOT RELEASED",
         "description": "Explore a massive open world full of magic and danger."
     },
     "Starmaker": {
         "name": "Starmaker",
-        "thumbnail": "images/studio/station_89.jpg",
-        "url": "https://store.steampowered.com/app/example",
+        "thumbnail": "images/studio/Starmaker.jpg",
+        "url": "https://arvusgames.itch.io/starmakerstory",
         "description": "Survive the isolation of deep space in this psychological horror."
-    }
-  "Sunshade": {
-        "name": "Sunshade",
-        "thumbnail": "images/studio/station_89.jpg",
-        "url": "https://store.steampowered.com/app/example",
+    },
+  "Below_Sunshade": {
+        "name": "Below Sunshade",
+        "thumbnail": "images/studio/Below_Sunshade.jpg",
+        "url": "https://arvusgames.itch.io/belowsunshade",
         "description": "Survive the isolation of deep space in this psychological horror."
-    }
+    },
   "Arenus": {
         "name": "Arenus",
         "thumbnail": "images/studio/station_89.jpg",
         "url": "https://store.steampowered.com/app/example",
+        "description": "Survive the isolation of deep space in this psychological horror."
+    },
+     "FINdom_Corporate": {
+        "name": "FINdom Corporate",
+        "thumbnail": "images/studio/FINdom_Corporate.jpg",
+        "url": "https://arvusgames.itch.io/findomcorporate",
         "description": "Survive the isolation of deep space in this psychological horror."
     }
 }
