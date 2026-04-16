@@ -1,0 +1,32 @@
+{
+    "Roundscape_Adorevia": {
+        "name": "Roundscape Adorevia",
+        "thumbnail": "images/studio/cyber_neon.jpg",
+        "url": "https://www.example.com/cyberneon",
+        "description": "A high-octane cyberpunk rhythm shooter."
+    },
+    "Roundscape_Eclipse": {
+        "name": "Rounscape Eclipse",
+        "thumbnail": "images/studio/fantasy_quest.jpg",
+        "url": "https://www.example.com/fantasyquest",
+        "description": "Explore a massive open world full of magic and danger."
+    },
+    "Starmaker": {
+        "name": "Starmaker",
+        "thumbnail": "images/studio/station_89.jpg",
+        "url": "https://store.steampowered.com/app/example",
+        "description": "Survive the isolation of deep space in this psychological horror."
+    }
+  "Sunshade": {
+        "name": "Sunshade",
+        "thumbnail": "images/studio/station_89.jpg",
+        "url": "https://store.steampowered.com/app/example",
+        "description": "Survive the isolation of deep space in this psychological horror."
+    }
+  "Arenus": {
+        "name": "Arenus",
+        "thumbnail": "images/studio/station_89.jpg",
+        "url": "https://store.steampowered.com/app/example",
+        "description": "Survive the isolation of deep space in this psychological horror."
+    }
+}
