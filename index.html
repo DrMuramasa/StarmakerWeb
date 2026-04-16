@@ -164,5 +164,38 @@
             }, 2600); 
         }
     </script>
+
+
+    <footer class="site-footer">
+        <span onclick="openAboutModal()">About Us</span>
+    </footer>
+
+    <div id="about-lightbox" class="about-overlay" onclick="closeAboutModal()">
+        <div class="about-modal" onclick="event.stopPropagation()">
+            <button class="close-modal-btn" onclick="closeAboutModal()" style="top:15px; right:15px;">×</button>
+            
+            <h2>ARVUS GAMES</h2>
+            <p>We are an independent development studio dedicated to crafting immersive worlds, unforgettable characters, and high-quality experiences. Thank you for playing!</p>
+            
+            <div class="social-links">
+                <a href="https://twitter.com" target="_blank" class="social-btn">Twitter (X)</a>
+                <a href="https://discord.com" target="_blank" class="social-btn">Discord</a>
+                <a href="https://patreon.com" target="_blank" class="social-btn">Patreon</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global functions for the About Us modal
+        window.openAboutModal = function() {
+            if(typeof playSnd === 'function') playSnd();
+            document.getElementById('about-lightbox').style.display = 'flex';
+        };
+
+        window.closeAboutModal = function() {
+            if(typeof playSnd === 'function') playSnd();
+            document.getElementById('about-lightbox').style.display = 'none';
+        };
+    </script>
 </body>
 </html>
