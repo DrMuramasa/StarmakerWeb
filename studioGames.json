@@ -4,35 +4,77 @@
         "thumbnail": "images/studio/Roundscape_Adorevia.jpg",
         "url": "https://www.steampowered.com/app/2986400/Roundscape_Adorevia",
         "description": "A high-octane cyberpunk rhythm shooter."
+        "tags": ["Cyberpunk", "Rhythm", "Shooter", "Singleplayer", "Great Soundtrack"],
+        "screenshots": [
+            "images/studio/cyber_1.jpg",
+            "images/studio/cyber_2.jpg",
+            "images/studio/cyber_3.jpg",
+            "images/studio/cyber_4.jpg"
+        ]
     },
     "Roundscape_Eclipse": {
         "name": "Rounscape Eclipse",
         "thumbnail": "images/studio/Roundscape_Eclipse.jpg",
         "url": "NOT RELEASED",
         "description": "Explore a massive open world full of magic and danger."
+        "tags": ["Cyberpunk", "Rhythm", "Shooter", "Singleplayer", "Great Soundtrack"],
+        "screenshots": [
+            "images/studio/cyber_1.jpg",
+            "images/studio/cyber_2.jpg",
+            "images/studio/cyber_3.jpg",
+            "images/studio/cyber_4.jpg"
+        ]
     },
     "Starmaker": {
         "name": "Starmaker",
         "thumbnail": "images/studio/Starmaker.jpg",
         "url": "https://arvusgames.itch.io/starmakerstory",
         "description": "Survive the isolation of deep space in this psychological horror."
+        "tags": ["Cyberpunk", "Rhythm", "Shooter", "Singleplayer", "Great Soundtrack"],
+        "screenshots": [
+            "images/studio/cyber_1.jpg",
+            "images/studio/cyber_2.jpg",
+            "images/studio/cyber_3.jpg",
+            "images/studio/cyber_4.jpg"
+        ]
     },
   "Below_Sunshade": {
         "name": "Below Sunshade",
         "thumbnail": "images/studio/Below_Sunshade.jpg",
         "url": "https://arvusgames.itch.io/belowsunshade",
         "description": "Survive the isolation of deep space in this psychological horror."
+      "tags": ["Cyberpunk", "Rhythm", "Shooter", "Singleplayer", "Great Soundtrack"],
+        "screenshots": [
+            "images/studio/cyber_1.jpg",
+            "images/studio/cyber_2.jpg",
+            "images/studio/cyber_3.jpg",
+            "images/studio/cyber_4.jpg"
+        ]
     },
   "Arenus": {
         "name": "Arenus",
         "thumbnail": "images/studio/station_89.jpg",
         "url": "https://store.steampowered.com/app/example",
         "description": "Survive the isolation of deep space in this psychological horror."
+      "tags": ["Cyberpunk", "Rhythm", "Shooter", "Singleplayer", "Great Soundtrack"],
+        "screenshots": [
+            "images/studio/cyber_1.jpg",
+            "images/studio/cyber_2.jpg",
+            "images/studio/cyber_3.jpg",
+            "images/studio/cyber_4.jpg"
+        ]
     },
      "FINdom_Corporate": {
         "name": "FINdom Corporate",
         "thumbnail": "images/studio/FINdom_Corporate.jpg",
         "url": "https://arvusgames.itch.io/findomcorporate",
         "description": "Survive the isolation of deep space in this psychological horror."
+         "tags": ["Cyberpunk", "Rhythm", "Shooter", "Singleplayer", "Great Soundtrack"],
+        "screenshots": [
+            "images/studio/cyber_1.jpg",
+            "images/studio/cyber_2.jpg",
+            "images/studio/cyber_3.jpg",
+            "images/studio/cyber_4.jpg"
+        ]
     }
 }
