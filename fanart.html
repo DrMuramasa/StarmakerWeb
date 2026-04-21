@@ -9,29 +9,45 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* --- Styles from the Second Page --- */
-        /* Removed body background/color as it is now handled by style.css and the background wrappers */
-        
         /* --- UI Controls --- */
         .controls {
             display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;
-            margin-bottom: 40px; position: sticky; top: 10px; z-index: 100;
+            margin-bottom: 20px; position: sticky; top: 0px; z-index: 100;
         }
 
         #searchBar {
             padding: 10px 20px; border-radius: 25px; border: 1px solid #444;
-            background: #1e1e1e; color: white; width: 300px; outline: none;
+            background: rgba(30, 30, 30, 0.9); color: white; width: 300px; outline: none;
+            backdrop-filter: blur(5px);
         }
 
         .toggle-btn {
             padding: 10px 20px; border-radius: 25px; border: 1px solid #00d4ff;
-            background: transparent; color: #00d4ff; cursor: pointer; transition: 0.3s;
+            background: rgba(0, 0, 0, 0.5); color: #00d4ff; cursor: pointer; transition: 0.3s;
+            backdrop-filter: blur(5px);
         }
 
         .toggle-btn.active { background: #00d4ff; color: #121212; }
 
+        /* --- Custom Scroll Area (Mirrored from Gallery) --- */
+        .gallery-scroll-area {
+            height: 65vh; /* Fixed height for internal scrolling */
+            overflow-y: auto;
+            padding: 0 15px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--gold) rgba(0,0,0,0.2);
+            border: 1px solid var(--box-border);
+            border-radius: 8px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .gallery-scroll-area::-webkit-scrollbar { width: 6px; }
+        .gallery-scroll-area::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+
         /* --- Gallery Layout --- */
-        .gallery-container { column-count: 3; column-gap: 20px; max-width: 1200px; margin: 0 auto; }
+        .gallery-container { 
+            column-count: 3; column-gap: 20px; max-width: 1200px; margin: 15px auto 0 auto; 
+        }
         @media (max-width: 900px) { .gallery-container { column-count: 2; } }
         @media (max-width: 600px) { .gallery-container { column-count: 1; } }
 
@@ -47,22 +63,27 @@
             position: absolute; top: 10px; right: 10px;
             background: rgba(0, 212, 255, 0.9); color: #000;
             padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 0.7rem;
+            pointer-events: none;
         }
 
         /* Red Heart Favorite Indicator */
         .fav-heart {
-            position: absolute; bottom: 10px; right: 10px;
+            position: absolute; top: 10px; left: 10px;
             font-size: 1.5rem; cursor: pointer;
-            color: rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.4);
             transition: 0.2s; user-select: none;
-            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+            text-shadow: 0 0 5px rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.4);
+            border-radius: 50%; width: 35px; height: 35px;
+            display: flex; justify-content: center; align-items: center;
         }
+        .fav-heart:hover { color: rgba(255, 255, 255, 0.8); background: rgba(0,0,0,0.6); }
         .fav-heart.active { color: #ff4b2b; filter: drop-shadow(0 0 8px rgba(255, 75, 43, 0.6)); }
 
         .art-info { padding: 12px; font-size: 0.85rem; color: #eee; }
         .creator-tag { color: #00d4ff; font-weight: bold; }
 
-        /* --- Lightbox with Fancy Border --- */
+        /* --- Lightbox --- */
         #fanart-lightbox {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 10000; justify-content: center; align-items: center; flex-direction: column;
@@ -73,6 +94,7 @@
             max-width: 85%; max-height: 80%; z-index: 5; position: relative;
             padding: 10px; background: #1e1e1e;
             border: 3px solid #00d4ff; border-radius: 8px;
+            cursor: pointer;
             box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(0, 212, 255, 0.2);
             animation: zoomIn 0.3s ease-out;
         }
@@ -84,7 +106,7 @@
 
         /* Navigation Zones */
         .nav-area {
-            position: absolute; top: 0; height: 100%; width: 25%; 
+            position: absolute; top: 0; height: 100%; width: 20%; 
             z-index: 10; cursor: pointer; display: flex; align-items: center; justify-content: center;
             font-size: 3rem; color: rgba(255,255,255,0.05); transition: 0.3s;
         }
@@ -129,8 +151,6 @@
                     <div id="track-list">
                         <button class="track-item nav-btn" onclick="changeTrack('audio/background_theme.mp3', 'Starmaker')">01. Starmaker Main</button>
                         <button class="track-item nav-btn" onclick="changeTrack('audio/FallApart.mp3', 'Fall Apart')">02. Fall Apart</button>
-                        <button class="track-item nav-btn" onclick="changeTrack('audio/GoBack.mp3', 'Go Back')">03. Go Back</button>
-                        <button class="track-item nav-btn" onclick="changeTrack('audio/Neo.mp3', 'Neo')">04. Neo</button>
                     </div>
                     <p id="current-track-name">STATUS: ONLINE // <span id="track-display">Starmaker</span></p>
                 </div>
@@ -145,10 +165,10 @@
     </header>
 
     <div class="container">
-        <div class="glass-panel" style="padding: 30px; min-height: 80vh;">
+        <div class="glass-panel" style="padding: 20px;">
             
-            <header style="text-align: center; margin-bottom: 20px;">
-                <h1 style="color: var(--gold); margin-top: 0;">Fanart Vault</h1>
+            <header style="text-align: center; margin-bottom: 15px;">
+                <h2 style="color: var(--gold); margin-top: 0; letter-spacing: 2px;">FANART VAULT</h2>
             </header>
 
             <div class="controls">
@@ -156,15 +176,19 @@
                 <button id="favToggle" class="toggle-btn" onclick="toggleFavView()">Show Favorites Only</button>
             </div>
 
-            <div class="gallery-container" id="gallery"></div>
+            <div class="gallery-scroll-area">
+                <div class="gallery-container" id="gallery"></div>
+            </div>
 
         </div>
     </div>
 
     <div id="fanart-lightbox" onclick="closeLightbox(event)">
-        <div class="nav-area left" onclick="prevVariant(event)">‹</div>
+        <button id="lb-fav-btn" class="fav-heart" style="position:absolute; top:20px; right:20px; font-size:2rem; width:55px; height:55px; z-index:10001; border:none;" onclick="toggleLightboxFav(event)">❤</button>
+        
+        <div class="nav-area left" onclick="navigateGallery(-1, event)">‹</div>
         <img id="lightbox-img" src="">
-        <div class="nav-area right" onclick="nextVariant(event)">›</div>
+        <div class="nav-area right" onclick="navigateGallery(1, event)">›</div>
         <div class="variant-picker" id="variantPicker" onclick="event.stopPropagation()"></div>
     </div>
 
@@ -174,6 +198,7 @@
         const FOLDER_PATH = 'images/artworks/';
 
         let allBundles = {};
+        let currentGalleryList = []; // Array of currently filtered bundle keys for easy navigation
         let favorites = JSON.parse(localStorage.getItem('fanart_favs')) || [];
         let showOnlyFavs = false;
         let currentOpenBundleKey = null;
@@ -204,16 +229,21 @@
             const query = document.getElementById('searchBar').value.toLowerCase();
             const container = document.getElementById('gallery');
             container.innerHTML = '';
+            currentGalleryList = [];
 
             Object.keys(allBundles).forEach(key => {
                 const bundle = allBundles[key];
                 const isFav = bundle.variants.some(v => favorites.includes(v.id));
+                
                 if (query && !bundle.creator.toLowerCase().includes(query)) return;
                 if (showOnlyFavs && !isFav) return;
+
+                currentGalleryList.push(key);
 
                 const mainImg = bundle.variants[0];
                 const card = document.createElement('div');
                 card.className = 'art-card';
+                card.oncontextmenu = (e) => toggleFavoriteRightClick(e, mainImg.id);
                 card.innerHTML = `
                     ${bundle.variants.length > 1 ? `<div class="bundle-badge">${bundle.variants.length} VERSIONS</div>` : ''}
                     <img src="${mainImg.url}" onclick="openLightbox('${key}')" loading="lazy">
@@ -237,7 +267,17 @@
         function updateLightboxView() {
             const bundle = allBundles[currentOpenBundleKey];
             const variant = bundle.variants[currentVariantIndex];
+            
             document.getElementById('lightbox-img').src = variant.url;
+            
+            // Sync Lightbox Favorite Button
+            const lbFavBtn = document.getElementById('lb-fav-btn');
+            if (favorites.includes(variant.id)) {
+                lbFavBtn.classList.add('active');
+            } else {
+                lbFavBtn.classList.remove('active');
+            }
+
             const picker = document.getElementById('variantPicker');
             picker.innerHTML = '';
 
@@ -252,35 +292,68 @@
             }
         }
 
-        // --- Finished Truncated Logic Below ---
-
-        function nextVariant(e) {
+        // --- Navigation Logic (Arrows + Swiping) ---
+        function navigateGallery(dir, e = null) {
             if(e) e.stopPropagation();
-            const bundle = allBundles[currentOpenBundleKey];
-            if (currentVariantIndex < bundle.variants.length - 1) {
-                currentVariantIndex++;
-                updateLightboxView();
-            }
+            if(currentGalleryList.length === 0) return;
+
+            let currentIndex = currentGalleryList.indexOf(currentOpenBundleKey);
+            let nextIndex = currentIndex + dir;
+
+            // Loop around if at the ends
+            if (nextIndex >= currentGalleryList.length) nextIndex = 0;
+            if (nextIndex < 0) nextIndex = currentGalleryList.length - 1;
+
+            currentOpenBundleKey = currentGalleryList[nextIndex];
+            currentVariantIndex = 0; // Reset to main image of the new bundle
+            updateLightboxView();
         }
 
-        function prevVariant(e) {
-            if(e) e.stopPropagation();
-            const bundle = allBundles[currentOpenBundleKey];
-            if (currentVariantIndex > 0) {
-                currentVariantIndex--;
-                updateLightboxView();
+        // Keyboard Controls
+        window.addEventListener('keydown', (e) => {
+            const lb = document.getElementById('fanart-lightbox');
+            if (lb.style.display === 'flex') {
+                if (e.key === "ArrowRight") navigateGallery(1);
+                else if (e.key === "ArrowLeft") navigateGallery(-1);
+                else if (e.key === "Escape") closeLightbox(e, true);
             }
+        });
+
+        // Touch / Swipe Controls
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const lightboxEl = document.getElementById('fanart-lightbox');
+
+        lightboxEl.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, {passive: true});
+
+        lightboxEl.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, {passive: true});
+
+        function handleSwipe() {
+            const swipeThreshold = 50; // Minimum distance to register a swipe
+            if (touchEndX < touchStartX - swipeThreshold) navigateGallery(1); // Swipe left
+            if (touchEndX > touchStartX + swipeThreshold) navigateGallery(-1); // Swipe right
         }
 
-        function closeLightbox(e) {
-            // Only close if clicking the background, not the image itself
-            if (e.target.id === 'fanart-lightbox') {
+        // --- Interaction Logic ---
+        function closeLightbox(e, force = false) {
+            // Close if forced (Esc), if clicking the background, or clicking the image itself
+            if (force || e.target.id === 'fanart-lightbox' || e.target.id === 'lightbox-img') {
                 document.getElementById('fanart-lightbox').style.display = 'none';
             }
         }
 
+        function toggleFavoriteRightClick(e, id) {
+            e.preventDefault(); // Block default browser context menu
+            toggleFavorite(e, id);
+        }
+
         function toggleFavorite(e, id) {
-            e.stopPropagation();
+            if(e) e.stopPropagation();
             const index = favorites.indexOf(id);
             if (index > -1) {
                 favorites.splice(index, 1);
@@ -288,7 +361,16 @@
                 favorites.push(id);
             }
             localStorage.setItem('fanart_favs', JSON.stringify(favorites));
-            renderGallery();
+            renderGallery(); // Re-render to update UI states
+        }
+
+        function toggleLightboxFav(e) {
+            if(e) e.stopPropagation();
+            const bundle = allBundles[currentOpenBundleKey];
+            const variantId = bundle.variants[currentVariantIndex].id;
+            
+            toggleFavorite(null, variantId);
+            updateLightboxView(); // Immediately update the heart in the lightbox
         }
 
         function toggleFavView() {
@@ -298,7 +380,7 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            if(typeof initMusic === 'function') initMusic(); // Assuming this is from data.js
+            if(typeof initMusic === 'function') initMusic(); 
             init();
         });
     </script>
@@ -323,7 +405,6 @@
     </div>
 
     <script>
-        // Global functions for the About Us modal
         window.openAboutModal = function() {
             if(typeof playSnd === 'function') playSnd();
             document.getElementById('about-lightbox').style.display = 'flex';
