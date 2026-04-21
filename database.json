@@ -324,7 +324,7 @@
         ]
     },
     "Roxy": { 
-        "name": "Celeste", 
+        "name": "Roxy", 
         "gallery": true,
         "sprite": "images/characters/Roxy/RoxyB_sprite.png", 
         "bg": "images/characters/Roxy/RoxyBackground_BG.png", 
