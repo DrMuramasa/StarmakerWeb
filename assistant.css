@@ -14,7 +14,7 @@
 #asterion-sprite {
     width: 160px; /* Adjust based on your actual frame size */
     height: 160px;
-    background-image: url('Gemini_Generated_Image_jwxe41jwxe41jwxe.png');
+    background-image: url('images/mino_assistant.png');
     background-size: 960px 640px; /* 6 frames * 160px by 4 rows * 160px */
     image-rendering: pixelated;
 }
