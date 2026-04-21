@@ -1,78 +1,76 @@
-/* Container for the assistant */
+/* --- ASTERION THE MINOTAUR: MAIN CONTAINER --- */
 #asterion-container {
     position: fixed;
-    bottom: 20px;
+    bottom: 20px; /* Keeps him walking along the bottom of the screen */
     right: 50px;
     z-index: 999999;
     display: flex;
     flex-direction: column;
     align-items: center;
-    transition: right 2s linear, bottom 0.5s ease;
+    pointer-events: none; /* Lets you click the background behind him */
+    
+    /* This makes his side-to-side movement smooth when your Javascript moves him */
+    transition: right 1s linear, left 1s linear, bottom 0.5s ease;
 }
 
-/* The Sprite Box */
+/* --- THE CHAT BUBBLE --- */
+#asterion-bubble {
+    pointer-events: all;
+    background: rgba(0, 0, 0, 0.95);
+    border: 2px solid #d4af37;
+    border-radius: 8px;
+    padding: 12px;
+    width: 240px;
+    margin-bottom: -10px;
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+    display: none;
+}
+
+#asterion-text { margin-bottom: 8px; line-height: 1.4; }
+#asterion-input { width: 100%; background: #111; border: 1px solid #444; color: #00ffff; padding: 5px; outline: none; font-size: 0.8rem; }
+
+/* --- THE SPRITE VIEWPORT --- */
 #asterion-sprite {
+    pointer-events: all;
+    cursor: pointer;
     display: block !important;
+    
+    /* 1. VIEWPORT: Exactly one frame wide */
     width: 160px !important; 
     height: 160px !important;
-    background-color: rgba(255, 0, 0, 0.3); /* Temporary: This will show a faint red box */
     
-    /* Make sure this path is exactly where your image is */
+    /* 2. INVISIBLE BOX: Removes all temporary testing colors */
+    border: none !important;
+    background-color: transparent !important;
+    
+    /* 3. NEW IMAGE PATH */
     background-image: url('./images/mino_sprites.png') !important;
-    background-size: 1120px 640px; /* Adjusted for the text labels on the left */
+    
+    /* 4. NEW SQUISH MATH: 6 frames * 160px = 960px wide | 1 row = 160px tall */
+    background-size: 960px 160px !important; 
+    
+    /* 5. PIXEL PERFECT: Prevents blur and stops smooth-sliding */
     image-rendering: pixelated;
-    border: 1px solid yellow; /* Temporary: To see the bounds */
+    transition: none !important; 
 }
 
-/* --- ANIMATIONS --- */
-
-/* Row 1: Walk (6 frames) */
+/* --- ANIMATION ENGINE --- */
 .walk {
-    animation: walk-anim 0.8s steps(6) infinite;
-    background-position-y: 0px;
-}
-@keyframes walk-anim { from { background-position-x: 0; } to { background-position-x: -960px; } }
-
-/* Row 2: Jump (5 frames) */
-.jump {
-    animation: jump-anim 1s steps(5) forwards;
-    background-position-y: -160px;
-}
-@keyframes jump-anim { from { background-position-x: 0; } to { background-position-x: -800px; } }
-
-/* Row 3: Read (6 frames) */
-.read {
-    animation: read-anim 1.5s steps(6) infinite;
-    background-position-y: -320px;
-}
-@keyframes read-anim { from { background-position-x: 0; } to { background-position-x: -960px; } }
-
-/* Row 4: Idle/Talk (6 frames) */
-.idle {
-    animation: idle-anim 1.2s steps(6) infinite;
-    background-position-y: -480px;
-}
-@keyframes idle-anim { from { background-position-x: 0; } to { background-position-x: -960px; } }
-
-/* Chat Bubble Styling */
-#asterion-bubble {
-    background: rgba(0, 0, 0, 0.9);
-    border: 2px solid #d4af37;
-    border-radius: 10px;
-    padding: 10px;
-    width: 220px;
-    margin-bottom: 10px;
-    color: white;
-    font-family: 'Courier New', monospace;
-    font-size: 0.8rem;
-    display: none; /* Hidden by default */
+    animation: walk-anim 0.9s steps(6) infinite;
+    background-position-y: 0px; 
 }
 
-#asterion-bubble input {
-    width: 100%;
-    background: none;
-    border: none;
-    border-bottom: 1px solid #d4af37;
-    color: #00ffff;
-    outline: none;
+/* We start at 0px now because there are no text labels to skip! */
+@keyframes walk-anim { 
+    from { background-position-x: 0px; } 
+    to { background-position-x: -960px; } 
+}
+
+/* --- UTILITY: FLIP DIRECTION --- */
+/* Your Javascript can add this class to make him face left when he turns around */
+.flip {
+    transform: scaleX(-1);
 }
