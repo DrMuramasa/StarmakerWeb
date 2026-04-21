@@ -12,11 +12,16 @@
 
 /* The Sprite Box */
 #asterion-sprite {
-    width: 235px; /* Adjust based on your actual frame size */
-    height: 192px;
-    background-image: url('images/mino_assistant.png');
-    background-size: 1407px 768px; /* 6 frames * 160px by 4 rows * 160px */
+    display: block !important;
+    width: 160px !important; 
+    height: 160px !important;
+    background-color: rgba(255, 0, 0, 0.3); /* Temporary: This will show a faint red box */
+    
+    /* Make sure this path is exactly where your image is */
+    background-image: url('./images/Gemini_Generated_Image_jwxe41jwxe41jwxe.png') !important;
+    background-size: 1120px 640px; /* Adjusted for the text labels on the left */
     image-rendering: pixelated;
+    border: 1px solid yellow; /* Temporary: To see the bounds */
 }
 
 /* --- ANIMATIONS --- */
