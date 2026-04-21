@@ -38,50 +38,58 @@
         .art-card:hover { transform: translateY(-5px); border-color: #444; }
         .art-card img { width: 100%; display: block; cursor: pointer; }
 
-        /* --- Indicators & Overlays --- */
         .bundle-badge {
             position: absolute; top: 10px; right: 10px;
             background: rgba(0, 212, 255, 0.9); color: #000;
             padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 0.7rem;
         }
 
-        /* 1. Visual Indicator: Red Heart */
+        /* Red Heart Favorite Indicator */
         .fav-heart {
             position: absolute; bottom: 10px; right: 10px;
             font-size: 1.5rem; cursor: pointer;
-            color: rgba(255, 255, 255, 0.3); /* Dim white when inactive */
+            color: rgba(255, 255, 255, 0.3);
             transition: 0.2s; user-select: none;
             text-shadow: 0 0 5px rgba(0,0,0,0.5);
         }
-
-        .fav-heart.active {
-            color: #ff4b2b; /* Solid Red */
-            filter: drop-shadow(0 0 8px rgba(255, 75, 43, 0.6));
-        }
+        .fav-heart.active { color: #ff4b2b; filter: drop-shadow(0 0 8px rgba(255, 75, 43, 0.6)); }
 
         .art-info { padding: 12px; font-size: 0.85rem; }
         .creator-tag { color: #00d4ff; font-weight: bold; }
 
-        /* --- Lightbox & 2. Navigation Areas --- */
+        /* --- Lightbox with Fancy Border --- */
         #lightbox {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; flex-direction: column;
         }
 
-        #lightbox img { max-width: 85%; max-height: 80%; z-index: 5; position: relative; border-radius: 4px; }
+        #lightbox img {
+            max-width: 85%; max-height: 80%; z-index: 5; position: relative;
+            padding: 10px; background: #1e1e1e;
+            border: 3px solid #00d4ff; border-radius: 8px;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(0, 212, 255, 0.2);
+            animation: zoomIn 0.3s ease-out;
+        }
 
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Navigation Zones */
         .nav-area {
             position: absolute; top: 0; height: 100%; width: 25%; 
             z-index: 10; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 3rem; color: rgba(255,255,255,0.1); transition: 0.3s;
+            font-size: 3rem; color: rgba(255,255,255,0.05); transition: 0.3s;
         }
-        .nav-area:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.03); }
+        .nav-area:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.02); }
         .nav-area.left { left: 0; }
         .nav-area.right { right: 0; }
 
-        .variant-picker { margin-top: 20px; display: flex; gap: 10px; z-index: 15; }
-        .variant-thumb { width: 50px; height: 50px; object-fit: cover; cursor: pointer; border: 2px solid transparent; border-radius: 4px; opacity: 0.6; }
-        .variant-thumb.active { border-color: #00d4ff; opacity: 1; }
+        .variant-picker { margin-top: 25px; display: flex; gap: 12px; z-index: 15; }
+        .variant-thumb { width: 60px; height: 60px; object-fit: cover; cursor: pointer; border: 2px solid transparent; border-radius: 6px; opacity: 0.5; transition: 0.2s; }
+        .variant-thumb:hover { opacity: 1; }
+        .variant-thumb.active { border-color: #00d4ff; opacity: 1; transform: scale(1.1); }
     </style>
 </head>
 <body>
@@ -101,20 +109,17 @@
     <div class="nav-area left" onclick="prevVariant(event)">‹</div>
     <img id="lightbox-img" src="">
     <div class="nav-area right" onclick="nextVariant(event)">›</div>
-    
     <div class="variant-picker" id="variantPicker" onclick="event.stopPropagation()"></div>
 </div>
 
 <script>
-    const GITHUB_USER = 'DrMuramasa';
-    const REPO_NAME = 'StarmakerWeb';
-    const FOLDER_PATH = 'images/artworks/';
+    const GITHUB_USER = 'YOUR_USERNAME';
+    const REPO_NAME = 'YOUR_REPO_NAME';
+    const FOLDER_PATH = 'artworks';
 
     let allBundles = {};
     let favorites = JSON.parse(localStorage.getItem('fanart_favs')) || [];
     let showOnlyFavs = false;
-    
-    // Tracking for Lightbox Navigation
     let currentOpenBundleKey = null;
     let currentVariantIndex = 0;
 
@@ -125,22 +130,18 @@
             
             files.forEach(file => {
                 if (!file.name.match(/\.(jpe?g|png|webp)$/i)) return;
-
                 const [mainPart, variantPart] = file.name.split('_alt_');
                 const variantName = variantPart ? variantPart.split('.')[0] : 'Original';
                 const parts = mainPart.split('_');
                 const creator = parts[0] || 'Unknown';
                 const title = parts.slice(1).join('_') || 'Untitled';
-                
                 const bundleKey = `${creator}_${title}`;
 
-                if (!allBundles[bundleKey]) {
-                    allBundles[bundleKey] = { creator, title, variants: [] };
-                }
+                if (!allBundles[bundleKey]) allBundles[bundleKey] = { creator, title, variants: [] };
                 allBundles[bundleKey].variants.push({ name: variantName, url: file.download_url, id: file.path });
             });
             renderGallery();
-        } catch(e) { console.error("Check GitHub settings.", e); }
+        } catch(e) { console.error("Verify GitHub Settings", e); }
     }
 
     function renderGallery() {
@@ -150,16 +151,13 @@
 
         Object.keys(allBundles).forEach(key => {
             const bundle = allBundles[key];
-            // Check if any variant in this bundle is favorited
             const isFav = bundle.variants.some(v => favorites.includes(v.id));
-
             if (query && !bundle.creator.toLowerCase().includes(query)) return;
             if (showOnlyFavs && !isFav) return;
 
             const mainImg = bundle.variants[0];
             const card = document.createElement('div');
             card.className = 'art-card';
-            
             card.innerHTML = `
                 ${bundle.variants.length > 1 ? `<div class="bundle-badge">${bundle.variants.length} VERSIONS</div>` : ''}
                 <img src="${mainImg.url}" onclick="openLightbox('${key}')" loading="lazy">
@@ -173,7 +171,6 @@
         });
     }
 
-    // --- Lightbox Logic ---
     function openLightbox(key) {
         currentOpenBundleKey = key;
         currentVariantIndex = 0;
@@ -184,9 +181,7 @@
     function updateLightboxView() {
         const bundle = allBundles[currentOpenBundleKey];
         const variant = bundle.variants[currentVariantIndex];
-        
         document.getElementById('lightbox-img').src = variant.url;
-        
         const picker = document.getElementById('variantPicker');
         picker.innerHTML = '';
 
@@ -217,31 +212,23 @@
 
     function closeLightbox(e) { 
         if (e.target.id === 'lightbox' || e.target.className.includes('nav-area')) {
-            if(e.target.className.includes('nav-area')) return; // handled by specific nav functions
+            if(e.target.className.includes('nav-area')) return;
             document.getElementById('lightbox').style.display = 'none'; 
             currentOpenBundleKey = null;
         }
     }
 
-    // Keyboard Navigation
     window.addEventListener('keydown', (e) => {
         if (!currentOpenBundleKey) return;
         if (e.key === "ArrowRight") nextVariant();
         if (e.key === "ArrowLeft") prevVariant();
-        if (e.key === "Escape") { 
-            document.getElementById('lightbox').style.display = 'none'; 
-            currentOpenBundleKey = null;
-        }
+        if (e.key === "Escape") { document.getElementById('lightbox').style.display = 'none'; currentOpenBundleKey = null; }
     });
 
-    // --- Favorites Logic ---
     function toggleFavorite(e, id) {
-        e.stopPropagation(); // Don't open lightbox when clicking heart
-        if (favorites.includes(id)) {
-            favorites = favorites.filter(favId => favId !== id);
-        } else {
-            favorites.push(id);
-        }
+        e.stopPropagation();
+        if (favorites.includes(id)) { favorites = favorites.filter(favId => favId !== id); }
+        else { favorites.push(id); }
         localStorage.setItem('fanart_favs', JSON.stringify(favorites));
         renderGallery();
     }
