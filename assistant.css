@@ -18,7 +18,7 @@
     background-color: rgba(255, 0, 0, 0.3); /* Temporary: This will show a faint red box */
     
     /* Make sure this path is exactly where your image is */
-    background-image: url('./images/mino_sprite.png') !important;
+    background-image: url('./images/mino_sprites.png') !important;
     background-size: 1120px 640px; /* Adjusted for the text labels on the left */
     image-rendering: pixelated;
     border: 1px solid yellow; /* Temporary: To see the bounds */
