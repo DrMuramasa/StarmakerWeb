@@ -1,0 +1,73 @@
+/* Container for the assistant */
+#asterion-container {
+    position: fixed;
+    bottom: 20px;
+    right: 50px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: right 2s linear, bottom 0.5s ease;
+}
+
+/* The Sprite Box */
+#asterion-sprite {
+    width: 160px; /* Adjust based on your actual frame size */
+    height: 160px;
+    background-image: url('Gemini_Generated_Image_jwxe41jwxe41jwxe.png');
+    background-size: 960px 640px; /* 6 frames * 160px by 4 rows * 160px */
+    image-rendering: pixelated;
+}
+
+/* --- ANIMATIONS --- */
+
+/* Row 1: Walk (6 frames) */
+.walk {
+    animation: walk-anim 0.8s steps(6) infinite;
+    background-position-y: 0px;
+}
+@keyframes walk-anim { from { background-position-x: 0; } to { background-position-x: -960px; } }
+
+/* Row 2: Jump (5 frames) */
+.jump {
+    animation: jump-anim 1s steps(5) forwards;
+    background-position-y: -160px;
+}
+@keyframes jump-anim { from { background-position-x: 0; } to { background-position-x: -800px; } }
+
+/* Row 3: Read (6 frames) */
+.read {
+    animation: read-anim 1.5s steps(6) infinite;
+    background-position-y: -320px;
+}
+@keyframes read-anim { from { background-position-x: 0; } to { background-position-x: -960px; } }
+
+/* Row 4: Idle/Talk (6 frames) */
+.idle {
+    animation: idle-anim 1.2s steps(6) infinite;
+    background-position-y: -480px;
+}
+@keyframes idle-anim { from { background-position-x: 0; } to { background-position-x: -960px; } }
+
+/* Chat Bubble Styling */
+#asterion-bubble {
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #d4af37;
+    border-radius: 10px;
+    padding: 10px;
+    width: 220px;
+    margin-bottom: 10px;
+    color: white;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    display: none; /* Hidden by default */
+}
+
+#asterion-bubble input {
+    width: 100%;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #d4af37;
+    color: #00ffff;
+    outline: none;
+}
