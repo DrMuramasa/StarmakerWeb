@@ -196,6 +196,39 @@ function changeTrack(path, label) {
     });
 }
 
+// --- Mobile Back Button Audio Fix ---
+window.addEventListener('pageshow', (event) => {
+    // Check if the page was restored from the browser's history cache
+    if (event.persisted || (performance.getEntriesByType("navigation")[0] && performance.getEntriesByType("navigation")[0].type === "back_forward")) {
+        
+        // 1. Re-initialize your music states if needed
+        if (typeof initMusic === 'function') {
+            initMusic(); 
+        }
+        
+        // 2. Catch the first screen tap/click to bypass mobile autoplay blocks
+        const resumeAudioOnInteraction = () => {
+            // Find your audio element (Adjust the selector if your audio has a specific ID like '#bg-music')
+            const audioEl = document.querySelector('audio'); 
+            
+            // Assuming you store mute state in localStorage (adjust if your key is different)
+            const isMuted = localStorage.getItem('isMuted') === 'true'; 
+
+            if (audioEl && audioEl.paused && !isMuted) {
+                audioEl.play().catch(e => console.log("Audio waiting for explicit interaction."));
+            }
+            
+            // Clean up the listeners so they only fire once
+            document.removeEventListener('touchstart', resumeAudioOnInteraction);
+            document.removeEventListener('click', resumeAudioOnInteraction);
+        };
+
+        // Attach the interaction listeners
+        document.addEventListener('touchstart', resumeAudioOnInteraction, { once: true });
+        document.addEventListener('click', resumeAudioOnInteraction, { once: true });
+    }
+});
+
 // --- 4. NAVIGATION & SETTINGS TOGGLES ---
 function toggleSettings() {
     if (typeof playSnd === 'function') playSnd();
