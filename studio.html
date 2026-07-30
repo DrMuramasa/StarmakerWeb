@@ -354,6 +354,23 @@
             }).join('');
         }
 
+        // --- MOBILE TOUCH SWIPING FOR THUMBNAIL STRIP ---
+        const thumbStrip = document.getElementById('thumb-container');
+        let thumbTouchStartX = 0;
+        let thumbScrollLeft = 0;
+
+        thumbStrip.addEventListener('touchstart', (e) => {
+            thumbTouchStartX = e.touches[0].pageX - thumbStrip.offsetLeft;
+            thumbScrollLeft = thumbStrip.scrollLeft;
+        }, { passive: true });
+
+        thumbStrip.addEventListener('touchmove', (e) => {
+            if (!thumbTouchStartX) return;
+            const x = e.touches[0].pageX - thumbStrip.offsetLeft;
+            const walk = (x - thumbTouchStartX) * 1.5; // Scroll speed multiplier
+            thumbStrip.scrollLeft = thumbScrollLeft - walk;
+        }, { passive: true });
+        
         window.openStoreModal = function(key) {
             if(typeof playSnd === 'function') playSnd();
             const game = gamesData[key];
