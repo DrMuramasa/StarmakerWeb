@@ -34,7 +34,53 @@
         "sprite": "images/characters/Charlotte/CharlotteB_sprite.png", 
         "bg": "images/characters/Charlotte/CharlotteBackground_BG.png", 
         "quests": [
-            { "title": "Coffee Grind", "steps": ["Work 3 shifts at the Cafe", "Reach 1000 Subs", "Visit Amelia during gym hours"] }
+      {
+          "title": "Gold And Wine",
+        "steps": [
+          "Charlotte invited me to her yacht. Private, luxurious, and way out of my usual league. This could be the perfect chance to get closer to her... to find out what she really wants, and maybe give her what she's looking for.",
+          "Talk to Charlotte and Anna in the Living room thrice on Monday to get invited to her Yacht",
+          "Build a connection with Charlotte.",
+          "Meet Charlotte on her yacht each Monday.",
+        ] 
+      },
+       {
+          "title": "Gold And Wine - Guide",
+        "steps": [
+          "Meet Charlotte on her yacht each Monday.",
+          "When asked by Charlotte at the yacht you will have the choice to either select Anna's (needs raw sex done at the studio) or Charlotte's route",
+          "Charlotte’s Route for a sex scene with Charlotte only (Vaginal)",
+          "Anna's route allows you to have sex with Charlotte at the yacht (anal only). Opens 3some scenes with Anna during specific events and Xmas (Anna needs to be shared with Adrian). Opens studio invitation for Charlotte to have sex with Anna",
+        ] 
+      },
+     {   
+         "title": "Old Friends",
+        "steps": [
+          "Charlotte says she wants to help Anna, but now she needs something from me to make it happen. I’m not sure I trust her. There’s something in her smile that feels off. Still, if it’s for Anna... I might not have a choice.",
+          "Meet with Charlotte: Be at the garage to meet Charlotte on Tuesday.",
+          "Locate Cheeseburger: Assist Charlotte in tracking down Cheeseburger."
+        ]
+     },
+      {
+        "title": "Old Friends - Guide",
+        "steps": [
+          "Go to the hallway after completing Charlotte's Quest, then go to the garage the next day",
+          "Drop from the conduits into Anna's room and tell Charlotte if she needs you to 'entertain her' for a scene",
+          "Go back to the hallway to finish the quest",
+          "Unlock a single pic scene during Anna's Birthday, 2 different XMAS Eve scenes, and house pool photo variations with Anna and Charlotte"
+        ]
+    },
+     {
+        "title": "The Bodyguard",
+        "steps": [
+          "After completing Charlotte’s and Phoenix’s Quests.",
+          "Go to the mall on a monday and you will find her there being harassed by a business man.",
+          "You can select to tell her either choice as both reach the same conclusion.",
+          "Go to the gym the next day and ask Phoenix to be Charlotte’s bodyguard.",
+          "Go to the entrance and meet them both there.",
+          "Go to the mall and a scene will play out where Phoenix is working as her bodyguard.",
+          "After that scene you’ll be able to find them for scenes at the Mall’s Boutique (any day) and at the Yacht (on Monday)."
+        ]
+     }
         ]
     },
     "Amelia": { 
