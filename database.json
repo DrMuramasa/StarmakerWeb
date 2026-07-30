@@ -14,7 +14,7 @@
         "sprite": "images/characters/Josef/JosefB_sprite.png", 
         "bg": "images/characters/Josef/JosefBackground_BG.jpg", 
         "quests": [
-            { "title": "Moment of Truth", "steps": ["Reach 3 Hearts with Anna", "Give Beer on Friday (x2)", "Reach 4 Hearts with Anna", "Give 3rd Beer & Explain Starmaker", "You will then be able to choose if he stays or leaves. Telling him “You’re a loser … It would be best if you just leave” will result in Josef leaving; otherwise, you can be nice to him and advise him to adapt to the new Anna"]},
+            { "title": "Moment of Truth (needs 5 Hearts if want to share)", "steps": ["Reach 3 Hearts with Anna", "Give Beer on Friday (x2)", "Reach 4 Hearts with Anna", "Give 3rd Beer & Explain Starmaker", "You will then be able to choose if he stays or leaves. Telling him “You’re a loser … It would be best if you just leave” will result in Josef leaving; otherwise, you can be nice to him and advise him to adapt to the new Anna"]},
             { "title": "Josef Routes - Via Isabella", "steps": ["After getting a daily income of 5k go to Josef office, where you'll meet Isabella", "Talk with Isabella at the beach on a Thursday and agree to have sex with her", "Meet her at the motel in downtown on Thursday", "After having sex with her go see Josef and tell him about it", "Next Thursday when you go meet with Isabella Josef will be there and you can do a 3some", "Get out of the room and you will have a talk with Josef", "Select: either [You should tell her] or [Yeah, we went to far] for his leaving route", "Select [Yeah, it was pretty hot, right?] - [ Maybe we can sandwich some more asses?] to start the Anna sharing route with this method ** NEEDS ANNA RAW DONE AT THE STUDIO **"]}, 
             { "title": "Josef Share Route", "steps": ["Go back inside to the Hallway to meet Anna and Josef", "Advise him he should join you at the studio", "If also sharing Anna with Adrian you will be able to have multiple scenes around the house and the hiking trip"] },
             { "title": "Josef Leaves Route", "steps": ["Go find Anna in the Kitchen and she will give you the key to the Master bedroom", "Go up to Adrian’s room to tell him about why Josef left (if you tell him the truth about why Josef left you will not be able to game with Adrian, unless you are sharing with him", "Go to the Master Bedroom for Anna's scene", "Fuck Isabella"] }
@@ -27,8 +27,8 @@
         "sprite": "images/characters/Adrian/AdrianB_sprite.png", 
         "bg": "images/characters/Adrian/AdrianBackground_BG.jpg", 
         "quests": [
-            { "title": "Friday Beer Strategy", "steps": ["Reach 3 Hearts with Anna", "Give Beer on Friday (x2)", "Reach 4 Hearts with Anna", "Give 3rd Beer & Explain Starmaker"] },
-            { "title": "Man of The House", "steps": ["After completing Friday's Quest", "Go Camping", "Have a 3some with Anna", "Fuck Isabella"] }
+            { "title": "Trial By Fire", "steps": ["He will at one point meet you at the garage and ask you for help dealing with women.", "Go to the mall and there will be a series of mini events of him speaking with some girls."] },
+            { "title": "Secrets (needs 5 Hearts if want to share)", "steps": ["IF WANT TO GO THE SHARE ROUTE YOU WILL NEED TO HAVE HAD RAW SEX WITH ANNA AT THE STUDIO BEFORE THE STEP TO TELL HER ABOUT ADRIAN", "Bye the injector from Joey's shop at the mall", "Learn how to hack by either learning from Samantha or by having MAX Smarts Stats", "Go to Adrian's room on Thursday when he is not there, go into his PC and open the secret folder", "Go to the kitchen and tell Anna about it. At this point you will be able to select if sharing or not Anna with him. This is a ONE TIME OPTION so make sure your decision is correct", "Meet Adrian inside his room with Anna 4 fridays", "Select a diferent choice each friday, starting with making Anna giving a blowjob. After passing by all choices, select Anna to give him a blowjob again", "Go to the bathroom next tuesday and you will find Anna having sex with him"] }
         ]
     },
     "Charlotte": { 
@@ -38,7 +38,7 @@
         "bg": "images/characters/Charlotte/CharlotteBackground_BG.png", 
         "quests": [
        {
-          "title": "Gold And Wine",
+          "title": "Gold And Wine (needs 5 Hearts if want to share)",
         "steps": [
           "Meet Charlotte on her yacht each Monday.",
           "When asked by Charlotte at the yacht you will have the choice to either select Anna's (needs raw sex done at the studio) or Charlotte's route",
