@@ -460,13 +460,32 @@
             history.pushState({ lightbox: true }, "");
         }
 
-        function navigateLightbox(dir) {
+        /*function navigateLightbox(dir) {
             const newIdx = galleryIdx + dir;
             if (newIdx < 0 || newIdx >= galleryImgs.length) return;
             galleryIdx = newIdx;
             const newUrl = galleryImgs[galleryIdx];
             document.getElementById('lb-img').src = newUrl;
             document.getElementById('lb-fav-btn').classList.toggle('active', favorites.images.includes(newUrl));
+        }*/
+
+        function navigateLightbox(dir) {
+            if (activeView === "sprite") {
+                // Cycle through sprites instead of gallery images
+                if (!sprites.length) return;
+                const newIdx = spriteIdx + dir;
+                if (newIdx < 0 || newIdx >= sprites.length) return;
+                spriteIdx = newIdx;
+                document.getElementById('lb-img').src = sprites[spriteIdx];
+            } else {
+                // Regular gallery image navigation
+                const newIdx = galleryIdx + dir;
+                if (newIdx < 0 || newIdx >= galleryImgs.length) return;
+                galleryIdx = newIdx;
+                const newUrl = galleryImgs[galleryIdx];
+                document.getElementById('lb-img').src = newUrl;
+                document.getElementById('lb-fav-btn').classList.toggle('active', favorites.images.includes(newUrl));
+            }
         }
 
         function toggleFavImg(url, btn) {
